@@ -1,85 +1,129 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8"><title>My Library Pro</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>My Library Pro - Ultra</title>
     <style>
-        :root { --bg: #0a0a0a; --acc: #4caf50; --sc: 1; }
-        body { margin:0; font-family:sans-serif; background:var(--bg); color:white; overflow-x:hidden; }
-        .nav { display:flex; justify-content:center; gap:10px; padding:20px; position: sticky; top: 0; background: var(--bg); z-index: 100; }
-        .t-btn { background:#222; color:white; border:1px solid #444; padding:8px 20px; border-radius:20px; cursor:pointer; transition:0.2s; }
-        .t-btn.active { background:var(--acc); border-color:var(--acc); }
-        .f-bar { background:rgba(20,20,20,0.95); margin:10px auto; padding:15px; border-radius:12px; max-width:1400px; border:1px solid #333; }
-        .grid { display:grid; gap:15px; padding:20px; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); }
+        :root { --bg: #0a0a0a; --acc: #4caf50; --pink: #d81b60; }
         
-        /* Estilos de la Card y Selección */
-        .card { background:#161616; border:1px solid #333; border-radius:10px; text-decoration:none; color:white; overflow:hidden; text-align:center; transition:0.2s; position: relative; cursor: pointer; content-visibility: auto; }
-        .card:hover { border-color:var(--acc); transform: translateY(-5px); }
-        .card.selected { border: 3px solid var(--acc); background: rgba(76, 175, 80, 0.1); }
-        .card.selected::after { content: '✅'; position: absolute; top: 8px; right: 8px; font-size: 18px; background: rgba(0,0,0,0.6); border-radius: 50%; padding: 2px; }
-        
-        .card img { width:100%; height:280px; object-fit:cover; display:block; background: #1a1a1a; }
-        .card span { display:block; padding:10px; font-size:13px; font-weight: bold; }
-        
-        .futa-sep { grid-column:1/-1; color:var(--acc); text-align:center; border-top:1px dashed #333; padding:15px; font-weight:bold; letter-spacing: 2px; }
-        .hidden { display:none !important; }
-        .f-group { display:flex; flex-wrap:wrap; gap:5px; margin-top:10px; }
-        
-        .stats { font-size: 12px; color: var(--acc); margin-bottom: 10px; font-weight: bold; }
-        .btn-view { background: #d81b60 !important; border-color: #d81b60 !important; }
+        /* Optimización de rendimiento base */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { 
+            margin:0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background:var(--bg); color:white; overflow-x:hidden; 
+            text-rendering: optimizeLegibility;
+        }
 
-        /* Estilos Carrusel */
-        #modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:5000; }
-        #modal img { max-width:95%; max-height:85vh; object-fit:contain; border:1px solid #444; }
-        .m-nav { position:absolute; top:50%; width:100%; display:flex; justify-content:space-between; padding:0 30px; box-sizing:border-box; pointer-events:none; }
-        .m-btn { background:rgba(255,255,255,0.1); color:white; border:none; padding:20px; cursor:pointer; pointer-events:auto; font-size:24px; border-radius:50%; }
-        .m-btn:hover { background:var(--acc); }
-        .m-close { position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:30px; cursor:pointer; }
+        /* Nav adaptable */
+        .nav { 
+            display:flex; justify-content:center; gap:8px; padding:15px; 
+            position: sticky; top: 0; background: rgba(10,10,10,0.9); 
+            backdrop-filter: blur(10px); z-index: 100; border-bottom: 1px solid #222;
+        }
+        .t-btn { 
+            background:#222; color:white; border:1px solid #444; 
+            padding:10px 15px; border-radius:12px; cursor:pointer; 
+            font-size: 14px; transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .t-btn.active { background:var(--acc); border-color:var(--acc); transform: scale(1.05); }
+
+        /* Barra de filtros responsive */
+        .f-bar { 
+            background:#141414; margin:10px; padding:12px; border-radius:15px; 
+            max-width:1400px; border:1px solid #333;
+        }
+        .f-group { display:flex; flex-wrap:nowrap; gap:8px; margin-top:10px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
+        .f-group::-webkit-scrollbar { display: none; }
+        
+        /* Grid Inteligente (Mobile First) */
+        .grid { 
+            display:grid; gap:10px; padding:10px;
+            grid-template-columns: repeat(2, 1fr); /* 2 columnas en móvil */
+        }
+        @media (min-width: 768px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+        @media (min-width: 1200px) { .grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); } }
+
+        /* Card Optimizada */
+        .card { 
+            background:#161616; border-radius:12px; overflow:hidden; 
+            border:1px solid #222; position: relative; cursor: pointer;
+            will-change: transform; transform: translateZ(0); /* Forzar GPU */
+        }
+        .card.selected { border: 2px solid var(--acc); background: rgba(76, 175, 80, 0.1); }
+        .card.selected::after { 
+            content: '✅'; position: absolute; top: 5px; right: 5px; 
+            background: var(--acc); border-radius: 50%; width: 24px; height: 24px;
+            display: flex; align-items: center; justify-content: center; font-size: 12px;
+        }
+        
+        .card img { 
+            width:100%; height:auto; aspect-ratio: 3/4; object-fit:cover; 
+            display:block; background: #1a1a1a; transition: opacity 0.3s;
+        }
+        .card span { display:block; padding:8px; font-size:12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* Stats y Buscador */
+        .search-container { display:flex; gap:8px; margin-bottom:10px; }
+        input { 
+            flex-grow:1; padding:12px; background:#1a1a1a; color:white; 
+            border:1px solid #333; border-radius:10px; outline: none;
+        }
+        .btn-view { background: var(--pink) !important; border: none; font-weight: bold; }
+
+        /* Modal Fullscreen */
+        #modal { 
+            position:fixed; top:0; left:0; width:100%; height:100%; 
+            background:#000; display:none; flex-direction:column; 
+            align-items:center; justify-content:center; z-index:5000; 
+        }
+        #modal img { max-width:100%; max-height:100vh; object-fit: contain; }
+        .m-nav { 
+            position:absolute; bottom:30px; width:100%; 
+            display:flex; justify-content:center; gap:50px; pointer-events:none; 
+        }
+        .m-btn { 
+            background:rgba(255,255,255,0.1); color:white; border:none; 
+            padding:15px 25px; border-radius:30px; cursor:pointer; pointer-events:auto;
+            backdrop-filter: blur(5px);
+        }
+        .m-close { position:absolute; top:20px; right:20px; color:white; font-size:30px; background:none; border:none; z-index: 5001;}
+
+        .hidden { display:none !important; }
     </style>
 </head>
 <body>
 
     <div class="nav">
-        <button class="t-btn" id="btn-mangas" onclick="tab('mangas',this)">📚 Mis Mangas</button>
-        <button class="t-btn" id="btn-galeria" onclick="tab('galeria',this)">🖼️ Ilustraciones</button>
+        <button class="t-btn active" id="btn-mangas" onclick="tab('mangas',this)">📚 Mangas</button>
+        <button class="t-btn" id="btn-galeria" onclick="tab('galeria',this)">🖼️ Galería</button>
     </div>
 
-    <div id="t-mangas" class="hidden">
-        <div class="f-bar"><input type="text" id="mSearch" placeholder="Buscar manga..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="searchM(this.value)"></div>
+    <div id="t-mangas">
+        <div class="f-bar">
+            <input type="text" placeholder="Buscar manga..." oninput="searchM(this.value)">
+        </div>
         <div id="m-grid" class="grid">
             <a class="card" href="reader.html?manga=Francis_X_Raikou"><span>Francis X Raikou</span></a>
-            <a class="card" href="reader.html?manga=Yang_Gui_Fei_X_Prota"><span>Yang Gui Fei X Prota</span></a>
-            <a class="card" href="reader.html?manga=Ibuki_X_Yui"><span>Ibuki X Yui</span></a>
-            <a class="card" href="reader.html?manga=BB_X_Prota"><span>BB X Prota</span></a>
-            <a class="card" href="reader.html?manga=Jalter_X_Apocrypha_NPC"><span>Jalter X Apocrypha NPC</span></a>
-            
-            <div class="futa-sep">FUTANARIJIMA</div>
-            <a class="card" href="reader.html?manga=Futanarijima_ch1"><span>Capítulo 1</span></a>
-            <a class="card" href="reader.html?manga=Futanarijima_ch2"><span>Capítulo 2</span></a>
-            <a class="card" href="reader.html?manga=Futanarijima_ch3"><span>Capítulo 3</span></a>
-            <a class="card" href="reader.html?manga=Futanarijima_ch4"><span>Capítulo 4</span></a>
-            <a class="card" href="reader.html?manga=Futanarijima_ch5"><span>Capítulo 5</span></a>
-            <a class="card" href="reader.html?manga=Futanarijima_ch6"><span>Capítulo 6</span></a>
-        </div>
+            </div>
     </div>
 
     <div id="t-galeria" class="hidden">
         <div class="f-bar">
-            <div class="stats" id="g-stats">Seleccionadas: 0 / Mostrando: 0</div>
-            <div style="display:flex; gap:10px; margin-bottom:10px;">
-                <input type="text" id="gSearch" placeholder="Buscar personaje..." style="flex-grow:1; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="filtG()">
-                <button class="t-btn btn-view" onclick="openM()">👁️ Ver Selección (0)</button>
-                <button class="t-btn" onclick="clearSel()">🧹 Limpiar Selección</button>
+            <div class="search-container">
+                <input type="text" id="gSearch" placeholder="Buscar personaje..." oninput="filtG()">
+                <button class="t-btn btn-view" onclick="openM()" id="floatBtn">👁️ (0)</button>
             </div>
+            <div class="stats" id="g-stats" style="font-size:11px; color:#888; margin-bottom:8px;"></div>
             <div id="cats" class="f-group"></div>
             <div id="pjs" class="f-group"></div>
         </div>
         <div id="g-grid" class="grid"></div>
     </div>
 
-    <div id="modal" onclick="if(event.target===this) closeM()">
+    <div id="modal">
         <button class="m-close" onclick="closeM()">✕</button>
-        <img id="m-img" src="">
-        <div id="m-name" style="margin-top:15px; font-weight:bold;"></div>
+        <img id="m-img" src="" loading="eager">
         <div class="m-nav">
             <button class="m-btn" onclick="changeM(-1)">❮</button>
             <button class="m-btn" onclick="changeM(1)">❯</button>
@@ -90,30 +134,34 @@
     <script>
     let db = [], selectedDB = new Map(), fCat = 'Todos', fPj = 'Todos', curIdx = 0;
 
+    // Observer para carga ultra-fluida
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                observer.unobserve(img);
+            }
+        });
+    }, { rootMargin: '200px' });
+
     function tab(t, b) {
         document.getElementById('t-mangas').classList.toggle('hidden', t !== 'mangas');
         document.getElementById('t-galeria').classList.toggle('hidden', t !== 'galeria');
         document.querySelectorAll('.nav .t-btn').forEach(x => x.classList.remove('active'));
         b.classList.add('active');
-        if (t === 'galeria' && db.length === 0) {
-            requestAnimationFrame(() => loadG());
-        }
+        if (t === 'galeria' && db.length === 0) loadG();
     }
 
     function loadG() {
         const tempDb = [];
         const proc = (o, c) => { 
             if (!o) return; 
-            let realCounter = 1; 
+            let count = 1; 
             for (let [p, l] of Object.entries(o)) {
-                const groupName = (c === "Realista") ? "Real" : p.split(/[ _]/)[0];
+                const group = (c === "Realista") ? "Real" : p.split(/[ _]/)[0];
                 l.forEach(r => {
-                    tempDb.push({
-                        r, 
-                        p: (c === "Realista") ? `Real ${realCounter++}` : groupName, 
-                        c, 
-                        g: groupName 
-                    });
+                    tempDb.push({ r, p: (c === "Realista") ? `Real ${count++}` : group, c, g: group });
                 });
             }
         };
@@ -128,41 +176,30 @@
     function renderF() {
         const gen = (id, l, cur, type) => {
             const d = document.getElementById(id);
-            const fragment = document.createDocumentFragment();
-            
-            // Eliminamos "Todos" de los personajes para usar la deselección por clic
+            const frag = document.createDocumentFragment();
             const items = type === 'p' ? l.filter(x => x !== 'Todos' && x !== 'Futa') : l;
 
             items.forEach(x => {
                 const b = document.createElement('button'); 
                 b.innerText = x;
                 b.className = 't-btn' + (x === cur ? ' active' : ''); 
-                b.style.fontSize = '10px';
-                
                 b.onclick = () => { 
-                    if (type === 'c') {
-                        fCat = x;
-                    } else {
-                        fPj = (fPj === x) ? 'Todos' : x;
-                    }
-                    renderF(); 
-                    filtG(); 
+                    if (type === 'c') fCat = x;
+                    else fPj = (fPj === x) ? 'Todos' : x;
+                    renderF(); filtG(); 
                 };
-                fragment.appendChild(b);
+                frag.appendChild(b);
             });
-            d.innerHTML = '';
-            d.appendChild(fragment);
+            d.innerHTML = ''; d.appendChild(frag);
         };
-
         gen('cats', ['Todos', ...new Set(db.map(i => i.c))], fCat, 'c');
-        const gruposPjs = [...new Set(db.map(i => i.g))].sort();
-        gen('pjs', ['Todos', ...gruposPjs], fPj, 'p');
+        gen('pjs', ['Todos', ...new Set(db.map(i => i.g))].sort(), fPj, 'p');
     }
 
     function filtG() {
         const q = document.getElementById('gSearch').value.toLowerCase();
-        const g = document.getElementById('g-grid');
-        const fragment = document.createDocumentFragment();
+        const container = document.getElementById('g-grid');
+        const frag = document.createDocumentFragment();
         
         const filtered = db.filter(i => 
             (fCat === 'Todos' || i.c === fCat) && 
@@ -172,43 +209,36 @@
 
         filtered.forEach(i => {
             const c = document.createElement('div');
-            const isSel = selectedDB.has(i.r);
-            c.className = 'card' + (isSel ? ' selected' : '');
-            c.onclick = () => toggleSel(i, c);
-            // Optimizaciones: loading lazy y decoding async
-            c.innerHTML = `<img src="${i.r}" loading="lazy" decoding="async"><span>${i.p}</span>`;
-            fragment.appendChild(c);
+            c.className = 'card' + (selectedDB.has(i.r) ? ' selected' : '');
+            c.innerHTML = `<img data-src="${i.r}" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="><span>${i.p}</span>`;
+            
+            c.onclick = () => {
+                if (selectedDB.has(i.r)) {
+                    selectedDB.delete(i.r);
+                    c.classList.remove('selected');
+                } else {
+                    selectedDB.set(i.r, i);
+                    c.classList.add('selected');
+                }
+                updStats(filtered.length);
+            };
+            
+            observer.observe(c.querySelector('img'));
+            frag.appendChild(c);
         });
 
-        g.innerHTML = '';
-        g.appendChild(fragment);
+        container.innerHTML = '';
+        container.appendChild(frag);
         updStats(filtered.length);
     }
 
-    function toggleSel(item, el) {
-        if (selectedDB.has(item.r)) {
-            selectedDB.delete(item.r);
-            el.classList.remove('selected');
-        } else {
-            selectedDB.set(item.r, item);
-            el.classList.add('selected');
-        }
-        updStats(document.querySelectorAll('#g-grid .card').length);
-    }
-
-    function updStats(visibleCount) {
-        document.getElementById('g-stats').innerText = `Seleccionadas: ${selectedDB.size} / Mostrando: ${visibleCount}`;
-        const viewBtn = document.querySelector('.btn-view');
-        if(viewBtn) viewBtn.innerText = `👁️ Ver Selección (${selectedDB.size})`;
-    }
-
-    function clearSel() { 
-        selectedDB.clear(); 
-        filtG(); 
+    function updStats(n) {
+        document.getElementById('g-stats').innerText = `Mostrando ${n} imágenes`;
+        document.getElementById('floatBtn').innerText = `👁️ (${selectedDB.size})`;
     }
 
     function openM() {
-        if (selectedDB.size === 0) return alert("Selecciona algunas imágenes primero");
+        if (selectedDB.size === 0) return;
         curIdx = 0;
         document.getElementById('modal').style.display = 'flex';
         updM();
@@ -218,14 +248,11 @@
     
     function updM() {
         const items = Array.from(selectedDB.values());
-        const i = items[curIdx];
-        document.getElementById('m-img').src = i.r;
-        document.getElementById('m-name').innerText = `(${curIdx + 1}/${selectedDB.size}) ${i.p} [${i.c}]`;
+        document.getElementById('m-img').src = items[curIdx].r;
     }
 
     function changeM(d) {
-        const size = selectedDB.size;
-        curIdx = (curIdx + d + size) % size;
+        curIdx = (curIdx + d + selectedDB.size) % selectedDB.size;
         updM();
     }
 
@@ -235,7 +262,7 @@
         });
     }
 
-    window.onload = () => tab('mangas', document.getElementById('btn-mangas'));
-</script>
+    function clearSel() { selectedDB.clear(); filtG(); }
+    </script>
 </body>
 </html>
