@@ -10,13 +10,22 @@
         .t-btn.active { background:var(--acc); border-color:var(--acc); }
         .f-bar { background:rgba(20,20,20,0.95); margin:10px auto; padding:15px; border-radius:12px; max-width:1400px; border:1px solid #333; }
         .grid { display:grid; gap:15px; padding:20px; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); }
-        .card { background:#161616; border:1px solid #333; border-radius:10px; text-decoration:none; color:white; overflow:hidden; text-align:center; transition:0.2s; position: relative; }
+        .card { background:#161616; border:1px solid #333; border-radius:10px; text-decoration:none; color:white; overflow:hidden; text-align:center; transition:0.2s; position: relative; cursor: pointer; }
         .card:hover { border-color:var(--acc); transform: translateY(-5px); }
         .card img { width:100%; height:280px; object-fit:cover; display:block; background: #222; }
         .card span { display:block; padding:10px; font-size:13px; font-weight: bold; }
         .futa-sep { grid-column:1/-1; color:var(--acc); text-align:center; border-top:1px dashed #333; padding:15px; font-weight:bold; letter-spacing: 2px; }
         .hidden { display:none !important; }
         .f-group { display:flex; flex-wrap:wrap; gap:5px; margin-top:10px; }
+        .stats { font-size: 12px; color: #888; margin-bottom: 10px; }
+
+        /* Estilos Carrusel */
+        #modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:5000; }
+        #modal img { max-width:95%; max-height:85vh; object-fit:contain; border:1px solid #444; }
+        .m-nav { position:absolute; top:50%; width:100%; display:flex; justify-content:space-between; padding:0 30px; box-sizing:border-box; pointer-events:none; }
+        .m-btn { background:rgba(255,255,255,0.1); color:white; border:none; padding:20px; cursor:pointer; pointer-events:auto; font-size:24px; border-radius:50%; }
+        .m-btn:hover { background:var(--acc); }
+        .m-close { position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:30px; cursor:pointer; }
     </style>
 </head>
 <body>
@@ -47,58 +56,112 @@
 
     <div id="t-galeria" class="hidden">
         <div class="f-bar">
-            <input type="text" placeholder="Buscar personaje..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="filtG()">
-            <div id="cats" class="f-group"></div><div id="pjs" class="f-group"></div>
+            <div class="stats" id="g-stats">Mostrando: 0 / Total: 0</div>
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <input type="text" placeholder="Buscar personaje..." style="flex-grow:1; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="filtG()">
+                <button class="t-btn" onclick="clearFilt()">🧹 Limpiar</button>
+            </div>
+            <div id="cats" class="f-group"></div>
+            <div id="pjs" class="f-group"></div>
         </div>
         <div id="g-grid" class="grid"></div>
     </div>
 
+    <div id="modal" onclick="if(event.target===this) closeM()">
+        <button class="m-close" onclick="closeM()">✕</button>
+        <img id="m-img" src="">
+        <div id="m-name" style="margin-top:15px; font-weight:bold;"></div>
+        <div class="m-nav">
+            <button class="m-btn" onclick="changeM(-1)">❮</button>
+            <button class="m-btn" onclick="changeM(1)">❯</button>
+        </div>
+    </div>
+
     <script src="lista_imagenes.js"></script>
     <script>
-        let db=[], fCat='Todos', fPj='Todos';
+        let db=[], filteredDB=[], fCat='Todos', fPj='Todos', curIdx=0;
+
         function tab(t, b) {
             document.getElementById('t-mangas').classList.toggle('hidden', t!=='mangas');
             document.getElementById('t-galeria').classList.toggle('hidden', t!=='galeria');
-            document.querySelectorAll('.t-btn').forEach(x=>x.classList.remove('active'));
+            document.querySelectorAll('.nav .t-btn').forEach(x=>x.classList.remove('active'));
             b.classList.add('active');
             if(t==='galeria' && db.length===0) loadG();
         }
+
         function loadG() {
             const proc = (o, c) => { if(!o) return; for(let [p, l] of Object.entries(o)){
                 let u = p.split(/[ _]/)[0]; l.forEach(r => db.push({r, p:u, c}));
             }};
-            proc(lista_ilustraciones, "Ilustraciones"); proc(lista_real, "Realista"); proc(lista_rule34, "Rule34");
-            renderG();
+            proc(lista_ilustraciones, "Ilustraciones"); 
+            proc(lista_real, "Realista"); 
+            proc(lista_rule34, "Rule34");
+            renderF(); 
+            filtG();
         }
-        function renderG() {
-            const g = document.getElementById('g-grid'); g.innerHTML = '';
-            db.forEach(i => {
-                const c = document.createElement('div'); c.className='card';
-                c.innerHTML = `<img src="${i.r}" loading="lazy"><span>${i.p}</span>`;
-                c.dataset.p=i.p; c.dataset.c=i.c; g.appendChild(c);
-            });
-            renderF(); filtG();
-        }
+
         function renderF() {
             const gen = (id, l, cur, type) => {
                 const d = document.getElementById(id); d.innerHTML = '';
                 l.forEach(x => {
                     const b = document.createElement('button'); b.innerText = x;
                     b.className = 't-btn' + (x===cur?' active':''); b.style.fontSize='10px';
-                    b.onclick = () => { if(type==='c') fCat=x; else fPj=x; renderF(); filtG(); };
+                    b.onclick = () => { 
+                        if(type==='c') fCat=x; else fPj=x; 
+                        renderF(); filtG(); 
+                    };
                     d.appendChild(b);
                 });
             };
             gen('cats', ['Todos', ...new Set(db.map(i=>i.c))], fCat, 'c');
             gen('pjs', ['Todos', ...new Set(db.map(i=>i.p))].sort(), fPj, 'p');
         }
+
         function filtG() {
             const q = document.querySelector('#t-galeria input').value.toLowerCase();
-            document.querySelectorAll('#g-grid .card').forEach(c => {
-                const v = (fCat==='Todos' || c.dataset.c===fCat) && (fPj==='Todos' || c.dataset.p===fPj) && (c.innerText.toLowerCase().includes(q));
-                c.classList.toggle('hidden', !v);
+            const g = document.getElementById('g-grid'); g.innerHTML = '';
+            
+            // Lógica de "Merge" (Persistencia de filtros)
+            filteredDB = db.filter(i => {
+                const cCat = (fCat==='Todos' || i.c===fCat);
+                const cPj = (fPj==='Todos' || i.p===fPj);
+                const cSearch = i.p.toLowerCase().includes(q);
+                return cCat && cPj && cSearch;
             });
+
+            filteredDB.forEach((i, idx) => {
+                const c = document.createElement('div'); c.className='card';
+                c.onclick = () => openM(idx);
+                c.innerHTML = `<img src="${i.r}" loading="lazy"><span>${i.p}</span>`;
+                g.appendChild(c);
+            });
+
+            document.getElementById('g-stats').innerText = `Mostrando: ${filteredDB.length} / Total: ${db.length}`;
         }
+
+        function clearFilt() {
+            fCat='Todos'; fPj='Todos';
+            document.querySelector('#t-galeria input').value = '';
+            renderF(); filtG();
+        }
+
+        // Funciones del Carrusel
+        function openM(idx) {
+            curIdx = idx;
+            document.getElementById('modal').style.display = 'flex';
+            updM();
+        }
+        function closeM() { document.getElementById('modal').style.display = 'none'; }
+        function updM() {
+            const i = filteredDB[curIdx];
+            document.getElementById('m-img').src = i.r;
+            document.getElementById('m-name').innerText = `${i.p} (${i.c})`;
+        }
+        function changeM(d) {
+            curIdx = (curIdx + d + filteredDB.length) % filteredDB.length;
+            updM();
+        }
+
         function searchM(q) {
             document.querySelectorAll('#m-grid .card').forEach(c => {
                 c.classList.toggle('hidden', !c.innerText.toLowerCase().includes(q.toLowerCase()));
