@@ -1,116 +1,76 @@
-<script src="lista_mangas.js"></script> <script>
-// 1. OBTENER EL NOMBRE DEL MANGA DESDE LA URL
-const params = new URLSearchParams(window.location.search);
-const mangaID = params.get("manga") || ""; // Ahora buscamos "?manga="
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Reader Pro</title>
+    <style>
+        body { margin: 0; background: #111; font-family: Arial, sans-serif; color: white; }
+        #reader { display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        .page { width: 100%; max-width: 900px; display: block; margin-bottom: 8px; border-radius: 6px; }
+        .fit-width .page { width: 100vw; max-width: none; }
+        #progressBar { position: fixed; top: 0; left: 0; height: 5px; background: #4caf50; width: 0%; z-index: 1000; }
+        #toolbar { position: fixed; top: 10px; right: 10px; background: rgba(0,0,0,0.8); padding: 10px; border-radius: 10px; display: flex; flex-direction: column; gap: 6px; z-index: 999; }
+        button { background: #333; color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; }
+        #pageInfo { font-size: 12px; text-align: center; margin-bottom: 5px; }
+        .error-msg { margin-top: 50px; text-align: center; padding: 20px; }
+    </style>
+</head>
+<body>
 
-// 2. BUSCAR LAS PÁGINAS EN NUESTRA LISTA
-const paginas = bibliotecaMangas[mangaID];
+<div id="progressBar"></div>
+<div id="reader"></div>
 
-if (!mangaID) {
-    document.body.innerHTML = "<h2 style='color:white;text-align:center'>Error: No se recibió nombre de manga en el link.</h2>";
-} else if (typeof bibliotecaMangas === 'undefined') {
-    document.body.innerHTML = "<h2 style='color:white;text-align:center'>Error: El archivo lista_mangas.js no cargó. Revisa el nombre del archivo en GitHub.</h2>";
-} else if (!paginas) {
-    document.body.innerHTML = `<h2 style='color:white;text-align:center'>Error: El manga '${mangaID}' no existe en la lista. Revisa mayúsculas y guiones.</h2>`;
-} else {
-    cargarTodoElManga();
-}
+<div id="toolbar">
+    <div id="pageInfo">Cargando...</div>
+    <button onclick="window.scrollTo({top:0, behavior:'smooth'})">⬆️ Top</button>
+    <button onclick="window.history.back()">⬅️ Volver</button>
+</div>
 
-// Variables de control
-let zoomLevel = 1;
-let totalPages = paginas ? paginas.length : 0;
+<script src="lista_mangas.js"></script>
 
-// 3. FUNCIÓN PARA CARGAR LOS LINKS DE CATBOX
-function cargarTodoElManga() {
-    const reader = document.getElementById("reader");
+<script>
+window.onload = function() {
+    const params = new URLSearchParams(window.location.search);
+    const mangaID = params.get("manga");
+    const readerDiv = document.getElementById("reader");
+
+    // DIAGNÓSTICO
+    if (!mangaID) {
+        readerDiv.innerHTML = "<div class='error-msg'><h2>❌ Error: No se seleccionó manga</h2><p>El link debe ser ?manga=Nombre</p></div>";
+        return;
+    }
+
+    if (typeof bibliotecaMangas === 'undefined') {
+        readerDiv.innerHTML = "<div class='error-msg'><h2>❌ Error: lista_mangas.js no cargó</h2><p>Verifica que el archivo se llame exactamente así en GitHub.</p></div>";
+        return;
+    }
+
+    const paginas = bibliotecaMangas[mangaID];
+
+    if (!paginas || paginas.length === 0) {
+        readerDiv.innerHTML = `<div class='error-msg'><h2>❌ Error: '${mangaID}' no encontrado</h2><p>Revisa que el nombre coincida exactamente en el JS e Index.</p></div>`;
+        return;
+    }
+
+    // CARGA DE IMÁGENES
+    document.getElementById("pageInfo").innerText = `1 / ${paginas.length}`;
     
-    paginas.forEach((link, index) => {
-        let img = new Image();
-        img.src = link; // Usa el link directo de Catbox
+    paginas.forEach((link) => {
+        const img = document.createElement("img");
+        img.src = link;
         img.className = "page";
-        img.loading = "lazy"; // Optimiza la carga en el celular
-        
-        img.onload = function() {
-            updatePageInfo();
-        };
-
-        img.onerror = function() {
-            console.error("Error cargando página:", link);
-        };
-
-        reader.appendChild(img);
+        img.onerror = () => console.error("Fallo link:", link);
+        readerDiv.appendChild(img);
     });
-}
 
-// --- FUNCIONES DE CONTROL (Manteniendo tus botones originales) ---
-
-function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
-function scrollToBottom() { window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }
-
-function zoomIn() { zoomLevel += 0.1; updateZoom(); }
-function zoomOut() { zoomLevel = Math.max(0.5, zoomLevel - 0.1); updateZoom(); }
-
-function updateZoom() {
-    document.querySelectorAll(".page").forEach(img => {
-        img.style.transform = `scale(${zoomLevel})`;
-    });
-}
-
-let fitMode = false;
-let doubleMode = false;
-
-function toggleFit() {
-    fitMode = !fitMode;
-    document.body.classList.toggle("fit-width", fitMode);
-}
-
-function toggleDouble() {
-    doubleMode = !doubleMode;
-    document.body.classList.toggle("double-page", doubleMode);
-    const toolbar = document.getElementById("toolbar");
-    const showBtn = document.getElementById("showUI");
-    if (doubleMode) {
-        toolbar.style.display = "none";
-        showBtn.style.display = "block";
-    } else {
-        toolbar.style.display = "flex";
-        showBtn.style.display = "none";
-    }
-}
-
-function toggleUI(forceShow = false) {
-    const bar = document.getElementById("toolbar");
-    const showBtn = document.getElementById("showUI");
-    if (forceShow || bar.style.display === "none") {
-        bar.style.display = "flex";
-        showBtn.style.display = "none";
-    } else {
-        bar.style.display = "none";
-        showBtn.style.display = "block";
-    }
-}
-
-function goBack() { window.history.back(); }
-
-function updatePageInfo(current = 1) {
-    document.getElementById("pageInfo").innerText = `Page ${current} / ${totalPages}`;
-}
-
-// Barra de progreso y contador de página actual al hacer scroll
-window.onscroll = function () {
-    let winScroll = document.documentElement.scrollTop;
-    let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    let scrolled = (winScroll / height) * 100;
-    document.getElementById("progressBar").style.width = scrolled + "%";
-
-    let pages = document.querySelectorAll(".page");
-    let current = 1;
-    pages.forEach((img, index) => {
-        let rect = img.getBoundingClientRect();
-        if (rect.top <= window.innerHeight / 2) {
-            current = index + 1;
-        }
-    });
-    updatePageInfo(current);
+    // BARRA DE PROGRESO
+    window.onscroll = function() {
+        let winScroll = document.documentElement.scrollTop;
+        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        let scrolled = (winScroll / height) * 100;
+        document.getElementById("progressBar").style.width = scrolled + "%";
+    };
 };
 </script>
+</body>
+</html>
