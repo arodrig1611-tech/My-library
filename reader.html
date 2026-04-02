@@ -6,8 +6,12 @@ const mangaID = params.get("manga") || ""; // Ahora buscamos "?manga="
 // 2. BUSCAR LAS PÁGINAS EN NUESTRA LISTA
 const paginas = bibliotecaMangas[mangaID];
 
-if (!mangaID || !paginas) {
-    document.body.innerHTML = "<h2 style='color:white;text-align:center'>Manga no encontrado o lista vacía</h2>";
+if (!mangaID) {
+    document.body.innerHTML = "<h2 style='color:white;text-align:center'>Error: No se recibió nombre de manga en el link.</h2>";
+} else if (typeof bibliotecaMangas === 'undefined') {
+    document.body.innerHTML = "<h2 style='color:white;text-align:center'>Error: El archivo lista_mangas.js no cargó. Revisa el nombre del archivo en GitHub.</h2>";
+} else if (!paginas) {
+    document.body.innerHTML = `<h2 style='color:white;text-align:center'>Error: El manga '${mangaID}' no existe en la lista. Revisa mayúsculas y guiones.</h2>`;
 } else {
     cargarTodoElManga();
 }
