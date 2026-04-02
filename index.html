@@ -88,105 +88,139 @@
 
     <script src="lista_imagenes.js"></script>
     <script>
-        let db=[], selectedDB=[], fCat='Todos', fPj='Todos', curIdx=0;
+    let db = [], selectedDB = [], fCat = 'Todos', fPj = 'Todos', curIdx = 0;
 
-        function tab(t, b) {
-            document.getElementById('t-mangas').classList.toggle('hidden', t!=='mangas');
-            document.getElementById('t-galeria').classList.toggle('hidden', t!=='galeria');
-            document.querySelectorAll('.nav .t-btn').forEach(x=>x.classList.remove('active'));
-            b.classList.add('active');
-            if(t==='galeria' && db.length===0) loadG();
-        }
+    function tab(t, b) {
+        document.getElementById('t-mangas').classList.toggle('hidden', t !== 'mangas');
+        document.getElementById('t-galeria').classList.toggle('hidden', t !== 'galeria');
+        document.querySelectorAll('.nav .t-btn').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+        if (t === 'galeria' && db.length === 0) loadG();
+    }
 
-        function loadG() {
-            const proc = (o, c) => { if(!o) return; for(let [p, l] of Object.entries(o)){
-                let u = p.split(/[ _]/)[0]; l.forEach(r => db.push({r, p:u, c}));
-            }};
-            proc(lista_ilustraciones, "Ilustraciones"); 
-            proc(lista_real, "Realista"); 
-            proc(lista_rule34, "Rule34");
-            renderF(); 
-            filtG();
-        }
-
-        function renderF() {
-            const gen = (id, l, cur, type) => {
-                const d = document.getElementById(id); d.innerHTML = '';
-                l.forEach(x => {
-                    const b = document.createElement('button'); b.innerText = x;
-                    b.className = 't-btn' + (x===cur?' active':''); b.style.fontSize='10px';
-                    b.onclick = () => { if(type==='c') fCat=x; else fPj=x; renderF(); filtG(); };
-                    d.appendChild(b);
+    function loadG() {
+        const proc = (o, c) => { 
+            if (!o) return; 
+            let realCounter = 1; // Contador para imágenes realistas
+            for (let [p, l] of Object.entries(o)) {
+                l.forEach(r => {
+                    let name;
+                    if (c === "Realista") {
+                        name = `Real ${realCounter++}`;
+                    } else {
+                        name = p.split(/[ _]/)[0];
+                    }
+                    db.push({ r, p: name, c });
                 });
-            };
-            gen('cats', ['Todos', ...new Set(db.map(i=>i.c))], fCat, 'c');
-            gen('pjs', ['Todos', ...new Set(db.map(i=>i.p))].sort(), fPj, 'p');
-        }
-
-        function filtG() {
-            const q = document.getElementById('gSearch').value.toLowerCase();
-            const g = document.getElementById('g-grid'); g.innerHTML = '';
-            
-            const filtered = db.filter(i => 
-                (fCat==='Todos' || i.c===fCat) && 
-                (fPj==='Todos' || i.p===fPj) && 
-                (i.p.toLowerCase().includes(q))
-            );
-
-            filtered.forEach(i => {
-                const c = document.createElement('div');
-                const isSel = selectedDB.some(s => s.r === i.r);
-                c.className = 'card' + (isSel ? ' selected' : '');
-                c.onclick = () => toggleSel(i, c);
-                c.innerHTML = `<img src="${i.r}" loading="lazy"><span>${i.p}</span>`;
-                g.appendChild(c);
-            });
-
-            document.getElementById('g-stats').innerText = `Seleccionadas: ${selectedDB.length} / Mostrando: ${filtered.length}`;
-        }
-
-        // Lógica de Selección (Mesa de Luz)
-        function toggleSel(item, el) {
-            const idx = selectedDB.findIndex(s => s.r === item.r);
-            if(idx > -1) {
-                selectedDB.splice(idx, 1);
-                el.classList.remove('selected');
-            } else {
-                selectedDB.push(item);
-                el.classList.add('selected');
             }
-            document.getElementById('g-stats').innerText = `Seleccionadas: ${selectedDB.length} / Mostrando: ${document.querySelectorAll('#g-grid .card').length}`;
-        }
+        };
+        proc(lista_ilustraciones, "Ilustraciones"); 
+        proc(lista_real, "Realista"); 
+        proc(lista_rule34, "Rule34");
+        renderF(); 
+        filtG();
+    }
 
-        function clearSel() {
-            selectedDB = [];
-            filtG();
-        }
+    function renderF() {
+        const gen = (id, l, cur, type) => {
+            const d = document.getElementById(id); d.innerHTML = '';
+            
+            // Filtramos "Todos" de la lista de personajes (type === 'p')
+            const items = type === 'p' ? l.filter(x => x !== 'Todos') : l;
 
-        // Funciones del Carrusel (Solo para seleccionadas)
-        function openM() {
-            if(selectedDB.length === 0) return alert("Selecciona algunas imágenes primero");
-            curIdx = 0;
-            document.getElementById('modal').style.display = 'flex';
-            updM();
-        }
-        function closeM() { document.getElementById('modal').style.display = 'none'; }
-        function updM() {
-            const i = selectedDB[curIdx];
-            document.getElementById('m-img').src = i.r;
-            document.getElementById('m-name').innerText = `(${curIdx+1}/${selectedDB.length}) ${i.p} [${i.c}]`;
-        }
-        function changeM(d) {
-            curIdx = (curIdx + d + selectedDB.length) % selectedDB.length;
-            updM();
-        }
-
-        function searchM(q) {
-            document.querySelectorAll('#m-grid .card').forEach(c => {
-                c.classList.toggle('hidden', !c.innerText.toLowerCase().includes(q.toLowerCase()));
+            items.forEach(x => {
+                const b = document.createElement('button'); 
+                b.innerText = x;
+                b.className = 't-btn' + (x === cur ? ' active' : ''); 
+                b.style.fontSize = '10px';
+                
+                b.onclick = () => { 
+                    if (type === 'c') {
+                        fCat = x;
+                    } else {
+                        // Lógica de deselección: si clicamos el mismo, volvemos a 'Todos'
+                        fPj = (fPj === x) ? 'Todos' : x;
+                    }
+                    renderF(); 
+                    filtG(); 
+                };
+                d.appendChild(b);
             });
+        };
+
+        gen('cats', ['Todos', ...new Set(db.map(i => i.c))], fCat, 'c');
+        
+        // Excluimos "Futa" de la lista de personajes si viene de Realista
+        const pjsUnicos = [...new Set(db.map(i => i.p))].filter(p => p !== "Futa").sort();
+        gen('pjs', ['Todos', ...pjsUnicos], fPj, 'p');
+    }
+
+    function filtG() {
+        const q = document.getElementById('gSearch').value.toLowerCase();
+        const g = document.getElementById('g-grid'); g.innerHTML = '';
+        
+        const filtered = db.filter(i => 
+            (fCat === 'Todos' || i.c === fCat) && 
+            (fPj === 'Todos' || i.p === fPj) && 
+            (i.p.toLowerCase().includes(q))
+        );
+
+        filtered.forEach(i => {
+            const c = document.createElement('div');
+            const isSel = selectedDB.some(s => s.r === i.r);
+            c.className = 'card' + (isSel ? ' selected' : '');
+            c.onclick = () => toggleSel(i, c);
+            c.innerHTML = `<img src="${i.r}" loading="lazy"><span>${i.p}</span>`;
+            g.appendChild(c);
+        });
+
+        document.getElementById('g-stats').innerText = `Seleccionadas: ${selectedDB.length} / Mostrando: ${filtered.length}`;
+    }
+
+    function toggleSel(item, el) {
+        const idx = selectedDB.findIndex(s => s.r === item.r);
+        if (idx > -1) {
+            selectedDB.splice(idx, 1);
+            el.classList.remove('selected');
+        } else {
+            selectedDB.push(item);
+            el.classList.add('selected');
         }
-        window.onload = () => tab('mangas', document.getElementById('btn-mangas'));
-    </script>
+        document.getElementById('g-stats').innerText = `Seleccionadas: ${selectedDB.length} / Mostrando: ${document.querySelectorAll('#g-grid .card').length}`;
+    }
+
+    function clearSel() {
+        selectedDB = [];
+        filtG();
+    }
+
+    function openM() {
+        if (selectedDB.length === 0) return alert("Selecciona algunas imágenes primero");
+        curIdx = 0;
+        document.getElementById('modal').style.display = 'flex';
+        updM();
+    }
+
+    function closeM() { document.getElementById('modal').style.display = 'none'; }
+    
+    function updM() {
+        const i = selectedDB[curIdx];
+        document.getElementById('m-img').src = i.r;
+        document.getElementById('m-name').innerText = `(${curIdx + 1}/${selectedDB.length}) ${i.p} [${i.c}]`;
+    }
+
+    function changeM(d) {
+        curIdx = (curIdx + d + selectedDB.length) % selectedDB.length;
+        updM();
+    }
+
+    function searchM(q) {
+        document.querySelectorAll('#m-grid .card').forEach(c => {
+            c.classList.toggle('hidden', !c.innerText.toLowerCase().includes(q.toLowerCase()));
+        });
+    }
+
+    window.onload = () => tab('mangas', document.getElementById('btn-mangas'));
+</script>
 </body>
 </html>
