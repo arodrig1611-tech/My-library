@@ -5,48 +5,36 @@
     <style>
         :root { --bg: #0a0a0a; --acc: #4caf50; --sc: 1; }
         body { margin:0; font-family:sans-serif; background:var(--bg); color:white; overflow-x:hidden; }
-        #sideBar { position:fixed; right:15px; top:50%; transform:translateY(-50%); background:#000; border:1px solid #333; border-radius:12px; padding:15px 10px; display:none; flex-direction:column; gap:8px; z-index:3000; width:110px; }
-        .p-btn { background:#1a1a1a; color:white; border:1px solid #333; padding:8px; border-radius:5px; cursor:pointer; font-size:12px; }
-        .p-btn:hover { border-color:var(--acc); }
-        .nav { display:flex; justify-content:center; gap:10px; padding:20px; }
+        .nav { display:flex; justify-content:center; gap:10px; padding:20px; position: sticky; top: 0; background: var(--bg); z-index: 100; }
         .t-btn { background:#222; color:white; border:1px solid #444; padding:8px 20px; border-radius:20px; cursor:pointer; transition:0.2s; }
         .t-btn.active { background:var(--acc); border-color:var(--acc); }
         .f-bar { background:rgba(20,20,20,0.95); margin:10px auto; padding:15px; border-radius:12px; max-width:1400px; border:1px solid #333; }
-        .f-group { display:flex; flex-wrap:wrap; gap:5px; max-height:80px; overflow-y:auto; margin-top:8px; }
-        input { width:100%; padding:8px; background:#111; color:white; border:1px solid #444; border-radius:5px; box-sizing:border-box; }
-        input:focus { outline:none; border-color:var(--acc); }
-        .grid { display:grid; gap:15px; padding:20px; grid-template-columns:repeat(auto-fill, minmax(calc(220px * var(--sc)), 1fr)); }
-        .card { background:#161616; border:1px solid #333; border-radius:10px; text-decoration:none; color:white; overflow:hidden; text-align:center; transition:0.2s; }
-        .card:hover { transform:scale(1.02); border-color:var(--acc); }
-        .card img { width:100%; height:260px; object-fit:cover; display:block; }
-        .card span { display:block; padding:10px; font-size:13px; }
-        .futa-sep { grid-column:1/-1; color:var(--acc); text-align:center; border-top:1px dashed #333; padding:15px; font-weight:bold; }
+        .grid { display:grid; gap:15px; padding:20px; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); }
+        .card { background:#161616; border:1px solid #333; border-radius:10px; text-decoration:none; color:white; overflow:hidden; text-align:center; transition:0.2s; position: relative; }
+        .card:hover { border-color:var(--acc); transform: translateY(-5px); }
+        .card img { width:100%; height:280px; object-fit:cover; display:block; background: #222; }
+        .card span { display:block; padding:10px; font-size:13px; font-weight: bold; }
+        .futa-sep { grid-column:1/-1; color:var(--acc); text-align:center; border-top:1px dashed #333; padding:15px; font-weight:bold; letter-spacing: 2px; }
         .hidden { display:none !important; }
+        .f-group { display:flex; flex-wrap:wrap; gap:5px; margin-top:10px; }
     </style>
 </head>
 <body>
-    <div id="sideBar">
-        <div id="count" style="font-size:11px; text-align:center; margin-bottom:5px; font-weight:bold; color:#ccc;">Item 1 / 0</div>
-        <button class="p-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">⬆️ Arriba</button>
-        <button class="p-btn" onclick="window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'})">⬇️ Abajo</button>
-        <button class="p-btn" onclick="adj(0.1)">🔍 +</button>
-        <button class="p-btn" onclick="adj(-0.1)">🔍 -</button>
-        <button class="p-btn" onclick="location.reload()">🔄 Recargar</button>
-    </div>
 
     <div class="nav">
-        <button class="t-btn" id="btn-mangas" onclick="tab('mangas',this)">Mis Mangas</button>
-        <button class="t-btn" id="btn-galeria" onclick="tab('galeria',this)">Ilustraciones</button>
+        <button class="t-btn" id="btn-mangas" onclick="tab('mangas',this)">📚 Mis Mangas</button>
+        <button class="t-btn" id="btn-galeria" onclick="tab('galeria',this)">🖼️ Ilustraciones</button>
     </div>
 
     <div id="t-mangas" class="hidden">
-        <div class="f-bar"><input type="text" placeholder="Buscar manga..." oninput="searchM(this.value)"></div>
+        <div class="f-bar"><input type="text" id="mSearch" placeholder="Buscar manga..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="searchM(this.value)"></div>
         <div id="m-grid" class="grid">
             <a class="card" href="reader.html?manga=Francis_X_Raikou"><span>Francis X Raikou</span></a>
             <a class="card" href="reader.html?manga=Yang_Gui_Fei_X_Prota"><span>Yang Gui Fei X Prota</span></a>
             <a class="card" href="reader.html?manga=Ibuki_X_Yui"><span>Ibuki X Yui</span></a>
             <a class="card" href="reader.html?manga=BB_X_Prota"><span>BB X Prota</span></a>
             <a class="card" href="reader.html?manga=Jalter_X_Apocrypha_NPC"><span>Jalter X Apocrypha NPC</span></a>
+            
             <div class="futa-sep">FUTANARIJIMA</div>
             <a class="card" href="reader.html?manga=Futanarijima_ch1"><span>Capítulo 1</span></a>
             <a class="card" href="reader.html?manga=Futanarijima_ch2"><span>Capítulo 2</span></a>
@@ -59,7 +47,7 @@
 
     <div id="t-galeria" class="hidden">
         <div class="f-bar">
-            <input type="text" placeholder="Buscar personaje..." oninput="filtG()">
+            <input type="text" placeholder="Buscar personaje..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="filtG()">
             <div id="cats" class="f-group"></div><div id="pjs" class="f-group"></div>
         </div>
         <div id="g-grid" class="grid"></div>
@@ -67,44 +55,30 @@
 
     <script src="lista_imagenes.js"></script>
     <script>
-        let db=[], fCat='Todos', fPj='Todos', sc=1;
-        
+        let db=[], fCat='Todos', fPj='Todos';
         function tab(t, b) {
-            document.getElementById('sideBar').style.display = 'flex';
             document.getElementById('t-mangas').classList.toggle('hidden', t!=='mangas');
             document.getElementById('t-galeria').classList.toggle('hidden', t!=='galeria');
             document.querySelectorAll('.t-btn').forEach(x=>x.classList.remove('active'));
             b.classList.add('active');
-            
-            if(t==='galeria' && db.length===0) {
-                loadG();
-            } else if (t==='mangas') {
-                // Actualiza el contador para los mangas al cambiar de pestaña
-                let totalMangas = document.querySelectorAll('#m-grid .card:not(.hidden)').length;
-                upd(1, totalMangas);
-            }
+            if(t==='galeria' && db.length===0) loadG();
         }
-
         function loadG() {
             const proc = (o, c) => { if(!o) return; for(let [p, l] of Object.entries(o)){
-                let u = p.split(/[ _]/)[0]; 
-                l.forEach(r => db.push({r, p:u, c}));
+                let u = p.split(/[ _]/)[0]; l.forEach(r => db.push({r, p:u, c}));
             }};
             proc(lista_ilustraciones, "Ilustraciones"); proc(lista_real, "Realista"); proc(lista_rule34, "Rule34");
             renderG();
         }
-
         function renderG() {
             const g = document.getElementById('g-grid'); g.innerHTML = '';
             db.forEach(i => {
                 const c = document.createElement('div'); c.className='card';
                 c.innerHTML = `<img src="${i.r}" loading="lazy"><span>${i.p}</span>`;
-                c.dataset.p=i.p; c.dataset.c=i.c;
-                g.appendChild(c);
+                c.dataset.p=i.p; c.dataset.c=i.c; g.appendChild(c);
             });
             renderF(); filtG();
         }
-
         function renderF() {
             const gen = (id, l, cur, type) => {
                 const d = document.getElementById(id); d.innerHTML = '';
@@ -118,35 +92,19 @@
             gen('cats', ['Todos', ...new Set(db.map(i=>i.c))], fCat, 'c');
             gen('pjs', ['Todos', ...new Set(db.map(i=>i.p))].sort(), fPj, 'p');
         }
-
         function filtG() {
             const q = document.querySelector('#t-galeria input').value.toLowerCase();
-            let n = 0; document.querySelectorAll('#g-grid .card').forEach(c => {
+            document.querySelectorAll('#g-grid .card').forEach(c => {
                 const v = (fCat==='Todos' || c.dataset.c===fCat) && (fPj==='Todos' || c.dataset.p===fPj) && (c.innerText.toLowerCase().includes(q));
-                c.classList.toggle('hidden', !v); if(v) n++;
+                c.classList.toggle('hidden', !v);
             });
-            upd(1, n);
         }
-
         function searchM(q) {
-            let n = 0; document.querySelectorAll('#m-grid .card').forEach(c => {
-                const v = c.innerText.toLowerCase().includes(q.toLowerCase());
-                c.classList.toggle('hidden', !v); if(v) n++;
+            document.querySelectorAll('#m-grid .card').forEach(c => {
+                c.classList.toggle('hidden', !c.innerText.toLowerCase().includes(q.toLowerCase()));
             });
-            upd(1, n);
         }
-
-        function adj(d) { sc += d; document.documentElement.style.setProperty('--sc', sc); }
-        function upd(c, t) { document.getElementById('count').innerText = `Item ${c} / ${t}`; }
-
-        // --- EL ARREGLO ESTÁ AQUÍ ---
-        // Simula un clic en el botón de Mangas en cuanto la página termina de cargar
-        window.onload = () => {
-            const btnMangas = document.getElementById('btn-mangas');
-            if (btnMangas) {
-                tab('mangas', btnMangas);
-            }
-        };
+        window.onload = () => tab('mangas', document.getElementById('btn-mangas'));
     </script>
 </body>
 </html>
