@@ -32,7 +32,7 @@ const lista_ilustraciones = {
   "https://cdn.imgchest.com/files/74b7d9803cf7.png",
 
     ],
-    "Rias": [
+    "Rias_Gremory": [
  "https://cdn.imgchest.com/files/5aeb668ae0c1.png",
   "https://cdn.imgchest.com/files/065baf412a60.png",
   "https://cdn.imgchest.com/files/d1ef6b09e950.png",
@@ -160,160 +160,159 @@ const lista_ilustraciones = {
 // --- SECCIÓN: CATEGORÍA REAL (Tus creaciones) ---
 // --- SECCIÓN: CATEGORÍA REAL (Modificada con numeración) ---
 const lista_real = {
-    "Futa_Real_01": ["https://i.ibb.co/s9wGbPbj/Rial-futa-2.png"],
-    "Futa_Real_02": ["https://i.ibb.co/ksx1kFZg/Rial-futa-4.png"],
-    "Futa_Real_03": ["https://i.ibb.co/N2d3RxHV/Rial-futa-5.png"],
-    "Futa_Real_04": ["https://i.ibb.co/Ng8Hpj6d/Rial-futa-6.png"],
-    "Futa_Real_05": ["https://i.ibb.co/5xwxz0rq/Rial-Futa-8.png"],
-    "Futa_Real_06": ["https://i.ibb.co/d0yv3d11/Rial-Futa-9.png"],
-    "Futa_Real_07": ["https://i.ibb.co/My2hpLwY/Rial-Futa-11.png"],
-    "Futa_Real_08": ["https://i.ibb.co/99kWDjKC/Rial-Futa-11-2.png"],
-    "Futa_Real_09": ["https://i.ibb.co/5XdGGdrX/Rial-Futa-12.png"],
-    "Futa_Real_10": ["https://i.ibb.co/ch7XM9xn/Rial-Futa-13.png"],
-    "Futa_Real_11": ["https://i.ibb.co/PZgLFHhN/Rial-Futa-14.png"],
-    "Futa_Real_12": ["https://i.ibb.co/vvKBqdJ5/Futa-real-15.png"],
-    "Futa_Real_13": ["https://i.ibb.co/v6Z1jPtK/Futa-real-16.png"],
-    "Futa_Real_14": ["https://i.ibb.co/8gxqVNFx/Futa-real-17.png"],
-    "Futa_Real_15": ["https://i.ibb.co/pjHYZ21Z/Futa-real-18.png"],
-    "Futa_Real_16": ["https://i.ibb.co/5XhBzt69/Futa-real-20.png"],
-    "Futa_Real_17": ["https://i.ibb.co/C3TJczPL/Futa-real-22.png"],
-    "Futa_Real_18": ["https://i.ibb.co/fzHMq2hn/Futa-real-23.png"],
-    "Futa_Real_19": ["https://i.ibb.co/GQQZC0Y1/Futa-real-24.png"],
-    "Futa_Real_20": ["https://i.ibb.co/pvFgGjth/Futa-real-25.png"],
-    "Futa_Real_21": ["https://i.ibb.co/Z6LnKfzm/Futa-real-26.png"],
-    "Futa_Real_22": ["https://i.ibb.co/QvQ1zSTs/Futa-real-27.png"],
-    "Futa_Real_23": ["https://i.ibb.co/bgWgL2Lm/Futa-real-28.png"],
-    "Futa_Real_24": ["https://i.ibb.co/YF6MfrR0/Futa-real-29.png"],
-    "Futa_Real_25": ["https://i.ibb.co/YB0V02Fb/Futa-real-31.png"],
-    "Futa_Real_26": ["https://i.ibb.co/Ldxf4v1w/Futa-real-33.png"],
-    "Futa_Real_27": ["https://i.ibb.co/HL9MbZbn/Futa-real-34.png"]
+    "Futa_Real_01": ["https://cdn.imgchest.com/files/acd02c3126e7.png"],
+    "Futa_Real_02": ["https://cdn.imgchest.com/files/ca2efc374546.png"],
+    "Futa_Real_03": ["https://cdn.imgchest.com/files/330bf324b859.png"],
+    "Futa_Real_04": ["https://cdn.imgchest.com/files/7a985fbc9644.png"],
+    "Futa_Real_05": ["https://cdn.imgchest.com/files/eb0f86634360.png"],
+    "Futa_Real_06": ["https://cdn.imgchest.com/files/52ec27d4a5ac.png"],
+    "Futa_Real_07": ["https://cdn.imgchest.com/files/08bc08f6d0ff.png"],
+    "Futa_Real_08": ["https://cdn.imgchest.com/files/ccfddbd57e86.png"],
+    "Futa_Real_09": ["https://cdn.imgchest.com/files/eb1f8e1e0582.png"],
+    "Futa_Real_10": ["https://cdn.imgchest.com/files/141acb8fbd9a.png"],
+    "Futa_Real_11": ["https://cdn.imgchest.com/files/bc7e92100c4f.png"],
+    "Futa_Real_12": ["https://cdn.imgchest.com/files/43329ab6a012.png"],
+    "Futa_Real_13": ["https://cdn.imgchest.com/files/15515d96c715.png"],
+    "Futa_Real_14": ["https://cdn.imgchest.com/files/5cee1a8bb0c2.png"],
+    "Futa_Real_15": ["https://cdn.imgchest.com/files/dd4bd6a73c91.png"],
+    "Futa_Real_16": ["https://cdn.imgchest.com/files/b875cf918010.png"],
+    "Futa_Real_17": ["https://cdn.imgchest.com/files/b61046b4ab29.png"],
+    "Futa_Real_18": ["https://cdn.imgchest.com/files/5f1046435ede.png"],
+    "Futa_Real_19": ["https://cdn.imgchest.com/files/b9d68cdd73c0.png"],
+    "Futa_Real_20": ["https://cdn.imgchest.com/files/6862e94c2cbb.png"],
+    "Futa_Real_21": ["https://cdn.imgchest.com/files/ee1fcd352fa4.png"],
+    "Futa_Real_22": ["https://cdn.imgchest.com/files/bca685205392.png"],
+    "Futa_Real_23": ["https://cdn.imgchest.com/files/00c65c7190b6.png"],
+    "Futa_Real_24": ["https://cdn.imgchest.com/files/4688cc1d2057.png"],
+    "Futa_Real_25": ["https://cdn.imgchest.com/files/6dd3dc664761.png"],
+    "Futa_Real_26": ["https://cdn.imgchest.com/files/98dcced6dd2f.png"],
+    "Futa_Real_27": ["https://cdn.imgchest.com/files/b8e15fbda1e9.png"]
 };
 
 // --- SECCIÓN: RULE34 (Contenido Externo) ---
 const lista_rule34 = {
     "Makima": [
-        "https://i.ibb.co/bMBdpLZ7/Makima-1-Rule.png",
-        "https://i.ibb.co/gbJZLdMX/Makima-2-Rule.jpg"
+        "https://cdn.imgchest.com/files/0c4bcc658e88.jpeg",
+  "https://cdn.imgchest.com/files/1c7589bdba42.png",
+  "https://cdn.imgchest.com/files/3f1f9ef0109f.jpeg",
+  "https://cdn.imgchest.com/files/025960f3ea85.jpeg",
+  "https://cdn.imgchest.com/files/7d8c7c967c04.png"
     ],
     "Yor_Forger": [
-        "https://i.ibb.co/9HCt9K9y/Yor-1-Rule.jpg",
-        "https://i.ibb.co/hRxzLY2K/Yor-2-Rule.jpg",
-        "https://i.ibb.co/xt2KBYRF/Yor-3-Rule.jpg"
+"https://cdn.imgchest.com/files/9d4d3a362a07.jpeg",
+  "https://cdn.imgchest.com/files/971ff9d8b337.jpeg",
+  "https://cdn.imgchest.com/files/43b058d128ac.jpg"
     ],
     "Pharah": [
-        "https://i.ibb.co/j99YJ1Nq/Pharah-1-Rule.jpg",
-        "https://i.ibb.co/fz3GLvWp/Pharah-2-Rule.png",
-        "https://i.ibb.co/kV63n2JF/Pharah-3-Rule.jpg",
-        "https://i.ibb.co/Rkjzjp9g/Pharah-4-Rule.png"
+       "https://cdn.imgchest.com/files/b4ae61179a6f.png",
+  "https://cdn.imgchest.com/files/6912d01eff68.jpg",
+  "https://cdn.imgchest.com/files/d00b4cb66dae.png",
+  "https://cdn.imgchest.com/files/f71eea1d5a93.jpeg"
     ],
     "Rias_Gremory": [
-        "https://i.ibb.co/TDbrLp1L/Rias-1-Rule.jpg",
-        "https://i.ibb.co/bjGr0RLY/Rias-2-Rule.jpg",
-        "https://i.ibb.co/ZpnzPygc/Rias-3-Rule.jpg"
+     "https://cdn.imgchest.com/files/615440af5940.jpeg",
+  "https://cdn.imgchest.com/files/61466fc6b25e.jpeg",
+  "https://cdn.imgchest.com/files/416c25756221.jpg"
     ],
     "Tifa_Lockhart": [
-        "https://i.ibb.co/MDH5BGkJ/Tifa-1-Rule.jpg",
-        "https://i.ibb.co/1Jn9q9dz/Tifa-2-Rule.jpg"
+"https://cdn.imgchest.com/files/037e5152ef9e.jpeg",
+  "https://cdn.imgchest.com/files/1b2de9229142.jpeg"
     ],
     "Satsuki_Kiryuin": [
-        "https://i.ibb.co/50bychB/Satsuki-1-Rule.jpg",
-        "https://i.ibb.co/GQWZFQh3/Satsuki-2-Rule.png",
-        "https://i.ibb.co/KzV6yzSX/Satsuki-3-Rule.png",
-        "https://i.ibb.co/9mNY7tBV/Satsuki-4-Rule.jpg",
-        "https://i.ibb.co/DxcWtZL/Satsuki-5-Rule.jpg",
-        "https://i.ibb.co/0ppGzbtp/Satsuki-6-Rule.jpg"
+  "https://cdn.imgchest.com/files/e26266e149a6.jpeg",
+  "https://cdn.imgchest.com/files/464bcfda9923.jpeg",
+  "https://cdn.imgchest.com/files/0cf66beed9e5.jpeg",
+  "https://cdn.imgchest.com/files/621975cfec30.png",
+  "https://cdn.imgchest.com/files/0d080d2b4896.png",
+"https://cdn.imgchest.com/files/7f3db629f657.jpg"
     ],
     "Boa_Hancock": [
-        "https://i.ibb.co/N24sPHSn/Boa-Hancock-1-Rule.jpg",
-        "https://i.ibb.co/6JWfXdcF/Boa-Hancock-2-Rule.jpg",
-        "https://i.ibb.co/ch8SVXVf/Boa-Hancock-3-Rule.jpg",
-        "https://i.ibb.co/6cYh2sfF/Boa-Hancock-4-Rule.jpg"
+  "https://cdn.imgchest.com/files/82f9c8a2baff.jpeg",
+  "https://cdn.imgchest.com/files/752409207efe.jpg",
+  "https://cdn.imgchest.com/files/567232232ae1.jpg",
+  "https://cdn.imgchest.com/files/a78a6add5c97.jpg"
     ],
     "Yamato": [
-        "https://i.ibb.co/5ggrWPgG/Yamato-2-Rule.png",
-        "https://i.ibb.co/HDLc24KX/Yamato-3-Rule.jpg"
+        "https://cdn.imgchest.com/files/8c9f8212cf5b.jpeg",
+  "https://cdn.imgchest.com/files/d270ffe2918d.png",
+  "https://cdn.imgchest.com/files/60d7efdce3e1.jpeg"
     ],
     "Tsunade": [
-        "https://i.ibb.co/Z6gb6BTT/Tsunade-1-Rule.jpg",
-        "https://i.ibb.co/Z6kBMTkz/Tsunade-2-Rule.jpg",
-        "https://i.ibb.co/4ZSpKSH8/Tsunade-3-Rule.jpg"
+        "https://cdn.imgchest.com/files/5f7b0b67bcae.png",
+  "https://cdn.imgchest.com/files/b1917ae374d3.jpeg",
+  "https://cdn.imgchest.com/files/e4ca09e1898e.jpeg",
+  "https://cdn.imgchest.com/files/ea3b13d51a66.jpg",
+  "https://cdn.imgchest.com/files/169113ce75b3.jpg"
     ],
     "Sylvia": [
-        "https://i.ibb.co/V08hmm26/Sylvia-1-Rule.jpg",
-        "https://i.ibb.co/Xf22C5+q3/Sylvia-2-Rule.jpg",
-        "https://i.ibb.co/HfYrgx90/Sylvia-3-Rule.jpg"
+      "https://cdn.imgchest.com/files/08083706ded0.jpeg",
+  "https://cdn.imgchest.com/files/8dae9612669a.jpg",
+  "https://cdn.imgchest.com/files/51c0f5b8e5e9.jpeg"
     ],
     "Esdeath": [
-        "https://i.ibb.co/svG0GB8W/Esdeath-1-Rule.png",
-        "https://i.ibb.co/MyFh3Qvy/Esdeath-2-Rule.jpg",
-        "https://i.ibb.co/xKt4mzQh/Esdeath-3-Rule.jpg",
-        "https://i.ibb.co/PzMQG856/Esdeath-4-Rule.jpg"
+        "https://cdn.imgchest.com/files/ccbd070b4362.jpg",
+  "https://cdn.imgchest.com/files/8cfa6c7edceb.jpeg",
+  "https://cdn.imgchest.com/files/268e2afb1849.jpeg",
+  "https://cdn.imgchest.com/files/c1659b1465fb.png"
     ],
     "Albedo": [
-        "https://i.ibb.co/Cpgyb4H8/Albedo-1-Rule.png",
-        "https://i.ibb.co/FLzs7Yyp/Albedo-2-Rule.jpg",
-        "https://i.ibb.co/60PP23KR/Albedo-3-Rule.jpg",
-        "https://i.ibb.co/KjpCKC8Y/Albedo-4-Rule.jpg",
-        "https://i.ibb.co/q318RYZV/Albedo-5-Rule.jpg"
+"https://cdn.imgchest.com/files/8e732aaf58a6.jpg",
+  "https://cdn.imgchest.com/files/e6a292598967.jpg",
+  "https://cdn.imgchest.com/files/49ebbd763a32.jpg",
+  "https://cdn.imgchest.com/files/204519695b32.jpg",
+  "https://cdn.imgchest.com/files/d73e879d65a1.png"
     ],
     "TwoB": [
-        "https://i.ibb.co/HT44RnzT/2b-1-Rule.png",
-        "https://i.ibb.co/G4kWyRx5/2b-2-Rule.png",
-        "https://i.ibb.co/JW3hJzVm/2b-3-Rule.jpg"
+ "https://cdn.imgchest.com/files/5b6db94ded23.jpg",
+  "https://cdn.imgchest.com/files/e5cacdaf729e.png",
+  "https://cdn.imgchest.com/files/d40cd4d627c4.png"
     ],
     "Fubuki": [
-        "https://i.ibb.co/spfTwk3G/Fubuki-1-Rule.jpg",
-        "https://i.ibb.co/1GfpgnY0/Fubuki-2-Rule.jpg"
+"https://cdn.imgchest.com/files/132a24c68fff.jpeg",
+  "https://cdn.imgchest.com/files/47fbdafffb15.jpeg"
     ],
     "Android_21": [
-        "https://i.ibb.co/LhvVNTHH/Android-21-1-Rule.jpg",
-        "https://i.ibb.co/j9Wf3w88/Android-21-2-Rule.jpg",
-        "https://i.ibb.co/39GYf61P/Android-21-3-Rule.jpg",
-        "https://i.ibb.co/TqMbhwy7/Android-21-4-Rule.jpg"
+        "https://cdn.imgchest.com/files/5b425e29afef.jpg",
+  "https://cdn.imgchest.com/files/299d3703ffac.jpeg",
+  "https://cdn.imgchest.com/files/f67bfa1ea7f6.jpeg",
+  "https://cdn.imgchest.com/files/0b0c2c5b8e92.jpeg"
     ],
     "Chun_Li": [
-        "https://i.ibb.co/qMRcWcHj/Chun-li-1-Rule.png",
-        "https://i.ibb.co/Mx3SJ1y2/Chun-li-2-Rule.jpg",
-        "https://i.ibb.co/QFbtp9VP/Chun-li-3-Rule.jpg"
+       "https://cdn.imgchest.com/files/dd55ba201a6f.jpeg",
+  "https://cdn.imgchest.com/files/0a0e346a3437.jpeg",
+  "https://cdn.imgchest.com/files/8c2049ac769a.png"
     ],
     "Ranni": [
-        "https://i.ibb.co/cKFJ34n7/Ranni-1-Rule.png",
-        "https://i.ibb.co/BV9W2Bmd/Ranni-2-Rule.jpg",
-        "https://i.ibb.co/TMf0nBYM/Ranni-3-Rule.jpg",
-        "https://i.ibb.co/9k49kqFj/Ranni-4-Rule.jpg",
-        "https://i.ibb.co/cXYzRW4P/Ranni-5-Rule.jpg"
+       "https://cdn.imgchest.com/files/764843fe5286.jpeg",
+  "https://cdn.imgchest.com/files/d403023e9322.jpeg",
+  "https://cdn.imgchest.com/files/24c4f04284f0.jpg",
+  "https://cdn.imgchest.com/files/c262d9c7b93e.jpg",
+  "https://cdn.imgchest.com/files/0c6ada70cf7e.png"
     ],
     "Juri_Han": [
-        "https://i.ibb.co/KcWhX66Y/Juri-Han-1-Rule.jpg",
-        "https://i.ibb.co/HD3v9v1G/Juri-Han-2-Rule.jpg",
-        "https://i.ibb.co/Rp2bc95p/Juri-Han-3-Rule.png"
+        "https://cdn.imgchest.com/files/edd011d51ebc.png",
+  "https://cdn.imgchest.com/files/1d6d57342931.jpg",
+  "https://cdn.imgchest.com/files/d35760e5afca.jpeg"
     ],
     "Poison": [
-        "https://i.ibb.co/60wwdG6M/Poison-1-Rule.jpg",
-        "https://i.ibb.co/6c5Gs3QG/Poison-2-Rule.jpg",
-        "https://i.ibb.co/1tpd90cp/Poison-3-Rule.png",
-        "https://i.ibb.co/Mx0CdsxK/Poison-4-Rule.jpg"
+        "https://cdn.imgchest.com/files/93fe79f29a8c.jpg",
+  "https://cdn.imgchest.com/files/7910cebf5d8d.png",
+  "https://cdn.imgchest.com/files/5d30d87d7271.jpeg",
+  "https://cdn.imgchest.com/files/19cee02351e9.jpeg"
     ],
     "Ghislaine": [
-        "https://i.ibb.co/yFpP08wf/Ghislaine-1-Rule.jpg",
-        "https://i.ibb.co/ZyGQVKS/Ghislaine-2-Rule.png",
-        "https://i.ibb.co/PvJHqfpY/Ghislaine-3-Rule.jpg",
-        "https://i.ibb.co/JwZdTK2R/Ghislaine-4-Rule.jpg"
+"https://cdn.imgchest.com/files/c7faf455b685.jpeg",
+  "https://cdn.imgchest.com/files/7168c0bb9d82.jpeg",
+  "https://cdn.imgchest.com/files/138f966c02d3.png",
+  "https://cdn.imgchest.com/files/0f25e28ccc1a.jpeg"
     ],
-    "Ghislaine": [
-        "https://i.ibb.co/yFpP08wf/Ghislaine-1-Rule.jpg",
-        "https://i.ibb.co/ZyGQVKS/Ghislaine-2-Rule.png",
-        "https://i.ibb.co/PvJHqfpY/Ghislaine-3-Rule.jpg",
-        "https://i.ibb.co/JwZdTK2R/Ghislaine-4-Rule.jpg"
-    ],
-    // --- NUEVAS CATEGORÍAS INDIVIDUALES ---
     "Cynthia_Pokemon": [
-        "https://i.ibb.co/prNX6v4w/Cynthia-1-Rule.png"
+"https://cdn.imgchest.com/files/084f3b12e79f.png"
     ],
     "Kaine_Nier": [
-        "https://i.ibb.co/GvHW2RjT/Kaine-1-Rule.jpg"
+  "https://cdn.imgchest.com/files/dc65b5d2823d.jpg"
     ],
     "Ciri_Witcher": [
-        "https://i.ibb.co/KcB0GdBB/Ciri-1-Rule.png"
+  "https://cdn.imgchest.com/files/b3f75cf4a65b.png"
     ]
 };
