@@ -101,16 +101,19 @@
     function loadG() {
         const proc = (o, c) => { 
             if (!o) return; 
-            let realCounter = 1; // Contador para imágenes realistas
+            let realCounter = 1; 
             for (let [p, l] of Object.entries(o)) {
                 l.forEach(r => {
                     let name;
+                    let filterGroup; // Nueva propiedad para agrupar en los botones
                     if (c === "Realista") {
                         name = `Real ${realCounter++}`;
+                        filterGroup = "Real"; // Todas las realistas se agrupan bajo el botón "Real"
                     } else {
                         name = p.split(/[ _]/)[0];
+                        filterGroup = name;
                     }
-                    db.push({ r, p: name, c });
+                    db.push({ r, p: name, c, g: filterGroup });
                 });
             }
         };
@@ -125,8 +128,8 @@
         const gen = (id, l, cur, type) => {
             const d = document.getElementById(id); d.innerHTML = '';
             
-            // Filtramos "Todos" de la lista de personajes (type === 'p')
-            const items = type === 'p' ? l.filter(x => x !== 'Todos') : l;
+            // Usamos el grupo 'g' para los botones de personajes, no el nombre individual 'p'
+            const items = type === 'p' ? l.filter(x => x !== 'Todos' && x !== 'Futa') : l;
 
             items.forEach(x => {
                 const b = document.createElement('button'); 
@@ -138,7 +141,6 @@
                     if (type === 'c') {
                         fCat = x;
                     } else {
-                        // Lógica de deselección: si clicamos el mismo, volvemos a 'Todos'
                         fPj = (fPj === x) ? 'Todos' : x;
                     }
                     renderF(); 
@@ -150,9 +152,9 @@
 
         gen('cats', ['Todos', ...new Set(db.map(i => i.c))], fCat, 'c');
         
-        // Excluimos "Futa" de la lista de personajes si viene de Realista
-        const pjsUnicos = [...new Set(db.map(i => i.p))].filter(p => p !== "Futa").sort();
-        gen('pjs', ['Todos', ...pjsUnicos], fPj, 'p');
+        // Obtenemos los grupos únicos de los personajes (etiquetas limpias)
+        const gruposPjs = [...new Set(db.map(i => i.g))].sort();
+        gen('pjs', ['Todos', ...gruposPjs], fPj, 'p');
     }
 
     function filtG() {
@@ -161,7 +163,7 @@
         
         const filtered = db.filter(i => 
             (fCat === 'Todos' || i.c === fCat) && 
-            (fPj === 'Todos' || i.p === fPj) && 
+            (fPj === 'Todos' || i.g === fPj) && // Filtramos por el grupo 'g'
             (i.p.toLowerCase().includes(q))
         );
 
@@ -177,6 +179,7 @@
         document.getElementById('g-stats').innerText = `Seleccionadas: ${selectedDB.length} / Mostrando: ${filtered.length}`;
     }
 
+    // --- El resto de funciones (toggleSel, clearSel, openM, etc.) se mantienen igual ---
     function toggleSel(item, el) {
         const idx = selectedDB.findIndex(s => s.r === item.r);
         if (idx > -1) {
@@ -189,10 +192,7 @@
         document.getElementById('g-stats').innerText = `Seleccionadas: ${selectedDB.length} / Mostrando: ${document.querySelectorAll('#g-grid .card').length}`;
     }
 
-    function clearSel() {
-        selectedDB = [];
-        filtG();
-    }
+    function clearSel() { selectedDB = []; filtG(); }
 
     function openM() {
         if (selectedDB.length === 0) return alert("Selecciona algunas imágenes primero");
