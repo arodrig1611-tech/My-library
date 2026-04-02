@@ -136,36 +136,35 @@ const lista_ilustraciones = {
 };
 
 // --- SECCIÓN: CATEGORÍA REAL (Tus creaciones) ---
+// --- SECCIÓN: CATEGORÍA REAL (Modificada con numeración) ---
 const lista_real = {
-    "Futa_Real": [
-        "https://i.ibb.co/s9wGbPbj/Rial-futa-2.png",
-        "https://i.ibb.co/ksx1kFZg/Rial-futa-4.png",
-        "https://i.ibb.co/N2d3RxHV/Rial-futa-5.png",
-        "https://i.ibb.co/Ng8Hpj6d/Rial-futa-6.png",
-        "https://i.ibb.co/5xwxz0rq/Rial-Futa-8.png",
-        "https://i.ibb.co/d0yv3d11/Rial-Futa-9.png",
-        "https://i.ibb.co/My2hpLwY/Rial-Futa-11.png",
-        "https://i.ibb.co/99kWDjKC/Rial-Futa-11-2.png",
-        "https://i.ibb.co/5XdGGdrX/Rial-Futa-12.png",
-        "https://i.ibb.co/ch7XM9xn/Rial-Futa-13.png",
-        "https://i.ibb.co/PZgLFHhN/Rial-Futa-14.png",
-        "https://i.ibb.co/vvKBqdJ5/Futa-real-15.png",
-        "https://i.ibb.co/v6Z1jPtK/Futa-real-16.png",
-        "https://i.ibb.co/8gxqVNFx/Futa-real-17.png",
-        "https://i.ibb.co/pjHYZ21Z/Futa-real-18.png",
-        "https://i.ibb.co/5XhBzt69/Futa-real-20.png",
-        "https://i.ibb.co/C3TJczPL/Futa-real-22.png",
-        "https://i.ibb.co/fzHMq2hn/Futa-real-23.png",
-        "https://i.ibb.co/GQQZC0Y1/Futa-real-24.png",
-        "https://i.ibb.co/pvFgGjth/Futa-real-25.png",
-        "https://i.ibb.co/Z6LnKfzm/Futa-real-26.png",
-        "https://i.ibb.co/QvQ1zSTs/Futa-real-27.png",
-        "https://i.ibb.co/bgWgL2Lm/Futa-real-28.png",
-        "https://i.ibb.co/YF6MfrR0/Futa-real-29.png",
-        "https://i.ibb.co/YB0V02Fb/Futa-real-31.png",
-        "https://i.ibb.co/Ldxf4v1w/Futa-real-33.png",
-        "https://i.ibb.co/HL9MbZbn/Futa-real-34.png"
-    ]
+    "Futa_Real_01": ["https://i.ibb.co/s9wGbPbj/Rial-futa-2.png"],
+    "Futa_Real_02": ["https://i.ibb.co/ksx1kFZg/Rial-futa-4.png"],
+    "Futa_Real_03": ["https://i.ibb.co/N2d3RxHV/Rial-futa-5.png"],
+    "Futa_Real_04": ["https://i.ibb.co/Ng8Hpj6d/Rial-futa-6.png"],
+    "Futa_Real_05": ["https://i.ibb.co/5xwxz0rq/Rial-Futa-8.png"],
+    "Futa_Real_06": ["https://i.ibb.co/d0yv3d11/Rial-Futa-9.png"],
+    "Futa_Real_07": ["https://i.ibb.co/My2hpLwY/Rial-Futa-11.png"],
+    "Futa_Real_08": ["https://i.ibb.co/99kWDjKC/Rial-Futa-11-2.png"],
+    "Futa_Real_09": ["https://i.ibb.co/5XdGGdrX/Rial-Futa-12.png"],
+    "Futa_Real_10": ["https://i.ibb.co/ch7XM9xn/Rial-Futa-13.png"],
+    "Futa_Real_11": ["https://i.ibb.co/PZgLFHhN/Rial-Futa-14.png"],
+    "Futa_Real_12": ["https://i.ibb.co/vvKBqdJ5/Futa-real-15.png"],
+    "Futa_Real_13": ["https://i.ibb.co/v6Z1jPtK/Futa-real-16.png"],
+    "Futa_Real_14": ["https://i.ibb.co/8gxqVNFx/Futa-real-17.png"],
+    "Futa_Real_15": ["https://i.ibb.co/pjHYZ21Z/Futa-real-18.png"],
+    "Futa_Real_16": ["https://i.ibb.co/5XhBzt69/Futa-real-20.png"],
+    "Futa_Real_17": ["https://i.ibb.co/C3TJczPL/Futa-real-22.png"],
+    "Futa_Real_18": ["https://i.ibb.co/fzHMq2hn/Futa-real-23.png"],
+    "Futa_Real_19": ["https://i.ibb.co/GQQZC0Y1/Futa-real-24.png"],
+    "Futa_Real_20": ["https://i.ibb.co/pvFgGjth/Futa-real-25.png"],
+    "Futa_Real_21": ["https://i.ibb.co/Z6LnKfzm/Futa-real-26.png"],
+    "Futa_Real_22": ["https://i.ibb.co/QvQ1zSTs/Futa-real-27.png"],
+    "Futa_Real_23": ["https://i.ibb.co/bgWgL2Lm/Futa-real-28.png"],
+    "Futa_Real_24": ["https://i.ibb.co/YF6MfrR0/Futa-real-29.png"],
+    "Futa_Real_25": ["https://i.ibb.co/YB0V02Fb/Futa-real-31.png"],
+    "Futa_Real_26": ["https://i.ibb.co/Ldxf4v1w/Futa-real-33.png"],
+    "Futa_Real_27": ["https://i.ibb.co/HL9MbZbn/Futa-real-34.png"]
 };
 
 // --- SECCIÓN: RULE34 (Contenido Externo) ---
