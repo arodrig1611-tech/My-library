@@ -16,15 +16,22 @@
 
         /* Contenedores */
         .f-bar { background:#141414; margin:10px auto; padding:15px; border-radius:12px; max-width:1400px; border:1px solid #333; }
-        .f-group { display:flex; flex-wrap: wrap; gap:8px; margin-top:10px; } /* Corregido para que no se corte */
+        .f-group { display:flex; flex-wrap: wrap; gap:8px; margin-top:10px; } 
         
-        .grid { display:grid; gap:15px; padding:20px; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); }
-        @media (max-width: 600px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+        /* Grid dinámico */
+        .grid { display:grid; gap:10px; padding:15px; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); }
+        
+        /* Ajuste para Móvil: 4 columnas */
+        @media (max-width: 600px) { 
+            .grid { grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 5px; } 
+            .card img { height: 100px !important; } /* Imagen más baja para que quepan 4 */
+            .card span { font-size: 8px !important; padding: 4px !important; }
+        }
 
-        .card { background:#161616; border:1px solid #333; border-radius:10px; text-decoration:none; color:white; overflow:hidden; text-align:center; cursor: pointer; position: relative; }
-        .card.selected { border: 3px solid var(--acc); }
+        .card { background:#161616; border:1px solid #333; border-radius:8px; text-decoration:none; color:white; overflow:hidden; text-align:center; cursor: pointer; position: relative; }
+        .card.selected { border: 2px solid var(--acc); background: rgba(76, 175, 80, 0.1); }
         .card img { width:100%; height:250px; object-fit:cover; display:block; background: #222; }
-        .card span { display:block; padding:10px; font-size:12px; font-weight: bold; }
+        .card span { display:block; padding:8px; font-size:11px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         .futa-sep { grid-column:1/-1; color:var(--acc); text-align:center; border-top:1px dashed #333; padding:15px; font-weight:bold; }
         .hidden { display:none !important; }
@@ -66,9 +73,12 @@
 
     <div id="t-galeria" class="hidden">
         <div class="f-bar">
-            <div style="display:flex; gap:10px; margin-bottom:10px;">
-                <input type="text" id="gSearch" placeholder="Buscar personaje..." style="flex-grow:1; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="filtG()">
-                <button class="t-btn" style="background:var(--pink)" onclick="openM()" id="viewBtn">👁️ (0)</button>
+            <div style="display:flex; gap:10px; margin-bottom:10px; flex-wrap: wrap;">
+                <input type="text" id="gSearch" placeholder="Buscar personaje..." style="flex-grow:1; min-width: 150px; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="filtG()">
+                <div style="display:flex; gap:5px;">
+                    <button class="t-btn" style="background:var(--pink); border:none;" onclick="openM()" id="viewBtn">👁️ Ver (0)</button>
+                    <button class="t-btn" style="background:#f44336; border:none;" onclick="clearSel()">🧹 Limpiar</button>
+                </div>
             </div>
             <div id="cats" class="f-group"></div>
             <div id="pjs" class="f-group"></div>
@@ -103,10 +113,7 @@
             if (!o) return; 
             let realCounter = 1; 
             for (let [p, l] of Object.entries(o)) {
-                // Lógica corregida: El grupo para el filtro es el nombre de la carpeta (p), 
-                // EXCEPTO para "Realista" que se agrupa todo en "Real"
                 const filterGroupName = (c === "Realista") ? "Real" : p;
-                
                 l.forEach(r => {
                     tempDb.push({
                         r, 
@@ -129,7 +136,6 @@
         const gen = (id, l, cur, type) => {
             const d = document.getElementById(id);
             const frag = document.createDocumentFragment();
-            // Filtramos Futa de los botones si así lo prefieres, pero mantenemos el resto
             const items = type === 'p' ? l.filter(x => x !== 'Todos' && x !== 'Futa') : l;
 
             items.forEach(x => {
@@ -146,7 +152,6 @@
             });
             d.innerHTML = ''; d.appendChild(frag);
         };
-
         gen('cats', ['Todos', ...new Set(db.map(i => i.c))], fCat, 'c');
         const pjsUnicos = [...new Set(db.map(i => i.g))].sort();
         gen('pjs', ['Todos', ...pjsUnicos], fPj, 'p');
@@ -171,14 +176,19 @@
                 if (selectedDB.has(i.r)) selectedDB.delete(i.r);
                 else selectedDB.set(i.r, i);
                 c.classList.toggle('selected');
-                document.getElementById('viewBtn').innerText = `👁️ (${selectedDB.size})`;
+                document.getElementById('viewBtn').innerText = `👁️ Ver (${selectedDB.size})`;
             };
             frag.appendChild(c);
         });
         g.innerHTML = ''; g.appendChild(frag);
+        document.getElementById('viewBtn').innerText = `👁️ Ver (${selectedDB.size})`;
     }
 
-    // Funciones del modal y búsqueda de mangas se mantienen...
+    function clearSel() {
+        selectedDB.clear();
+        filtG();
+    }
+
     function openM() { 
         if(selectedDB.size === 0) return;
         curIdx = 0; document.getElementById('modal').style.display = 'flex'; updM(); 
