@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Manga Library & Gallery</title>
+    <title>Manga Library & Gallery - Pro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         :root { --bg-dark: #0f0f0f; --accent: #4caf50; --error: #f44336; --glass: rgba(25,25,25,0.9); }
@@ -14,51 +14,45 @@
         .tab-btn { background:#222; color:white; border:1px solid #444; padding:12px 24px; border-radius:30px; cursor:pointer; font-size:16px; font-weight:bold; transition: 0.3s; }
         .tab-btn.active { background:var(--accent); border-color:var(--accent); box-shadow:0 0 15px rgba(76,175,80,0.3); }
         
-        /* Lista de Mangas Principal */
+        /* Listas y Grillas */
         .manga-list { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:20px; padding:20px; }
         .manga-card { text-decoration:none; color:white; background:#1a1a1a; padding:20px; border-radius:15px; text-align:center; border:1px solid #333; transition:0.3s; display:flex; align-items:center; justify-content:center; min-height:80px; font-weight: 500; }
         .manga-card:hover { transform:translateY(-5px); border-color:var(--accent); background:#222; }
 
-        /* Sección Especial para Capítulos */
         .futanari-section { grid-column: 1 / -1; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 20px; border: 1px dashed #444; margin-top: 15px; }
         .futanari-title { margin: 0 0 20px 0; font-size: 20px; color: var(--accent); text-align: center; text-transform: uppercase; letter-spacing: 1px; }
         .chapter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
-        .chapter-grid .manga-card { min-height: 50px; padding: 12px; font-size: 14px; background: #111; }
 
-        /* Galería de Ilustraciones */
+        /* Galería */
         .gallery-container { max-width:1500px; margin:0 auto; padding:0 20px; }
         .filter-bar { background:var(--glass); backdrop-filter:blur(15px); padding:20px; border-radius:15px; margin-bottom:20px; border:1px solid #444; position:sticky; top:10px; z-index:100; }
         #searchBox { width:100%; padding:12px; margin-bottom:20px; border-radius:10px; border:1px solid #444; background:#111; color:white; font-size:16px; outline:none; box-sizing: border-box; }
-        .filter-group { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:15px; max-height:200px; overflow-y:auto; padding:5px; }
-        .filter-label { width:100%; font-size:14px; color:var(--accent); text-transform:uppercase; margin-bottom:8px; font-weight:bold; }
-        .btn-filter { background:#333; color:#eee; border:1px solid #444; padding:8px 16px; border-radius:8px; cursor:pointer; font-size:14px; transition:0.2s; }
+        .filter-group { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:15px; max-height:150px; overflow-y:auto; padding:5px; border-bottom: 1px solid #333; }
+        .filter-label { width:100%; font-size:12px; color:var(--accent); text-transform:uppercase; margin-bottom:8px; font-weight:bold; opacity: 0.8; }
+        .btn-filter { background:#333; color:#eee; border:1px solid #444; padding:6px 12px; border-radius:8px; cursor:pointer; font-size:13px; transition:0.2s; }
         .btn-filter.active { background:var(--accent); color:white; border-color: var(--accent); }
         
-        .gallery-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; padding-bottom:120px; }
-        .img-card { background:#161616; border-radius:12px; overflow:hidden; border:1px solid #333; cursor:pointer; }
-        .img-card img { width:100%; height:350px; object-fit:cover; display:block; transition: 0.3s; }
-        .img-card:hover img { opacity: 0.8; }
-        .img-card .info { padding:12px; font-size:13px; text-align:center; color:#999; background:#1a1a1a; border-top:1px solid #222; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .img-card.selected { border:3px solid var(--accent); box-shadow:0 0 25px rgba(76,175,80,0.6); }
-        
-        /* Lightbox */
-        #lightbox { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.97); display:none; justify-content:center; align-items:center; z-index:3000; }
-        #lightbox img { max-width:94%; max-height:94%; object-fit:contain; }
-        .nav-btn { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.1); color:white; border:none; font-size:40px; padding:20px; cursor:pointer; border-radius:50%; z-index:3100; }
-        #prevBtn { left:30px; } #nextBtn { right:30px; }
-        #closeBtn { position:absolute; top:20px; right:30px; font-size:50px; color:white; cursor:pointer; background:none; border:none; z-index:3100; }
+        .gallery-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:15px; padding-bottom:120px; }
+        .img-card { background:#161616; border-radius:10px; overflow:hidden; border:1px solid #333; cursor:pointer; transition: 0.3s; }
+        .img-card img { width:100%; height:300px; object-fit:cover; display:block; }
+        .img-card .info { padding:10px; font-size:11px; text-align:center; color:#777; background:#1a1a1a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .img-card.selected { border:2px solid var(--accent); transform: scale(0.98); opacity: 0.6; }
 
-        /* UI Inferior */
-        #menuUI { position:fixed; bottom:20px; right:20px; background:var(--glass); backdrop-filter:blur(10px); padding:15px; border-radius:15px; z-index:2000; display:flex; gap:12px; border:1px solid #444; }
-        .ui-btn { background:#333; color:white; border:none; padding:12px 22px; border-radius:10px; cursor:pointer; font-weight:bold; }
+        /* Lightbox */
+        #lightbox { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); display:none; justify-content:center; align-items:center; z-index:3000; }
+        #lightbox img { max-width:90%; max-height:90%; object-fit:contain; border-radius: 5px; }
+        .nav-btn { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.05); color:white; border:none; font-size:30px; padding:15px; cursor:pointer; border-radius:50%; }
+        #prevBtn { left:20px; } #nextBtn { right:20px; }
+        #closeBtn { position:absolute; top:20px; right:20px; font-size:40px; color:white; cursor:pointer; background:none; border:none; }
+
+        #menuUI { position:fixed; bottom:20px; right:20px; background:var(--glass); backdrop-filter:blur(10px); padding:12px; border-radius:12px; z-index:2000; display:flex; gap:10px; border:1px solid #444; }
+        .ui-btn { background:#444; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:bold; font-size: 14px; }
         #viewSelectedBtn { display:none; background:var(--accent); }
-        #clearSelectedBtn { display:none; background:var(--error); }
-        #stats { font-size:14px; color:#888; text-align:right; margin-bottom:10px; }
     </style>
 </head>
 <body>
 
-    <h1>📚 My Library</h1>
+    <h1>📚 My Digital Library</h1>
 
     <div class="tab-nav">
         <button class="tab-btn active" onclick="showTab('mangas', this)">Mis Mangas</button>
@@ -76,12 +70,12 @@
             <div class="futanari-section">
                 <h3 class="futanari-title">Futanarijima</h3>
                 <div class="chapter-grid">
-                    <a class="manga-card" href="reader.html?manga=Futanarijima_ch1">Capítulo 1</a>
-                    <a class="manga-card" href="reader.html?manga=Futanarijima_ch2">Capítulo 2</a>
-                    <a class="manga-card" href="reader.html?manga=Futanarijima_ch3">Capítulo 3</a>
-                    <a class="manga-card" href="reader.html?manga=Futanarijima_ch4">Capítulo 4</a>
-                    <a class="manga-card" href="reader.html?manga=Futanarijima_ch5">Capítulo 5</a>
-                    <a class="manga-card" href="reader.html?manga=Futanarijima_ch6">Capítulo 6</a>
+                    <a class="manga-card" href="reader.html?manga=Futanarijima_ch1">Ch. 1</a>
+                    <a class="manga-card" href="reader.html?manga=Futanarijima_ch2">Ch. 2</a>
+                    <a class="manga-card" href="reader.html?manga=Futanarijima_ch3">Ch. 3</a>
+                    <a class="manga-card" href="reader.html?manga=Futanarijima_ch4">Ch. 4</a>
+                    <a class="manga-card" href="reader.html?manga=Futanarijima_ch5">Ch. 5</a>
+                    <a class="manga-card" href="reader.html?manga=Futanarijima_ch6">Ch. 6</a>
                 </div>
             </div>
         </div>
@@ -91,9 +85,13 @@
         <div class="gallery-container">
             <div id="stats">Mostrando: 0 / Total: 0</div>
             <div class="filter-bar">
-                <input type="text" id="searchBox" placeholder="Buscar por nombre, personaje o carpeta..." oninput="applyFilters()">
-                <div class="filter-label">Carpeta</div><div id="cat-filters" class="filter-group"></div>
-                <div class="filter-label">Personaje</div><div id="pj-filters" class="filter-group"></div>
+                <input type="text" id="searchBox" placeholder="Buscar personaje o archivo..." oninput="applyFilters()">
+                
+                <div class="filter-label">Sección</div>
+                <div id="cat-filters" class="filter-group"></div>
+                
+                <div class="filter-label">Personaje (Merge Activo)</div>
+                <div id="pj-filters" class="filter-group"></div>
             </div>
             <div id="galleryGrid" class="gallery-grid"></div>
         </div>
@@ -107,13 +105,39 @@
     </div>
 
     <div id="menuUI">
-        <button id="clearSelectedBtn" class="ui-btn" onclick="clearAllSelection()">Limpiar</button>
+        <button id="clearSelectedBtn" class="ui-btn" style="display:none;" onclick="clearAllSelection()">Limpiar</button>
         <button id="viewSelectedBtn" class="ui-btn" onclick="openCarousel()">Ver (0)</button>
     </div>
 
     <script src="lista_imagenes.js"></script>
     <script>
+        let galleryData = [];
         let filterCat='Todos', filterPj='Todos', selectedImages=[], currentIndex=0;
+
+        // --- LÓGICA DE MERGE Y PROCESAMIENTO ---
+        function buildGalleryData() {
+            galleryData = [];
+            
+            // Función auxiliar para procesar cada objeto de lista_imagenes.js
+            const procesar = (obj, catName) => {
+                if (typeof obj === 'undefined') return;
+                for (const [pj, links] of Object.entries(obj)) {
+                    links.forEach(url => {
+                        galleryData.push({
+                            ruta: url,
+                            archivo: url.split('/').pop(),
+                            pj: pj,
+                            categoria: catName
+                        });
+                    });
+                }
+            };
+
+            // Ejecutamos el procesado de tus 3 constantes
+            procesar(lista_ilustraciones, "Ilustraciones");
+            procesar(lista_real, "Realista");
+            procesar(lista_rule34, "Rule34");
+        }
 
         function showTab(t, b) {
             document.querySelectorAll('.tab-content').forEach(x=>x.style.display='none');
@@ -124,17 +148,21 @@
         }
 
         function initGallery() {
-            const g=document.getElementById('galleryGrid'); 
-            if(!g || typeof galleryData==='undefined') return;
-            g.innerHTML=''; 
-            galleryData.forEach(img=>{
-                const c=document.createElement('div'); 
-                c.className='img-card'+(selectedImages.includes(img.ruta)?' selected':'');
-                c.setAttribute('data-cat', img.categoria); 
-                c.setAttribute('data-pj', img.pj);
-                c.setAttribute('data-name', img.archivo.toLowerCase());
-                c.innerHTML=`<img src="${img.ruta}" loading="lazy"><div class="info">${img.archivo}</div>`;
-                c.onclick=()=>toggleSelect(img.ruta, c); 
+            buildGalleryData(); // Sincroniza datos antes de renderizar
+            const g = document.getElementById('galleryGrid'); 
+            g.innerHTML = ''; 
+            
+            galleryData.forEach(img => {
+                const c = document.createElement('div'); 
+                c.className = 'img-card' + (selectedImages.includes(img.ruta) ? ' selected' : '');
+                c.innerHTML = `<img src="${img.ruta}" loading="lazy"><div class="info">${img.pj} - ${img.archivo}</div>`;
+                
+                // Guardamos metadatos en el elemento para filtrar rápido
+                c.dataset.cat = img.categoria;
+                c.dataset.pj = img.pj;
+                c.dataset.name = img.archivo.toLowerCase();
+                
+                c.onclick = () => toggleSelect(img.ruta, c); 
                 g.appendChild(c);
             });
             updateFiltersUI(); 
@@ -142,64 +170,92 @@
         }
 
         function updateFiltersUI() {
-            renderBtn('cat-filters', [...new Set(galleryData.map(i=>i.categoria))], filterCat, v=>{filterCat=v; applyFilters(); updateFiltersUI();});
-            renderBtn('pj-filters', [...new Set(galleryData.map(i=>i.pj))].sort(), filterPj, v=>{filterPj=v; applyFilters(); updateFiltersUI();});
+            const categorias = [...new Set(galleryData.map(i=>i.categoria))];
+            const personajes = [...new Set(galleryData.map(i=>i.pj))].sort();
+
+            renderBtn('cat-filters', categorias, filterCat, v => {filterCat=v; applyFilters(); updateFiltersUI();});
+            renderBtn('pj-filters', personajes, filterPj, v => {filterPj=v; applyFilters(); updateFiltersUI();});
         }
 
-        function renderBtn(id, l, curr, cb) {
-            const con=document.getElementById(id); if(!con) return; con.innerHTML='';
-            ['Todos', ...l].forEach(i=>{ 
-                const b=document.createElement('button'); b.innerText=i; 
-                b.className='btn-filter'+(i===curr?' active':'');
-                b.onclick=()=>cb(i); con.appendChild(b); 
+        function renderBtn(id, list, current, callback) {
+            const container = document.getElementById(id);
+            container.innerHTML = '';
+            ['Todos', ...list].forEach(item => { 
+                const b = document.createElement('button');
+                b.innerText = item.replace(/_/g, ' '); 
+                b.className = 'btn-filter' + (item === current ? ' active' : '');
+                b.onclick = () => callback(item);
+                container.appendChild(b); 
             });
         }
 
         function applyFilters() {
             const term = document.getElementById('searchBox').value.toLowerCase();
-            let vis = 0; 
-            document.querySelectorAll('.img-card').forEach(c=>{
-                const mC=filterCat==='Todos'||c.getAttribute('data-cat')===filterCat, 
-                      mP=filterPj==='Todos'||c.getAttribute('data-pj')===filterPj,
-                      mT=term==='' || c.getAttribute('data-name').includes(term) || c.getAttribute('data-cat').toLowerCase().includes(term) || c.getAttribute('data-pj').toLowerCase().includes(term);
-                const isVis = mC && mP && mT;
-                c.style.display=isVis?'block':'none'; 
-                if(isVis) vis++;
+            let visibleCount = 0; 
+            
+            document.querySelectorAll('.img-card').forEach(card => {
+                const matchCat = filterCat === 'Todos' || card.dataset.cat === filterCat;
+                const matchPj = filterPj === 'Todos' || card.dataset.pj === filterPj;
+                const matchSearch = term === '' || 
+                                    card.dataset.name.includes(term) || 
+                                    card.dataset.pj.toLowerCase().includes(term);
+
+                const isVisible = matchCat && matchPj && matchSearch;
+                card.style.display = isVisible ? 'block' : 'none'; 
+                if(isVisible) visibleCount++;
             });
-            document.getElementById('stats').innerText = `Mostrando: ${vis} / Total: ${galleryData.length}`;
+            document.getElementById('stats').innerText = `Mostrando: ${visibleCount} / Total: ${galleryData.length}`;
         }
 
-        function toggleSelect(r, e) {
-            const i=selectedImages.indexOf(r);
-            if(i>-1) { selectedImages.splice(i,1); e.classList.remove('selected'); }
-            else { if(selectedImages.length<4){ selectedImages.push(r); e.classList.add('selected'); } else alert("Máximo 4 seleccionadas"); }
+        function toggleSelect(ruta, element) {
+            const index = selectedImages.indexOf(ruta);
+            if(index > -1) {
+                selectedImages.splice(index, 1);
+                element.classList.remove('selected');
+            } else {
+                if(selectedImages.length < 20) { // Aumenté el límite para que puedas ver más en el carrusel
+                    selectedImages.push(ruta);
+                    element.classList.add('selected');
+                } else {
+                    alert("Límite de 20 imágenes alcanzado");
+                }
+            }
             updateUIButtons();
         }
 
         function clearAllSelection() {
-            selectedImages=[]; 
-            document.querySelectorAll('.img-card').forEach(c=>c.classList.remove('selected')); 
+            selectedImages = []; 
+            document.querySelectorAll('.img-card').forEach(c => c.classList.remove('selected')); 
             updateUIButtons();
         }
 
         function updateUIButtons() {
-            const vBtn=document.getElementById('viewSelectedBtn'), cBtn=document.getElementById('clearSelectedBtn');
-            const hasSel = selectedImages.length > 0;
-            vBtn.innerText=`Ver (${selectedImages.length})`; 
-            vBtn.style.display=hasSel?'inline-block':'none';
-            cBtn.style.display=hasSel?'inline-block':'none';
+            const vBtn = document.getElementById('viewSelectedBtn');
+            const cBtn = document.getElementById('clearSelectedBtn');
+            vBtn.innerText = `Ver (${selectedImages.length})`; 
+            vBtn.style.display = selectedImages.length > 0 ? 'inline-block' : 'none';
+            cBtn.style.display = selectedImages.length > 0 ? 'inline-block' : 'none';
         }
 
         function openCarousel() { currentIndex=0; updateLightboxImage(); document.getElementById('lightbox').style.display='flex'; }
-        function changeImage(s) { 
+        function changeImage(step) { 
             if(selectedImages.length === 0) return;
-            currentIndex = (currentIndex + s + selectedImages.length) % selectedImages.length; 
+            currentIndex = (currentIndex + step + selectedImages.length) % selectedImages.length; 
             updateLightboxImage(); 
         }
         function updateLightboxImage() { document.getElementById('fullImage').src = selectedImages[currentIndex]; }
         function closeLightbox() { document.getElementById('lightbox').style.display='none'; }
         
-        window.onload=()=>{ if(typeof galleryData!=='undefined') initGallery(); };
+        // Teclado para el visor
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('lightbox').style.display === 'flex') {
+                if (e.key === "ArrowLeft") changeImage(-1);
+                if (e.key === "ArrowRight") changeImage(1);
+                if (e.key === "Escape") closeLightbox();
+            }
+        });
+
+        window.onload = () => { buildGalleryData(); };
     </script>
 </body>
 </html>
