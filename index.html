@@ -116,28 +116,33 @@
 
         // --- LÓGICA DE MERGE Y PROCESAMIENTO ---
         function buildGalleryData() {
-            galleryData = [];
+    galleryData = [];
+    
+    const procesar = (obj, catName) => {
+        if (typeof obj === 'undefined') return;
+        for (let [pj, links] of Object.entries(obj)) {
             
-            // Función auxiliar para procesar cada objeto de lista_imagenes.js
-            const procesar = (obj, catName) => {
-                if (typeof obj === 'undefined') return;
-                for (const [pj, links] of Object.entries(obj)) {
-                    links.forEach(url => {
-                        galleryData.push({
-                            ruta: url,
-                            archivo: url.split('/').pop(),
-                            pj: pj,
-                            categoria: catName
-                        });
-                    });
-                }
-            };
+            // --- LÓGICA DE UNIFICACIÓN ---
+            // Esto quita "R34", "_2B" o cualquier sufijo después de un espacio o guion bajo
+            // para que "TwoB R34" y "TwoB 2B" se conviertan ambos en "TwoB"
+            let pjUnificado = pj.split(/[ _]/)[0]; 
 
-            // Ejecutamos el procesado de tus 3 constantes
-            procesar(lista_ilustraciones, "Ilustraciones");
-            procesar(lista_real, "Realista");
-            procesar(lista_rule34, "Rule34");
+            links.forEach(url => {
+                galleryData.push({
+                    ruta: url,
+                    archivo: url.split('/').pop(),
+                    pj: pjUnificado, // Usamos el nombre unificado para el filtro
+                    pjOriginal: pj,  // Guardamos el original por si acaso
+                    categoria: catName
+                });
+            });
         }
+    };
+
+    procesar(lista_ilustraciones, "Ilustraciones");
+    procesar(lista_real, "Realista");
+    procesar(lista_rule34, "Rule34");
+}
 
         function showTab(t, b) {
             document.querySelectorAll('.tab-content').forEach(x=>x.style.display='none');
