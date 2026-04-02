@@ -10,14 +10,22 @@
         .t-btn.active { background:var(--acc); border-color:var(--acc); }
         .f-bar { background:rgba(20,20,20,0.95); margin:10px auto; padding:15px; border-radius:12px; max-width:1400px; border:1px solid #333; }
         .grid { display:grid; gap:15px; padding:20px; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); }
+        
+        /* Estilos de la Card y Selección */
         .card { background:#161616; border:1px solid #333; border-radius:10px; text-decoration:none; color:white; overflow:hidden; text-align:center; transition:0.2s; position: relative; cursor: pointer; }
         .card:hover { border-color:var(--acc); transform: translateY(-5px); }
+        .card.selected { border: 3px solid var(--acc); background: rgba(76, 175, 80, 0.1); }
+        .card.selected::after { content: '✅'; position: absolute; top: 8px; right: 8px; font-size: 18px; background: rgba(0,0,0,0.6); border-radius: 50%; padding: 2px; }
+        
         .card img { width:100%; height:280px; object-fit:cover; display:block; background: #222; }
         .card span { display:block; padding:10px; font-size:13px; font-weight: bold; }
+        
         .futa-sep { grid-column:1/-1; color:var(--acc); text-align:center; border-top:1px dashed #333; padding:15px; font-weight:bold; letter-spacing: 2px; }
         .hidden { display:none !important; }
         .f-group { display:flex; flex-wrap:wrap; gap:5px; margin-top:10px; }
-        .stats { font-size: 12px; color: #888; margin-bottom: 10px; }
+        
+        .stats { font-size: 12px; color: var(--acc); margin-bottom: 10px; font-weight: bold; }
+        .btn-view { background: #d81b60 !important; border-color: #d81b60 !important; }
 
         /* Estilos Carrusel */
         #modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:5000; }
@@ -56,10 +64,11 @@
 
     <div id="t-galeria" class="hidden">
         <div class="f-bar">
-            <div class="stats" id="g-stats">Mostrando: 0 / Total: 0</div>
+            <div class="stats" id="g-stats">Seleccionadas: 0 / Mostrando: 0</div>
             <div style="display:flex; gap:10px; margin-bottom:10px;">
-                <input type="text" placeholder="Buscar personaje..." style="flex-grow:1; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="filtG()">
-                <button class="t-btn" onclick="clearFilt()">🧹 Limpiar</button>
+                <input type="text" id="gSearch" placeholder="Buscar personaje..." style="flex-grow:1; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="filtG()">
+                <button class="t-btn btn-view" onclick="openM()">👁️ Ver Selección</button>
+                <button class="t-btn" onclick="clearSel()">🧹 Limpiar Selección</button>
             </div>
             <div id="cats" class="f-group"></div>
             <div id="pjs" class="f-group"></div>
@@ -79,7 +88,7 @@
 
     <script src="lista_imagenes.js"></script>
     <script>
-        let db=[], filteredDB=[], fCat='Todos', fPj='Todos', curIdx=0;
+        let db=[], selectedDB=[], fCat='Todos', fPj='Todos', curIdx=0;
 
         function tab(t, b) {
             document.getElementById('t-mangas').classList.toggle('hidden', t!=='mangas');
@@ -106,10 +115,7 @@
                 l.forEach(x => {
                     const b = document.createElement('button'); b.innerText = x;
                     b.className = 't-btn' + (x===cur?' active':''); b.style.fontSize='10px';
-                    b.onclick = () => { 
-                        if(type==='c') fCat=x; else fPj=x; 
-                        renderF(); filtG(); 
-                    };
+                    b.onclick = () => { if(type==='c') fCat=x; else fPj=x; renderF(); filtG(); };
                     d.appendChild(b);
                 });
             };
@@ -118,47 +124,60 @@
         }
 
         function filtG() {
-            const q = document.querySelector('#t-galeria input').value.toLowerCase();
+            const q = document.getElementById('gSearch').value.toLowerCase();
             const g = document.getElementById('g-grid'); g.innerHTML = '';
             
-            // Lógica de "Merge" (Persistencia de filtros)
-            filteredDB = db.filter(i => {
-                const cCat = (fCat==='Todos' || i.c===fCat);
-                const cPj = (fPj==='Todos' || i.p===fPj);
-                const cSearch = i.p.toLowerCase().includes(q);
-                return cCat && cPj && cSearch;
-            });
+            const filtered = db.filter(i => 
+                (fCat==='Todos' || i.c===fCat) && 
+                (fPj==='Todos' || i.p===fPj) && 
+                (i.p.toLowerCase().includes(q))
+            );
 
-            filteredDB.forEach((i, idx) => {
-                const c = document.createElement('div'); c.className='card';
-                c.onclick = () => openM(idx);
+            filtered.forEach(i => {
+                const c = document.createElement('div');
+                const isSel = selectedDB.some(s => s.r === i.r);
+                c.className = 'card' + (isSel ? ' selected' : '');
+                c.onclick = () => toggleSel(i, c);
                 c.innerHTML = `<img src="${i.r}" loading="lazy"><span>${i.p}</span>`;
                 g.appendChild(c);
             });
 
-            document.getElementById('g-stats').innerText = `Mostrando: ${filteredDB.length} / Total: ${db.length}`;
+            document.getElementById('g-stats').innerText = `Seleccionadas: ${selectedDB.length} / Mostrando: ${filtered.length}`;
         }
 
-        function clearFilt() {
-            fCat='Todos'; fPj='Todos';
-            document.querySelector('#t-galeria input').value = '';
-            renderF(); filtG();
+        // Lógica de Selección (Mesa de Luz)
+        function toggleSel(item, el) {
+            const idx = selectedDB.findIndex(s => s.r === item.r);
+            if(idx > -1) {
+                selectedDB.splice(idx, 1);
+                el.classList.remove('selected');
+            } else {
+                selectedDB.push(item);
+                el.classList.add('selected');
+            }
+            document.getElementById('g-stats').innerText = `Seleccionadas: ${selectedDB.length} / Mostrando: ${document.querySelectorAll('#g-grid .card').length}`;
         }
 
-        // Funciones del Carrusel
-        function openM(idx) {
-            curIdx = idx;
+        function clearSel() {
+            selectedDB = [];
+            filtG();
+        }
+
+        // Funciones del Carrusel (Solo para seleccionadas)
+        function openM() {
+            if(selectedDB.length === 0) return alert("Selecciona algunas imágenes primero");
+            curIdx = 0;
             document.getElementById('modal').style.display = 'flex';
             updM();
         }
         function closeM() { document.getElementById('modal').style.display = 'none'; }
         function updM() {
-            const i = filteredDB[curIdx];
+            const i = selectedDB[curIdx];
             document.getElementById('m-img').src = i.r;
-            document.getElementById('m-name').innerText = `${i.p} (${i.c})`;
+            document.getElementById('m-name').innerText = `(${curIdx+1}/${selectedDB.length}) ${i.p} [${i.c}]`;
         }
         function changeM(d) {
-            curIdx = (curIdx + d + filteredDB.length) % filteredDB.length;
+            curIdx = (curIdx + d + selectedDB.length) % selectedDB.length;
             updM();
         }
 
