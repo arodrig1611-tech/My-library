@@ -1,76 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Reader Pro</title>
     <style>
-        body { margin: 0; background: #111; font-family: Arial, sans-serif; color: white; }
-        #reader { display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        .page { width: 100%; max-width: 900px; display: block; margin-bottom: 8px; border-radius: 6px; }
-        .fit-width .page { width: 100vw; max-width: none; }
-        #progressBar { position: fixed; top: 0; left: 0; height: 5px; background: #4caf50; width: 0%; z-index: 1000; }
-        #toolbar { position: fixed; top: 10px; right: 10px; background: rgba(0,0,0,0.8); padding: 10px; border-radius: 10px; display: flex; flex-direction: column; gap: 6px; z-index: 999; }
-        button { background: #333; color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; }
-        #pageInfo { font-size: 12px; text-align: center; margin-bottom: 5px; }
-        .error-msg { margin-top: 50px; text-align: center; padding: 20px; }
+        body { margin:0; background:#0a0a0a; font-family:sans-serif; color:white; overflow-x:hidden; }
+        #reader { display:flex; flex-direction:column; align-items:center; padding-top:10px; }
+        .page { width:100%; max-width:900px; margin-bottom:8px; border-radius:4px; transition: width 0.2s; }
+        #progressBar { position:fixed; top:0; left:0; height:4px; background:#4caf50; width:0%; z-index:4000; }
+        
+        /* SIDEBAR (Igual al Index) */
+        #sideBar { position:fixed; right:15px; top:50%; transform:translateY(-50%); background:#000; border:1px solid #333; border-radius:12px; padding:15px 10px; display:flex; flex-direction:column; gap:8px; z-index:3000; width:110px; box-shadow:0 0 20px rgba(0,0,0,0.5); }
+        .p-btn { background:#1a1a1a; color:white; border:1px solid #333; padding:8px; border-radius:5px; cursor:pointer; font-size:12px; text-align:center; }
+        .p-btn:hover { border-color:#4caf50; }
+        #pageInfo { font-size:11px; text-align:center; color:#888; margin-bottom:5px; }
+        .error-msg { text-align:center; padding:50px; }
     </style>
 </head>
 <body>
 
 <div id="progressBar"></div>
-<div id="reader"></div>
 
-<div id="toolbar">
+<div id="sideBar">
     <div id="pageInfo">Cargando...</div>
-    <button onclick="window.scrollTo({top:0, behavior:'smooth'})">⬆️ Top</button>
-    <button onclick="window.history.back()">⬅️ Volver</button>
+    <button class="p-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">⬆️ Arriba</button>
+    <button class="p-btn" onclick="window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'})">⬇️ Abajo</button>
+    <button class="p-btn" onclick="adjReader(1.1)">🔍 +</button>
+    <button class="p-btn" onclick="adjReader(0.9)">🔍 -</button>
+    <button class="p-btn" onclick="window.location.href='index.html'">⬅️ Volver</button>
 </div>
 
-<script src="lista_mangas.js"></script>
+<div id="reader"></div>
 
+<script src="lista_mangas.js"></script>
 <script>
-window.onload = function() {
     const params = new URLSearchParams(window.location.search);
     const mangaID = params.get("manga");
     const readerDiv = document.getElementById("reader");
 
-    // DIAGNÓSTICO
-    if (!mangaID) {
-        readerDiv.innerHTML = "<div class='error-msg'><h2>❌ Error: No se seleccionó manga</h2><p>El link debe ser ?manga=Nombre</p></div>";
-        return;
-    }
+    window.onload = function() {
+        if (!mangaID || typeof bibliotecaMangas === 'undefined') {
+            readerDiv.innerHTML = "<div class='error-msg'><h2>❌ Error de carga</h2><p>Verifica el ID o el archivo JS.</p></div>";
+            return;
+        }
 
-    if (typeof bibliotecaMangas === 'undefined') {
-        readerDiv.innerHTML = "<div class='error-msg'><h2>❌ Error: lista_mangas.js no cargó</h2><p>Verifica que el archivo se llame exactamente así en GitHub.</p></div>";
-        return;
-    }
+        const paginas = bibliotecaMangas[mangaID];
+        if (!paginas) {
+            readerDiv.innerHTML = `<div class='error-msg'><h2>❌ '${mangaID}' no encontrado</h2></div>`;
+            return;
+        }
 
-    const paginas = bibliotecaMangas[mangaID];
+        document.getElementById("pageInfo").innerText = `1 / ${paginas.length}`;
+        
+        paginas.forEach(link => {
+            const img = document.createElement("img");
+            img.src = link;
+            img.className = "page";
+            readerDiv.appendChild(img);
+        });
+    };
 
-    if (!paginas || paginas.length === 0) {
-        readerDiv.innerHTML = `<div class='error-msg'><h2>❌ Error: '${mangaID}' no encontrado</h2><p>Revisa que el nombre coincida exactamente en el JS e Index.</p></div>`;
-        return;
-    }
-
-    // CARGA DE IMÁGENES
-    document.getElementById("pageInfo").innerText = `1 / ${paginas.length}`;
-    
-    paginas.forEach((link) => {
-        const img = document.createElement("img");
-        img.src = link;
-        img.className = "page";
-        img.onerror = () => console.error("Fallo link:", link);
-        readerDiv.appendChild(img);
-    });
-
-    // BARRA DE PROGRESO
+    // Barra de progreso y contador
     window.onscroll = function() {
         let winScroll = document.documentElement.scrollTop;
         let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
         let scrolled = (winScroll / height) * 100;
         document.getElementById("progressBar").style.width = scrolled + "%";
     };
-};
+
+    // Zoom funcional
+    let currentWidth = 900;
+    function adjReader(factor) {
+        currentWidth *= factor;
+        document.querySelectorAll('.page').forEach(img => {
+            img.style.maxWidth = currentWidth + "px";
+        });
+    }
 </script>
+
 </body>
 </html>
