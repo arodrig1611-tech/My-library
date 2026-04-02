@@ -2,148 +2,92 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>My Library Pro - Ultra</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Library Pro - Fixed</title>
     <style>
         :root { --bg: #0a0a0a; --acc: #4caf50; --pink: #d81b60; }
+        * { box-sizing: border-box; }
+        body { margin:0; font-family: sans-serif; background:var(--bg); color:white; overflow-x:hidden; }
+
+        /* Nav */
+        .nav { display:flex; justify-content:center; gap:10px; padding:20px; position: sticky; top: 0; background: var(--bg); z-index: 100; border-bottom: 1px solid #222; }
+        .t-btn { background:#222; color:white; border:1px solid #444; padding:10px 20px; border-radius:20px; cursor:pointer; transition:0.2s; }
+        .t-btn.active { background:var(--acc); border-color:var(--acc); }
+
+        /* Contenedores */
+        .f-bar { background:#141414; margin:10px auto; padding:15px; border-radius:12px; max-width:1400px; border:1px solid #333; }
+        .f-group { display:flex; flex-wrap: wrap; gap:8px; margin-top:10px; } /* Corregido para que no se corte */
         
-        /* Optimización de rendimiento base */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { 
-            margin:0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background:var(--bg); color:white; overflow-x:hidden; 
-            text-rendering: optimizeLegibility;
-        }
+        .grid { display:grid; gap:15px; padding:20px; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); }
+        @media (max-width: 600px) { .grid { grid-template-columns: repeat(2, 1fr); } }
 
-        /* Nav adaptable */
-        .nav { 
-            display:flex; justify-content:center; gap:8px; padding:15px; 
-            position: sticky; top: 0; background: rgba(10,10,10,0.9); 
-            backdrop-filter: blur(10px); z-index: 100; border-bottom: 1px solid #222;
-        }
-        .t-btn { 
-            background:#222; color:white; border:1px solid #444; 
-            padding:10px 15px; border-radius:12px; cursor:pointer; 
-            font-size: 14px; transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .t-btn.active { background:var(--acc); border-color:var(--acc); transform: scale(1.05); }
+        .card { background:#161616; border:1px solid #333; border-radius:10px; text-decoration:none; color:white; overflow:hidden; text-align:center; cursor: pointer; position: relative; }
+        .card.selected { border: 3px solid var(--acc); }
+        .card img { width:100%; height:250px; object-fit:cover; display:block; background: #222; }
+        .card span { display:block; padding:10px; font-size:12px; font-weight: bold; }
 
-        /* Barra de filtros responsive */
-        .f-bar { 
-            background:#141414; margin:10px; padding:12px; border-radius:15px; 
-            max-width:1400px; border:1px solid #333;
-        }
-        .f-group { display:flex; flex-wrap:nowrap; gap:8px; margin-top:10px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
-        .f-group::-webkit-scrollbar { display: none; }
-        
-        /* Grid Inteligente (Mobile First) */
-        .grid { 
-            display:grid; gap:10px; padding:10px;
-            grid-template-columns: repeat(2, 1fr); /* 2 columnas en móvil */
-        }
-        @media (min-width: 768px) { .grid { grid-template-columns: repeat(4, 1fr); } }
-        @media (min-width: 1200px) { .grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); } }
-
-        /* Card Optimizada */
-        .card { 
-            background:#161616; border-radius:12px; overflow:hidden; 
-            border:1px solid #222; position: relative; cursor: pointer;
-            will-change: transform; transform: translateZ(0); /* Forzar GPU */
-        }
-        .card.selected { border: 2px solid var(--acc); background: rgba(76, 175, 80, 0.1); }
-        .card.selected::after { 
-            content: '✅'; position: absolute; top: 5px; right: 5px; 
-            background: var(--acc); border-radius: 50%; width: 24px; height: 24px;
-            display: flex; align-items: center; justify-content: center; font-size: 12px;
-        }
-        
-        .card img { 
-            width:100%; height:auto; aspect-ratio: 3/4; object-fit:cover; 
-            display:block; background: #1a1a1a; transition: opacity 0.3s;
-        }
-        .card span { display:block; padding:8px; font-size:12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        /* Stats y Buscador */
-        .search-container { display:flex; gap:8px; margin-bottom:10px; }
-        input { 
-            flex-grow:1; padding:12px; background:#1a1a1a; color:white; 
-            border:1px solid #333; border-radius:10px; outline: none;
-        }
-        .btn-view { background: var(--pink) !important; border: none; font-weight: bold; }
-
-        /* Modal Fullscreen */
-        #modal { 
-            position:fixed; top:0; left:0; width:100%; height:100%; 
-            background:#000; display:none; flex-direction:column; 
-            align-items:center; justify-content:center; z-index:5000; 
-        }
-        #modal img { max-width:100%; max-height:100vh; object-fit: contain; }
-        .m-nav { 
-            position:absolute; bottom:30px; width:100%; 
-            display:flex; justify-content:center; gap:50px; pointer-events:none; 
-        }
-        .m-btn { 
-            background:rgba(255,255,255,0.1); color:white; border:none; 
-            padding:15px 25px; border-radius:30px; cursor:pointer; pointer-events:auto;
-            backdrop-filter: blur(5px);
-        }
-        .m-close { position:absolute; top:20px; right:20px; color:white; font-size:30px; background:none; border:none; z-index: 5001;}
-
+        .futa-sep { grid-column:1/-1; color:var(--acc); text-align:center; border-top:1px dashed #333; padding:15px; font-weight:bold; }
         .hidden { display:none !important; }
+        
+        /* Modal */
+        #modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:5000; }
+        #modal img { max-width:95%; max-height:85vh; object-fit:contain; }
+        .m-nav { position:absolute; bottom:20px; width:100%; display:flex; justify-content:center; gap:20px; }
+        .m-btn { background:var(--acc); color:white; border:none; padding:10px 25px; border-radius:20px; cursor:pointer; }
     </style>
 </head>
 <body>
 
     <div class="nav">
-        <button class="t-btn active" id="btn-mangas" onclick="tab('mangas',this)">📚 Mangas</button>
-        <button class="t-btn" id="btn-galeria" onclick="tab('galeria',this)">🖼️ Galería</button>
+        <button class="t-btn active" id="btn-mangas" onclick="tab('mangas',this)">📚 Mis Mangas</button>
+        <button class="t-btn" id="btn-galeria" onclick="tab('galeria',this)">🖼️ Ilustraciones</button>
     </div>
 
     <div id="t-mangas">
         <div class="f-bar">
-            <input type="text" placeholder="Buscar manga..." oninput="searchM(this.value)">
+            <input type="text" placeholder="Buscar manga..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="searchM(this.value)">
         </div>
         <div id="m-grid" class="grid">
             <a class="card" href="reader.html?manga=Francis_X_Raikou"><span>Francis X Raikou</span></a>
-            </div>
+            <a class="card" href="reader.html?manga=Yang_Gui_Fei_X_Prota"><span>Yang Gui Fei X Prota</span></a>
+            <a class="card" href="reader.html?manga=Ibuki_X_Yui"><span>Ibuki X Yui</span></a>
+            <a class="card" href="reader.html?manga=BB_X_Prota"><span>BB X Prota</span></a>
+            <a class="card" href="reader.html?manga=Jalter_X_Apocrypha_NPC"><span>Jalter X Apocrypha NPC</span></a>
+            
+            <div class="futa-sep">FUTANARIJIMA</div>
+            <a class="card" href="reader.html?manga=Futanarijima_ch1"><span>Capítulo 1</span></a>
+            <a class="card" href="reader.html?manga=Futanarijima_ch2"><span>Capítulo 2</span></a>
+            <a class="card" href="reader.html?manga=Futanarijima_ch3"><span>Capítulo 3</span></a>
+            <a class="card" href="reader.html?manga=Futanarijima_ch4"><span>Capítulo 4</span></a>
+            <a class="card" href="reader.html?manga=Futanarijima_ch5"><span>Capítulo 5</span></a>
+            <a class="card" href="reader.html?manga=Futanarijima_ch6"><span>Capítulo 6</span></a>
+        </div>
     </div>
 
     <div id="t-galeria" class="hidden">
         <div class="f-bar">
-            <div class="search-container">
-                <input type="text" id="gSearch" placeholder="Buscar personaje..." oninput="filtG()">
-                <button class="t-btn btn-view" onclick="openM()" id="floatBtn">👁️ (0)</button>
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <input type="text" id="gSearch" placeholder="Buscar personaje..." style="flex-grow:1; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="filtG()">
+                <button class="t-btn" style="background:var(--pink)" onclick="openM()" id="viewBtn">👁️ (0)</button>
             </div>
-            <div class="stats" id="g-stats" style="font-size:11px; color:#888; margin-bottom:8px;"></div>
             <div id="cats" class="f-group"></div>
             <div id="pjs" class="f-group"></div>
         </div>
         <div id="g-grid" class="grid"></div>
     </div>
 
-    <div id="modal">
-        <button class="m-close" onclick="closeM()">✕</button>
-        <img id="m-img" src="" loading="eager">
+    <div id="modal" onclick="if(event.target===this) closeM()">
+        <button style="position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:30px;" onclick="closeM()">✕</button>
+        <img id="m-img" src="">
         <div class="m-nav">
-            <button class="m-btn" onclick="changeM(-1)">❮</button>
-            <button class="m-btn" onclick="changeM(1)">❯</button>
+            <button class="m-btn" onclick="changeM(-1)">❮ Anterior</button>
+            <button class="m-btn" onclick="changeM(1)">Siguiente ❯</button>
         </div>
     </div>
 
     <script src="lista_imagenes.js"></script>
     <script>
     let db = [], selectedDB = new Map(), fCat = 'Todos', fPj = 'Todos', curIdx = 0;
-
-    // Observer para carga ultra-fluida
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                img.src = img.dataset.src;
-                observer.unobserve(img);
-            }
-        });
-    }, { rootMargin: '200px' });
 
     function tab(t, b) {
         document.getElementById('t-mangas').classList.toggle('hidden', t !== 'mangas');
@@ -157,11 +101,19 @@
         const tempDb = [];
         const proc = (o, c) => { 
             if (!o) return; 
-            let count = 1; 
+            let realCounter = 1; 
             for (let [p, l] of Object.entries(o)) {
-                const group = (c === "Realista") ? "Real" : p.split(/[ _]/)[0];
+                // Lógica corregida: El grupo para el filtro es el nombre de la carpeta (p), 
+                // EXCEPTO para "Realista" que se agrupa todo en "Real"
+                const filterGroupName = (c === "Realista") ? "Real" : p;
+                
                 l.forEach(r => {
-                    tempDb.push({ r, p: (c === "Realista") ? `Real ${count++}` : group, c, g: group });
+                    tempDb.push({
+                        r, 
+                        p: (c === "Realista") ? `Real ${realCounter++}` : p, 
+                        c, 
+                        g: filterGroupName 
+                    });
                 });
             }
         };
@@ -177,12 +129,14 @@
         const gen = (id, l, cur, type) => {
             const d = document.getElementById(id);
             const frag = document.createDocumentFragment();
+            // Filtramos Futa de los botones si así lo prefieres, pero mantenemos el resto
             const items = type === 'p' ? l.filter(x => x !== 'Todos' && x !== 'Futa') : l;
 
             items.forEach(x => {
                 const b = document.createElement('button'); 
                 b.innerText = x;
                 b.className = 't-btn' + (x === cur ? ' active' : ''); 
+                b.style.fontSize = '11px';
                 b.onclick = () => { 
                     if (type === 'c') fCat = x;
                     else fPj = (fPj === x) ? 'Todos' : x;
@@ -192,13 +146,15 @@
             });
             d.innerHTML = ''; d.appendChild(frag);
         };
+
         gen('cats', ['Todos', ...new Set(db.map(i => i.c))], fCat, 'c');
-        gen('pjs', ['Todos', ...new Set(db.map(i => i.g))].sort(), fPj, 'p');
+        const pjsUnicos = [...new Set(db.map(i => i.g))].sort();
+        gen('pjs', ['Todos', ...pjsUnicos], fPj, 'p');
     }
 
     function filtG() {
         const q = document.getElementById('gSearch').value.toLowerCase();
-        const container = document.getElementById('g-grid');
+        const g = document.getElementById('g-grid');
         const frag = document.createDocumentFragment();
         
         const filtered = db.filter(i => 
@@ -210,59 +166,38 @@
         filtered.forEach(i => {
             const c = document.createElement('div');
             c.className = 'card' + (selectedDB.has(i.r) ? ' selected' : '');
-            c.innerHTML = `<img data-src="${i.r}" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="><span>${i.p}</span>`;
-            
+            c.innerHTML = `<img src="${i.r}" loading="lazy"><span>${i.p}</span>`;
             c.onclick = () => {
-                if (selectedDB.has(i.r)) {
-                    selectedDB.delete(i.r);
-                    c.classList.remove('selected');
-                } else {
-                    selectedDB.set(i.r, i);
-                    c.classList.add('selected');
-                }
-                updStats(filtered.length);
+                if (selectedDB.has(i.r)) selectedDB.delete(i.r);
+                else selectedDB.set(i.r, i);
+                c.classList.toggle('selected');
+                document.getElementById('viewBtn').innerText = `👁️ (${selectedDB.size})`;
             };
-            
-            observer.observe(c.querySelector('img'));
             frag.appendChild(c);
         });
-
-        container.innerHTML = '';
-        container.appendChild(frag);
-        updStats(filtered.length);
+        g.innerHTML = ''; g.appendChild(frag);
     }
 
-    function updStats(n) {
-        document.getElementById('g-stats').innerText = `Mostrando ${n} imágenes`;
-        document.getElementById('floatBtn').innerText = `👁️ (${selectedDB.size})`;
+    // Funciones del modal y búsqueda de mangas se mantienen...
+    function openM() { 
+        if(selectedDB.size === 0) return;
+        curIdx = 0; document.getElementById('modal').style.display = 'flex'; updM(); 
     }
-
-    function openM() {
-        if (selectedDB.size === 0) return;
-        curIdx = 0;
-        document.getElementById('modal').style.display = 'flex';
-        updM();
-    }
-
     function closeM() { document.getElementById('modal').style.display = 'none'; }
-    
     function updM() {
         const items = Array.from(selectedDB.values());
         document.getElementById('m-img').src = items[curIdx].r;
     }
-
     function changeM(d) {
-        curIdx = (curIdx + d + selectedDB.size) % selectedDB.size;
-        updM();
+        const s = selectedDB.size;
+        curIdx = (curIdx + d + s) % s; updM();
     }
-
     function searchM(q) {
         document.querySelectorAll('#m-grid .card').forEach(c => {
+            if(c.classList.contains('futa-sep')) return;
             c.classList.toggle('hidden', !c.innerText.toLowerCase().includes(q.toLowerCase()));
         });
     }
-
-    function clearSel() { selectedDB.clear(); filtG(); }
     </script>
 </body>
 </html>
