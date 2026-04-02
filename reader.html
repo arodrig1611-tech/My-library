@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Reader</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #111;
+            font-family: Arial, sans-serif;
+        }
+
+        /* contenedor */
+        #reader {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* imágenes */
+        .page {
+            width: 100%;
+            max-width: 900px;
+            display: block;
+            margin-bottom: 8px;
+            border-radius: 6px;
+        }
+
+        /* 🔥 FIT HORIZONTAL */
+        .fit-width .page {
+            width: 100vw;
+            max-width: none;
+        }
+
+        /* 🔥 DOBLE PÁGINA */
+        .double-page #reader {
+    	display: grid;
+    	grid-template-columns: auto auto;
+    	justify-content: center;
+    	gap: 10px;
+    	padding: 20px;
+	}
+
+        .double-page .page {
+    	width: auto;
+    	max-width: 700px;
+	}
+
+        #progressBar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 5px;
+            background: #4caf50;
+            width: 0%;
+            z-index: 1000;
+        }
+
+        #toolbar {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.75);
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 999;
+            color: white;
+        }
+
+        button {
+            background: #222;
+            color: white;
+            border: none;
+            padding: 6px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #444;
+        }
+
+        #pageInfo {
+            font-size: 12px;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        #showUI {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: none;
+            z-index: 1000;
+        }
+	#toolbar {
+    transition: opacity 0.3s;
+}
+
+.double-page #toolbar {
+    opacity: 0.1;
+}
+
+.double-page #toolbar:hover {
+    opacity: 1;
+}
+    </style>
+</head>
+
+<body>
+<div id="reader"></div>
+
+<div id="progressBar"></div>
+
+<div id="toolbar">
+    <div id="pageInfo">Page 1 / ?</div>
+    <button onclick="scrollToTop()">⬆️ Arriba</button>
+    <button onclick="scrollToBottom()">⬇️ Abajo</button>
+    <button onclick="zoomIn()">🔍 +</button>
+    <button onclick="zoomOut()">🔍 -</button>
+    <button onclick="toggleFit()">📐 Fit</button>
+    <button onclick="toggleDouble()">📖 Doble</button>
+    <button onclick="toggleUI()">👁️ Ocultar UI</button>
+    <button onclick="goBack()">⬅️ Volver</button>
+</div>
+
+<div id="showUI" onclick="toggleUI(true)">☰</div>
+
+<script>
+// 🔥 OBTENER RUTA DEL CAPÍTULO
+const params = new URLSearchParams(window.location.search);
+const basePath = params.get("path") || "";
+
+// seguridad
+if (!basePath) {
+    document.body.innerHTML = "<h2 style='color:white;text-align:center'>No chapter selected</h2>";
+}
+
+// variables
+let zoomLevel = 1;
+let totalPages = 0;
+let i = 1;
+
+// 🔥 AUTO CARGA DE IMÁGENES
+function loadImage() {
+    let img = new Image();
+    let filename = i.toString().padStart(2, '0') + ".webp";
+
+    img.src = basePath + filename;
+    img.className = "page";
+
+    img.onload = function() {
+        document.getElementById("reader").appendChild(img);
+        totalPages++;
+        updatePageInfo();
+        i++;
+        loadImage();
+    };
+
+    img.onerror = function() {
+        console.log("Total páginas:", totalPages);
+    };
+}
+
+loadImage();
+
+// Scroll
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function scrollToBottom() {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+
+// Zoom
+function zoomIn() {
+    zoomLevel += 0.1;
+    updateZoom();
+}
+
+function zoomOut() {
+    zoomLevel = Math.max(0.5, zoomLevel - 0.1);
+    updateZoom();
+}
+
+function updateZoom() {
+    document.querySelectorAll(".page").forEach(img => {
+        img.style.transform = `scale(${zoomLevel})`;
+    });
+}
+
+// 🔥 MODOS NUEVOS
+let fitMode = false;
+let doubleMode = false;
+
+function toggleFit() {
+    fitMode = !fitMode;
+    document.body.classList.toggle("fit-width", fitMode);
+}
+
+function toggleDouble() {
+    doubleMode = !doubleMode;
+    document.body.classList.toggle("double-page", doubleMode);
+
+    const toolbar = document.getElementById("toolbar");
+    const showBtn = document.getElementById("showUI");
+
+    if (doubleMode) {
+        toolbar.style.display = "none";
+        showBtn.style.display = "block";
+    } else {
+        toolbar.style.display = "flex";
+        showBtn.style.display = "none";
+    }
+}
+
+// UI
+function toggleUI(forceShow = false) {
+    const bar = document.getElementById("toolbar");
+    const showBtn = document.getElementById("showUI");
+
+    if (forceShow) {
+        bar.style.display = "flex";
+        showBtn.style.display = "none";
+        return;
+    }
+
+    if (bar.style.display === "none") {
+        bar.style.display = "flex";
+        showBtn.style.display = "none";
+    } else {
+        bar.style.display = "none";
+        showBtn.style.display = "block";
+    }
+}
+
+// volver
+function goBack() {
+    window.history.back();
+}
+
+// páginas
+function updatePageInfo(current = 1) {
+    document.getElementById("pageInfo").innerText = `Page ${current} / ${totalPages}`;
+}
+
+// scroll + progreso
+window.onscroll = function () {
+    let winScroll = document.documentElement.scrollTop;
+    let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    let scrolled = (winScroll / height) * 100;
+
+    document.getElementById("progressBar").style.width = scrolled + "%";
+
+    let pages = document.querySelectorAll(".page");
+    let current = 1;
+
+    pages.forEach((img, index) => {
+        let rect = img.getBoundingClientRect();
+        if (rect.top <= window.innerHeight / 2) {
+            current = index + 1;
+        }
+    });
+
+    updatePageInfo(current);
+};
+</script>
+
+</body>
+</html>
