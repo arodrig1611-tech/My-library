@@ -1,137 +1,137 @@
 const lista_ilustraciones = {
     "Olga": [
-        "https://i.ibb.co/xSK324JT/Olga-futa-1-Ami.png",
-        "https://i.ibb.co/gsd6m3W/Olga-futa-2-Ami.png"
+        "https://cdn.imgchest.com/files/9024415d2a63.png",
+        "https://cdn.imgchest.com/files/c8d5209f6eee.png"
     ],
     "Ilynav": [
-        "https://i.ibb.co/vCdYLMdv/Ilynav-Futa-1-Ami.png",
-        "https://i.ibb.co/35K2NZJW/Ilynav-Futa-2-Ami.png",
-        "https://i.ibb.co/n8VDjnQY/Ilynav-Futa-3-Ami.png",
-        "https://i.ibb.co/1G5zss0w/Ilynav-Futa-4-Ami.png",
-        "https://i.ibb.co/fGkLbShK/Ilynav-futa-5.png"
+        "https://cdn.imgchest.com/files/ac68a6c8c454.png",
+        "https://cdn.imgchest.com/files/c8da7a3bccb0.png",
+        "https://cdn.imgchest.com/files/fbf1b2b1665d.png",
+        "https://cdn.imgchest.com/files/90343a4db547.png",
+        "https://cdn.imgchest.com/files/bc26822c7fcd.png"
     ],
     "Kyouka": [
-        "https://i.ibb.co/wVYPTh8/Kyouka-futa-1-semi.png",
-        "https://i.ibb.co/8nyRKKXX/Kyouka-futa-2-Classic.png",
-        "https://i.ibb.co/462sYxZ/Kyouka-futa-3-Classic.png",
-        "https://i.ibb.co/DPT7G9FH/Kyouka-futa-4-Ami.png"
+        "https://cdn.imgchest.com/files/cd1073831c4e.png",
+        "https://cdn.imgchest.com/files/314f7ed9865e.png",
+        "https://cdn.imgchest.com/files/989da37af6e6.png",
+        "https://cdn.imgchest.com/files/78264628d980.png"
     ],
     "Nessa": [
-        "https://i.ibb.co/SwYjgtCW/Nessa-futa-1-Semi.png",
-        "https://i.ibb.co/Y7K8p9zN/Nessa-futa-2-Classic.png"
+        "https://cdn.imgchest.com/files/85e95dafa567.png",
+        "https://cdn.imgchest.com/files/52e8e848d9c4.png"
     ],
     "Senga": [
-        "https://i.ibb.co/7JWmkdjV/Senga-futa-1-ami.png",
-        "https://i.ibb.co/cSN2JP7W/Senga-futa-2-Classic.png",
-        "https://i.ibb.co/xSx6tD0y/Senga-futa-3-Classic.png",
-        "https://i.ibb.co/wFxV8SLf/Senga-futa-4-Glossy.png"
+        "https://cdn.imgchest.com/files/d1508bdd56ad.png",
+        "https://cdn.imgchest.com/files/74b7d9803cf7.png",
+        "https://cdn.imgchest.com/files/5aeb668ae0c1.png",
+        "https://cdn.imgchest.com/files/065baf412a60.png"
     ],
     "Rias": [
-        "https://i.ibb.co/gLd2Y70p/Rias-futa-1-Classic.png",
-        "https://i.ibb.co/Ng6cG8pY/Rias-futa-2-Classic.png",
-        "https://i.ibb.co/mFbMN823/Rias-futa-3-Classic.png"
+        "https://cdn.imgchest.com/files/d1ef6b09e950.png",
+        "https://cdn.imgchest.com/files/3fb8cc98fa24.png",
+        "https://cdn.imgchest.com/files/7f1f531a1996.png"
     ],
     "Mai": [
-        "https://i.ibb.co/ccbL2bhZ/Mai-Futa-1.png",
-        "https://i.ibb.co/vCdfJh3P/Mai-Futa-1-Classic.png",
-        "https://i.ibb.co/ZRxBT9hq/Mai-Futa-1-1-Classic.png",
-        "https://i.ibb.co/yckzv0JX/Mai-Futa-sex-1-Semi.png"
-    ],
-    "St_Louis": [
-        "https://i.ibb.co/Jh3KZKy/St-louis-futa1.png",
-        "https://i.ibb.co/6RPcpSq3/St-louis-futa2.png",
-        "https://i.ibb.co/35FjL3kC/St-louis-futa3.png"
-    ],
-    "Sonia": [
-        "https://i.ibb.co/FkcYmKrf/Sonia-Inmoraliy-futa-1.png",
-        "https://i.ibb.co/JRMmyjZG/Sonia-Inmoraliy-futa-2.png",
-        "https://i.ibb.co/j9YJ78v9/Sonia-futa-3.png"
-    ],
-    "Xenovia": [
-        "https://i.ibb.co/DfP1D8vW/Xenovia-futa-1.png",
-        "https://i.ibb.co/cK3zL7cn/Xenovia-futa-2.png",
-        "https://i.ibb.co/xqDhVfBH/Xenovia-futa-3.png"
-    ],
-    "Grace": [
-        "https://i.ibb.co/35HhByBD/Grace-futa-1.png",
-        "https://i.ibb.co/HLyDrPR8/Grace-futa-2.png",
-        "https://i.ibb.co/1G48K3nF/Grace-futa-3.png"
-    ],
-    "Nina": [
-        "https://i.ibb.co/rRpzd56B/Nina-futa-1.png",
-        "https://i.ibb.co/R4QS86ty/Nina-futa-2.png"
-    ],
-    "Barghest": [
-        "https://i.ibb.co/hRbWKJjj/Barghest-def-v1.png",
-        "https://i.ibb.co/ZZLdDb4/Barghest-def-v2.png"
-    ],
-    "Mavuika": [
-        "https://i.ibb.co/TMsRTKNZ/Mavuika-def-v1.png",
-        "https://i.ibb.co/fdnVLtqC/Mavuika-def-v2.png",
-        "https://i.ibb.co/j9hMr1bB/Mavuika-ami-v1.png",
-        "https://i.ibb.co/Z6Q3jkTT/Mavuika-proto-v1.png",
-        "https://i.ibb.co/NG4FLpG/Mavuika-proto-v2.png",
-        "https://i.ibb.co/dwmrXcTC/Mavuika-protov2-1.png"
-    ],
-    "Lethe": [
-        "https://i.ibb.co/wNfT3B5P/Lethe-def-v1.png",
-        "https://i.ibb.co/d0J3Rqpz/Lethe-def-v2.png",
-        "https://i.ibb.co/HLNbLGRb/Lethe-def-v3.png"
-    ],
-    "Hwa_Young": [
-        "https://i.ibb.co/PzWg6SNk/Hwa-Young-def-v1.png",
-        "https://i.ibb.co/1GM1xRCb/Hwa-Young-def-v2.png"
-    ],
-    "Delva": [
-        "https://i.ibb.co/prQk8LJj/Delva-ami-v1.png",
-        "https://i.ibb.co/7trqW7s3/Delva-def-v2.png",
-        "https://i.ibb.co/LDtDPcgN/Delva-def-v3.png",
-        "https://i.ibb.co/Y7W8xZTB/Delva-def-v4.png"
-    ],
-    "Lillia": [
-        "https://i.ibb.co/bRqkHJX9/Lillia-def-v1.png",
-        "https://i.ibb.co/zhmXhbq5/Lillia-def-v2-def.png"
-    ],
-    "Constance": [
-        "https://i.ibb.co/9kcy1xgG/Constance-ami-v1.png",
-        "https://i.ibb.co/jx6rDVm/Constance-ami-v1-muscle.png",
-        "https://i.ibb.co/JwbJdhqy/Constance-ami-v2.png"
-    ],
-    "Vermeil": [
-        "https://i.ibb.co/NkZB17m/vermeil-v1.png",
-        "https://i.ibb.co/RGSDB6QB/Vermeil-ami-v2.png",
-        "https://i.ibb.co/p6h4ynrM/Vermeil-x-2b.png"
-    ],
-    "TwoB": [
-        "https://i.ibb.co/C31PGhqh/2b-ami.png",
-        "https://i.ibb.co/CK6jkZ61/2b-ami-v2.png",
-        "https://i.ibb.co/F4SnSTL9/2b-ami-v3.png",
-        "https://i.ibb.co/sv0t5YBQ/2b-ami-v4.png",
-        "https://i.ibb.co/QFNBcxvs/2-B-proto-v1.jpg",
-        "https://i.ibb.co/JFsSmHM5/2-B-proto-v2.jpg"
+        "https://cdn.imgchest.com/files/d8091d44ce55.png",
+        "https://cdn.imgchest.com/files/0e63ca54ee26.png",
+        "https://cdn.imgchest.com/files/8bc418acfda9.png",
+        "https://cdn.imgchest.com/files/57c103e798aa.png"
     ],
     "Random_Sex_Futa": [
-        "https://i.ibb.co/MxGP6cz4/Futa-Random-sex-1.png",
-        "https://i.ibb.co/wZbdkKjp/Futa-Random-sex-2.png",
-        "https://i.ibb.co/HJcjr3j/Futa-Random-sex-4.png",
-        "https://i.ibb.co/Xxw336Hr/Futa-Random-sex-5.png",
-        "https://i.ibb.co/nNXJVZR8/Futa-Random-sex-7.png",
-        "https://i.ibb.co/XrfbkKjF/Futa-Random-sex-8.png",
-        "https://i.ibb.co/3yMm6vSM/Futa-Random-sex-9.png"
+        "https://cdn.imgchest.com/files/f17fbce3ab8b.png",
+        "https://cdn.imgchest.com/files/a675484c2385.png",
+        "https://cdn.imgchest.com/files/1ea754adb5c1.png",
+        "https://cdn.imgchest.com/files/e16e4958d178.png",
+        "https://cdn.imgchest.com/files/245841fcb7c9.png",
+        "https://cdn.imgchest.com/files/f2885fa17b97.png",
+        "https://cdn.imgchest.com/files/c2bc9464068c.png"
+    ],
+    "St_Louis": [
+        "https://cdn.imgchest.com/files/7aa9d5afff48.png",
+        "https://cdn.imgchest.com/files/e68fda6c43ed.png",
+        "https://cdn.imgchest.com/files/671f777c691f.png"
+    ],
+    "Sonia": [
+        "https://cdn.imgchest.com/files/d3bf61db33f8.png",
+        "https://cdn.imgchest.com/files/4910d91213ff.png",
+        "https://cdn.imgchest.com/files/a10f76986f9b.png"
+    ],
+    "Xenovia": [
+        "https://cdn.imgchest.com/files/accebdfdba22.png",
+        "https://cdn.imgchest.com/files/b80ab3f9036f.png",
+        "https://cdn.imgchest.com/files/9cc5b6c95c06.png"
+    ],
+    "Grace": [
+        "https://cdn.imgchest.com/files/7392f3bb22f2.png",
+        "https://cdn.imgchest.com/files/45bc7ca118f7.png",
+        "https://cdn.imgchest.com/files/21f972b8eb5e.png"
+    ],
+    "Nina": [
+        "https://cdn.imgchest.com/files/7ea234bc66f3.png",
+        "https://cdn.imgchest.com/files/aea6cbb463ce.png"
+    ],
+    "Vermeil": [
+        "https://cdn.imgchest.com/files/7c0b69d86b46.png",
+        "https://cdn.imgchest.com/files/6acb3d80c57b.png",
+        "https://cdn.imgchest.com/files/7546b47ffa1d.png"
     ],
     "Psylocke": [
-        "https://i.ibb.co/gZk5jymy/Psylocke-1.png"
+        "https://cdn.imgchest.com/files/d785b58e76e5.png"
+    ],
+    "Barghest": [
+        "https://cdn.imgchest.com/files/04d890912b96.png",
+        "https://cdn.imgchest.com/files/53d77bf18190.png"
+    ],
+    "Mavuika": [
+        "https://cdn.imgchest.com/files/0218ed20b8af.png",
+        "https://cdn.imgchest.com/files/9d8923d7d946.png",
+        "https://cdn.imgchest.com/files/25b4e6f89864.png",
+        "https://cdn.imgchest.com/files/3e46f4bff6c0.png",
+        "https://cdn.imgchest.com/files/3cb2b7974809.png",
+        "https://cdn.imgchest.com/files/7dcd93966f53.png"
+    ],
+    "Lethe": [
+        "https://cdn.imgchest.com/files/69dd6d6b5ae8.png",
+        "https://cdn.imgchest.com/files/fc3fa3cc6524.png",
+        "https://cdn.imgchest.com/files/0cf6b192d25c.png"
     ],
     "Mercedes_ML": [
-        "https://i.ibb.co/5XXS76ZX/Mercedes-Ml-def-v1.png"
+        "https://cdn.imgchest.com/files/11713fe2c4af.png"
+    ],
+    "Hwa_Young": [
+        "https://cdn.imgchest.com/files/b82c4de6e449.png",
+        "https://cdn.imgchest.com/files/97ff331cf11e.png"
+    ],
+    "Delva": [
+        "https://cdn.imgchest.com/files/a84b625aaffa.png",
+        "https://cdn.imgchest.com/files/a8362b533d24.png",
+        "https://cdn.imgchest.com/files/e884ceceecf1.png",
+        "https://cdn.imgchest.com/files/25a6bab7e62e.png"
+    ],
+    "Lillia": [
+        "https://cdn.imgchest.com/files/298393e23d9d.png",
+        "https://cdn.imgchest.com/files/00ff364cdb27.png"
+    ],
+    "Constance": [
+        "https://cdn.imgchest.com/files/de8a3af216f2.png",
+        "https://cdn.imgchest.com/files/3e46f4bff6c0.png", // Nota: Mantuve el orden del mapping
+        "https://cdn.imgchest.com/files/07c824ec6219.png"
     ],
     "Arunka": [
-        "https://i.ibb.co/1GGBjZ0j/Arunka-ami-v1.png"
+        "https://cdn.imgchest.com/files/25b4e6f89864.png"
+    ],
+    "TwoB": [
+        "https://cdn.imgchest.com/files/5e8928ef5684.png",
+        "https://cdn.imgchest.com/files/8c032c47a008.png",
+        "https://cdn.imgchest.com/files/01d3bc31d26f.png",
+        "https://cdn.imgchest.com/files/f337981fed79.png",
+        "https://cdn.imgchest.com/files/6938d4f079fa.png",
+        "https://cdn.imgchest.com/files/bf578d2569a2.png"
     ],
     "Otras_Ilustraciones": [
-        "https://i.ibb.co/PvxcLrqk/Demonio-futa-1.png",
-        "https://i.ibb.co/wX4M2wP/Morena.png",
-        "https://i.ibb.co/mFz8HnGX/Shiroko-v1.png"
+        "https://cdn.imgchest.com/files/516b1e866edb.png", // Demonio
+        "https://cdn.imgchest.com/files/f69aab48487e.png", // Morena
+        "https://cdn.imgchest.com/files/7c4221da76b9.png"  // Shiroko
     ]
 };
 
