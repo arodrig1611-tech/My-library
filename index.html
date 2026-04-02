@@ -2,265 +2,280 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Manga Library & Gallery - Pro</title>
+    <title>Manga Library & Gallery - Pro v3</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        :root { --bg-dark: #0f0f0f; --accent: #4caf50; --error: #f44336; --glass: rgba(25,25,25,0.9); }
-        body { margin:0; font-family:'Segoe UI',Roboto,sans-serif; background:var(--bg-dark); color:white; min-height:100vh; overflow-x:hidden; }
-        h1 { text-align:center; margin:30px 0; font-weight:300; letter-spacing:2px; }
+        :root { 
+            --bg-dark: #0f0f0f; 
+            --accent: #4caf50; 
+            --error: #f44336; 
+            --glass: rgba(25,25,25,0.95); 
+            --card-scale: 1; /* Variable para el zoom */
+        }
+        body { margin:0; font-family:'Segoe UI',Roboto,sans-serif; background:var(--bg-dark); color:white; min-height:100vh; overflow-x:hidden; transition: 0.3s; }
         
-        /* Navegación por Pestañas */
-        .tab-nav { display:flex; justify-content:center; gap:12px; margin-bottom:25px; }
-        .tab-btn { background:#222; color:white; border:1px solid #444; padding:12px 24px; border-radius:30px; cursor:pointer; font-size:16px; font-weight:bold; transition: 0.3s; }
-        .tab-btn.active { background:var(--accent); border-color:var(--accent); box-shadow:0 0 15px rgba(76,175,80,0.3); }
+        /* PANEL DE CONTROL (Sidebar de la imagen) */
+        #controlPanel {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 15px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 3000;
+            width: 120px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+        .panel-info { text-align: center; font-size: 13px; margin-bottom: 5px; color: #ccc; }
+        .panel-btn {
+            background: #222;
+            color: white;
+            border: 1px solid #444;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+        .panel-btn:hover { background: #333; border-color: var(--accent); }
+        .panel-btn i { font-style: normal; }
+
+        /* NAVEGACIÓN Y TABS */
+        h1 { text-align:center; margin:20px 0; font-weight:300; letter-spacing:2px; }
+        .tab-nav { display:flex; justify-content:center; gap:12px; margin-bottom:20px; }
+        .tab-btn { background:#222; color:white; border:1px solid #444; padding:10px 20px; border-radius:30px; cursor:pointer; font-weight:bold; transition: 0.3s; }
+        .tab-btn.active { background:var(--accent); border-color:var(--accent); }
+
+        /* CONTENEDOR Y FILTROS */
+        .content-container { max-width: 1400px; margin: 0 auto; padding: 0 20px; transition: 0.3s; }
         
-        /* Listas y Grillas */
-        .manga-list { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:20px; padding:20px; }
-        .manga-card { text-decoration:none; color:white; background:#1a1a1a; padding:20px; border-radius:15px; text-align:center; border:1px solid #333; transition:0.3s; display:flex; align-items:center; justify-content:center; min-height:80px; font-weight: 500; }
-        .manga-card:hover { transform:translateY(-5px); border-color:var(--accent); background:#222; }
-
-        .futanari-section { grid-column: 1 / -1; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 20px; border: 1px dashed #444; margin-top: 15px; }
-        .futanari-title { margin: 0 0 20px 0; font-size: 20px; color: var(--accent); text-align: center; text-transform: uppercase; letter-spacing: 1px; }
-        .chapter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
-
-        /* Galería */
-        .gallery-container { max-width:1500px; margin:0 auto; padding:0 20px; }
-        .filter-bar { background:var(--glass); backdrop-filter:blur(15px); padding:20px; border-radius:15px; margin-bottom:20px; border:1px solid #444; position:sticky; top:10px; z-index:100; }
-        #searchBox { width:100%; padding:12px; margin-bottom:20px; border-radius:10px; border:1px solid #444; background:#111; color:white; font-size:16px; outline:none; box-sizing: border-box; }
-        .filter-group { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:15px; max-height:150px; overflow-y:auto; padding:5px; border-bottom: 1px solid #333; }
-        .filter-label { width:100%; font-size:12px; color:var(--accent); text-transform:uppercase; margin-bottom:8px; font-weight:bold; opacity: 0.8; }
-        .btn-filter { background:#333; color:#eee; border:1px solid #444; padding:6px 12px; border-radius:8px; cursor:pointer; font-size:13px; transition:0.2s; }
-        .btn-filter.active { background:var(--accent); color:white; border-color: var(--accent); }
+        /* Filtros más compactos para que no estorben */
+        .filter-bar { 
+            background: var(--glass); 
+            padding: 12px; 
+            border-radius: 12px; 
+            margin-bottom: 15px; 
+            border: 1px solid #444; 
+            position: sticky; 
+            top: 10px; 
+            z-index: 100;
+        }
+        .search-input { width:100%; padding:8px; margin-bottom:10px; border-radius:6px; border:1px solid #444; background:#111; color:white; }
         
-        .gallery-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:15px; padding-bottom:120px; }
-        .img-card { background:#161616; border-radius:10px; overflow:hidden; border:1px solid #333; cursor:pointer; transition: 0.3s; }
-        .img-card img { width:100%; height:300px; object-fit:cover; display:block; }
-        .img-card .info { padding:10px; font-size:11px; text-align:center; color:#777; background:#1a1a1a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .img-card.selected { border:2px solid var(--accent); transform: scale(0.98); opacity: 0.6; }
+        .filter-group { 
+            display:flex; flex-wrap:wrap; gap:6px; 
+            max-height: 70px; /* Muy compacto con scroll */
+            overflow-y: auto; padding: 5px;
+        }
+        .filter-label { font-size: 10px; color: var(--accent); text-transform: uppercase; font-weight: bold; margin-bottom: 4px; }
+        .btn-filter { background:#333; color:#eee; border:1px solid #444; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:11px; }
+        .btn-filter.active { background:var(--accent); border-color: var(--accent); }
 
-        /* Lightbox */
-        #lightbox { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); display:none; justify-content:center; align-items:center; z-index:3000; }
-        #lightbox img { max-width:90%; max-height:90%; object-fit:contain; border-radius: 5px; }
-        .nav-btn { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.05); color:white; border:none; font-size:30px; padding:15px; cursor:pointer; border-radius:50%; }
-        #prevBtn { left:20px; } #nextBtn { right:20px; }
-        #closeBtn { position:absolute; top:20px; right:20px; font-size:40px; color:white; cursor:pointer; background:none; border:none; }
+        /* LISTAS Y CARDS (Con Zoom Dinámico) */
+        .manga-list, .gallery-grid { 
+            display:grid; 
+            gap:15px; 
+            padding-bottom:100px; 
+            transform: scale(var(--card-scale));
+            transform-origin: top center;
+        }
+        .manga-list { grid-template-columns: repeat(auto-fill, minmax(calc(200px * var(--card-scale)), 1fr)); }
+        .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(calc(240px * var(--card-scale)), 1fr)); }
 
-        #menuUI { position:fixed; bottom:20px; right:20px; background:var(--glass); backdrop-filter:blur(10px); padding:12px; border-radius:12px; z-index:2000; display:flex; gap:10px; border:1px solid #444; }
-        .ui-btn { background:#444; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:bold; font-size: 14px; }
-        #viewSelectedBtn { display:none; background:var(--accent); }
+        .manga-card, .img-card { background:#1a1a1a; border-radius:10px; border:1px solid #333; text-decoration:none; color:white; overflow:hidden; transition: 0.2s; }
+        .manga-card { padding:15px; text-align:center; min-height:50px; display:flex; align-items:center; justify-content:center; }
+        .img-card img { width:100%; height:260px; object-fit:cover; display:block; }
+        .img-card .info { padding:6px; font-size:10px; text-align:center; color:#666; }
+        .img-card.selected { border:2px solid var(--accent); opacity: 0.6; }
+
+        /* LIGHTBOX */
+        #lightbox { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.97); display:none; justify-content:center; align-items:center; z-index:4000; }
+        #lightbox img { max-height: 95vh; max-width: 95vw; object-fit: contain; }
+
+        /* UTILS */
+        .hidden-ui { display: none !important; }
+        .double-grid { grid-template-columns: 1fr 1fr !important; }
     </style>
 </head>
 <body>
 
-    <h1>📚 My Digital Library</h1>
+    <div id="controlPanel">
+        <div class="panel-info" id="pageCounter">Item 1 / 0</div>
+        <button class="panel-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">⬆️ Arriba</button>
+        <button class="panel-btn" onclick="window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'})">⬇️ Abajo</button>
+        <button class="panel-btn" onclick="adjustZoom(0.1)">🔍 +</button>
+        <button class="panel-btn" onclick="adjustZoom(-0.1)">🔍 -</button>
+        <button class="panel-btn" onclick="resetZoom()">📐 Fit</button>
+        <button class="panel-btn" onclick="toggleDouble()">📖 Doble</button>
+        <button class="panel-btn" onclick="toggleUI()">👁️ Ocultar UI</button>
+        <button class="panel-btn" onclick="location.reload()">⬅️ Volver</button>
+    </div>
 
-    <div class="tab-nav">
+    <h1>📚 My Library</h1>
+
+    <div class="tab-nav" id="mainTabs">
         <button class="tab-btn active" onclick="showTab('mangas', this)">Mis Mangas</button>
         <button class="tab-btn" onclick="showTab('galeria', this)">Ilustraciones</button>
     </div>
 
-    <div id="tab-mangas" class="tab-content">
-        <div class="manga-list">
-            <a class="manga-card" href="reader.html?manga=Francis_X_Raikou">Francis X Raikou</a>
-            <a class="manga-card" href="reader.html?manga=Yang_Gui_Fei_X_Prota">Yang Gui Fei X Prota</a>
-            <a class="manga-card" href="reader.html?manga=Ibuki_X_Yui">Ibuki X Yui</a>
-            <a class="manga-card" href="reader.html?manga=BB_X_Prota">BB X Prota</a>
-            <a class="manga-card" href="reader.html?manga=Jalter_X_Apocrypha_NPC">Jalter X Apocrypha NPC</a>
-
-            <div class="futanari-section">
-                <h3 class="futanari-title">Futanarijima</h3>
-                <div class="chapter-grid">
-                    <a class="manga-card" href="reader.html?manga=Futanarijima_ch1">Ch. 1</a>
-                    <a class="manga-card" href="reader.html?manga=Futanarijima_ch2">Ch. 2</a>
-                    <a class="manga-card" href="reader.html?manga=Futanarijima_ch3">Ch. 3</a>
-                    <a class="manga-card" href="reader.html?manga=Futanarijima_ch4">Ch. 4</a>
-                    <a class="manga-card" href="reader.html?manga=Futanarijima_ch5">Ch. 5</a>
-                    <a class="manga-card" href="reader.html?manga=Futanarijima_ch6">Ch. 6</a>
-                </div>
+    <div class="content-container">
+        
+        <div id="tab-mangas" class="tab-content">
+            <div class="filter-bar" id="mangaFilters">
+                <input type="text" class="search-input" placeholder="Buscar manga..." oninput="filterList('mangaContainer', this.value)">
+            </div>
+            <div id="mangaContainer" class="manga-list">
+                <a class="manga-card" href="reader.html?manga=Francis_X_Raikou">Francis X Raikou</a>
+                <a class="manga-card" href="reader.html?manga=Yang_Gui_Fei_X_Prota">Yang Gui Fei X Prota</a>
+                <div style="grid-column: 1/-1; border-top:1px dashed #333; margin-top:10px; padding-top:10px; text-align:center; color:var(--accent)">FUTANARIJIMA</div>
+                <a class="manga-card" href="reader.html?manga=Futanarijima_ch1">Capítulo 1</a>
+                <a class="manga-card" href="reader.html?manga=Futanarijima_ch2">Capítulo 2</a>
             </div>
         </div>
-    </div>
 
-    <div id="tab-galeria" class="tab-content" style="display:none;">
-        <div class="gallery-container">
-            <div id="stats">Mostrando: 0 / Total: 0</div>
-            <div class="filter-bar">
-                <input type="text" id="searchBox" placeholder="Buscar personaje o archivo..." oninput="applyFilters()">
-                
+        <div id="tab-galeria" class="tab-content" style="display:none;">
+            <div class="filter-bar" id="galleryFilters">
+                <input type="text" class="search-input" placeholder="Buscar personaje (Merge activo)..." oninput="applyGalleryFilters()">
                 <div class="filter-label">Sección</div>
                 <div id="cat-filters" class="filter-group"></div>
-                
-                <div class="filter-label">Personaje (Merge Activo)</div>
+                <div class="filter-label">Personaje</div>
                 <div id="pj-filters" class="filter-group"></div>
             </div>
             <div id="galleryGrid" class="gallery-grid"></div>
         </div>
     </div>
 
-    <div id="lightbox">
-        <button id="closeBtn" onclick="closeLightbox()">&times;</button>
-        <button id="prevBtn" class="nav-btn" onclick="changeImage(-1)">❮</button>
+    <div id="lightbox" onclick="this.style.display='none'">
         <img id="fullImage" src="">
-        <button id="nextBtn" class="nav-btn" onclick="changeImage(1)">❯</button>
-    </div>
-
-    <div id="menuUI">
-        <button id="clearSelectedBtn" class="ui-btn" style="display:none;" onclick="clearAllSelection()">Limpiar</button>
-        <button id="viewSelectedBtn" class="ui-btn" onclick="openCarousel()">Ver (0)</button>
     </div>
 
     <script src="lista_imagenes.js"></script>
     <script>
         let galleryData = [];
-        let filterCat='Todos', filterPj='Todos', selectedImages=[], currentIndex=0;
+        let currentZoom = 1;
+        let filterCat='Todos', filterPj='Todos', selectedImages=[];
 
-        // --- LÓGICA DE MERGE Y PROCESAMIENTO ---
-        function buildGalleryData() {
-    galleryData = [];
-    
-    const procesar = (obj, catName) => {
-        if (typeof obj === 'undefined') return;
-        for (let [pj, links] of Object.entries(obj)) {
-            
-            // --- LÓGICA DE UNIFICACIÓN ---
-            // Esto quita "R34", "_2B" o cualquier sufijo después de un espacio o guion bajo
-            // para que "TwoB R34" y "TwoB 2B" se conviertan ambos en "TwoB"
-            let pjUnificado = pj.split(/[ _]/)[0]; 
-
-            links.forEach(url => {
-                galleryData.push({
-                    ruta: url,
-                    archivo: url.split('/').pop(),
-                    pj: pjUnificado, // Usamos el nombre unificado para el filtro
-                    pjOriginal: pj,  // Guardamos el original por si acaso
-                    categoria: catName
-                });
-            });
+        // LÓGICA DE DATOS (Merge & Unify)
+        function buildData() {
+            galleryData = [];
+            const procesar = (obj, cat) => {
+                if (!obj) return;
+                for (let [pj, links] of Object.entries(obj)) {
+                    let pjUnificado = pj.split(/[ _]/)[0]; // Merge por primera palabra
+                    links.forEach(url => galleryData.push({ ruta: url, pj: pjUnificado, cat: cat }));
+                }
+            };
+            procesar(lista_ilustraciones, "Ilustraciones");
+            procesar(lista_real, "Realista");
+            procesar(lista_rule34, "Rule34");
+            updateCounter(1, galleryData.length);
         }
-    };
 
-    procesar(lista_ilustraciones, "Ilustraciones");
-    procesar(lista_real, "Realista");
-    procesar(lista_rule34, "Rule34");
-}
+        // FUNCIONES DEL PANEL DE CONTROL (LA IMAGEN)
+        function adjustZoom(delta) {
+            currentZoom = Math.min(Math.max(0.5, currentZoom + delta), 1.5);
+            document.documentElement.style.setProperty('--card-scale', currentZoom);
+        }
+        function resetZoom() {
+            currentZoom = 1;
+            document.documentElement.style.setProperty('--card-scale', 1);
+        }
+        function toggleDouble() {
+            document.getElementById('mangaContainer').classList.toggle('double-grid');
+            document.getElementById('galleryGrid').classList.toggle('double-grid');
+        }
+        function toggleUI() {
+            document.getElementById('mainTabs').classList.toggle('hidden-ui');
+            document.getElementById('mangaFilters').classList.toggle('hidden-ui');
+            document.getElementById('galleryFilters').classList.toggle('hidden-ui');
+            document.querySelector('h1').classList.toggle('hidden-ui');
+        }
+        function updateCounter(current, total) {
+            document.getElementById('pageCounter').innerText = `Item ${current} / ${total}`;
+        }
 
+        // TABS Y GALERÍA
         function showTab(t, b) {
-            document.querySelectorAll('.tab-content').forEach(x=>x.style.display='none');
-            document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
-            document.getElementById('tab-'+t).style.display='block'; 
+            document.querySelectorAll('.tab-content').forEach(x => x.style.display='none');
+            document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
+            document.getElementById('tab-'+t).style.display='block';
             b.classList.add('active');
-            if(t==='galeria') initGallery();
+            if(t==='galeria') renderGallery();
         }
 
-        function initGallery() {
-            buildGalleryData(); // Sincroniza datos antes de renderizar
-            const g = document.getElementById('galleryGrid'); 
-            g.innerHTML = ''; 
-            
-            galleryData.forEach(img => {
-                const c = document.createElement('div'); 
-                c.className = 'img-card' + (selectedImages.includes(img.ruta) ? ' selected' : '');
-                c.innerHTML = `<img src="${img.ruta}" loading="lazy"><div class="info">${img.pj} - ${img.archivo}</div>`;
-                
-                // Guardamos metadatos en el elemento para filtrar rápido
-                c.dataset.cat = img.categoria;
+        function renderGallery() {
+            const g = document.getElementById('galleryGrid'); g.innerHTML = '';
+            galleryData.forEach((img, idx) => {
+                const c = document.createElement('div');
+                c.className = 'img-card';
+                c.innerHTML = `<img src="${img.ruta}" loading="lazy"><div class="info">${img.pj}</div>`;
                 c.dataset.pj = img.pj;
-                c.dataset.name = img.archivo.toLowerCase();
-                
-                c.onclick = () => toggleSelect(img.ruta, c); 
+                c.dataset.cat = img.cat;
+                c.onclick = () => { 
+                    document.getElementById('fullImage').src = img.ruta;
+                    document.getElementById('lightbox').style.display = 'flex';
+                    updateCounter(idx + 1, galleryData.length);
+                };
                 g.appendChild(c);
             });
-            updateFiltersUI(); 
-            applyFilters();
+            renderFilters();
+            applyGalleryFilters();
         }
 
-        function updateFiltersUI() {
-            const categorias = [...new Set(galleryData.map(i=>i.categoria))];
-            const personajes = [...new Set(galleryData.map(i=>i.pj))].sort();
-
-            renderBtn('cat-filters', categorias, filterCat, v => {filterCat=v; applyFilters(); updateFiltersUI();});
-            renderBtn('pj-filters', personajes, filterPj, v => {filterPj=v; applyFilters(); updateFiltersUI();});
-        }
-
-        function renderBtn(id, list, current, callback) {
-            const container = document.getElementById(id);
-            container.innerHTML = '';
-            ['Todos', ...list].forEach(item => { 
-                const b = document.createElement('button');
-                b.innerText = item.replace(/_/g, ' '); 
-                b.className = 'btn-filter' + (item === current ? ' active' : '');
-                b.onclick = () => callback(item);
-                container.appendChild(b); 
-            });
-        }
-
-        function applyFilters() {
-            const term = document.getElementById('searchBox').value.toLowerCase();
-            let visibleCount = 0; 
+        function renderFilters() {
+            const cats = [...new Set(galleryData.map(i=>i.cat))];
+            const pjs = [...new Set(galleryData.map(i=>i.pj))].sort();
             
-            document.querySelectorAll('.img-card').forEach(card => {
-                const matchCat = filterCat === 'Todos' || card.dataset.cat === filterCat;
-                const matchPj = filterPj === 'Todos' || card.dataset.pj === filterPj;
-                const matchSearch = term === '' || 
-                                    card.dataset.name.includes(term) || 
-                                    card.dataset.pj.toLowerCase().includes(term);
+            const renderBtns = (id, list, curr, type) => {
+                const con = document.getElementById(id); con.innerHTML = '';
+                ['Todos', ...list].forEach(item => {
+                    const b = document.createElement('button');
+                    b.innerText = item; b.className = 'btn-filter' + (item===curr?' active':'');
+                    b.onclick = () => { 
+                        if(type==='cat') filterCat = item; else filterPj = item;
+                        renderFilters(); applyGalleryFilters();
+                    };
+                    con.appendChild(b);
+                });
+            };
+            renderBtns('cat-filters', cats, filterCat, 'cat');
+            renderBtns('pj-filters', pjs, filterPj, 'pj');
+        }
 
-                const isVisible = matchCat && matchPj && matchSearch;
-                card.style.display = isVisible ? 'block' : 'none'; 
-                if(isVisible) visibleCount++;
+        function applyGalleryFilters() {
+            const term = document.querySelector('#tab-galeria .search-input').value.toLowerCase();
+            let count = 0;
+            document.querySelectorAll('.img-card').forEach(c => {
+                const mC = filterCat==='Todos' || c.dataset.cat===filterCat;
+                const mP = filterPj==='Todos' || c.dataset.pj===filterPj;
+                const mT = term==='' || c.dataset.pj.toLowerCase().includes(term);
+                const isVis = mC && mP && mT;
+                c.style.display = isVis ? 'block' : 'none';
+                if(isVis) count++;
             });
-            document.getElementById('stats').innerText = `Mostrando: ${visibleCount} / Total: ${galleryData.length}`;
+            updateCounter(1, count);
         }
 
-        function toggleSelect(ruta, element) {
-            const index = selectedImages.indexOf(ruta);
-            if(index > -1) {
-                selectedImages.splice(index, 1);
-                element.classList.remove('selected');
-            } else {
-                if(selectedImages.length < 20) { // Aumenté el límite para que puedas ver más en el carrusel
-                    selectedImages.push(ruta);
-                    element.classList.add('selected');
-                } else {
-                    alert("Límite de 20 imágenes alcanzado");
-                }
-            }
-            updateUIButtons();
+        function filterList(id, term) {
+            let count = 0;
+            document.querySelectorAll(`#${id} .manga-card`).forEach(c => {
+                const isVis = c.innerText.toLowerCase().includes(term.toLowerCase());
+                c.style.display = isVis ? 'flex' : 'none';
+                if(isVis) count++;
+            });
+            updateCounter(1, count);
         }
 
-        function clearAllSelection() {
-            selectedImages = []; 
-            document.querySelectorAll('.img-card').forEach(c => c.classList.remove('selected')); 
-            updateUIButtons();
-        }
-
-        function updateUIButtons() {
-            const vBtn = document.getElementById('viewSelectedBtn');
-            const cBtn = document.getElementById('clearSelectedBtn');
-            vBtn.innerText = `Ver (${selectedImages.length})`; 
-            vBtn.style.display = selectedImages.length > 0 ? 'inline-block' : 'none';
-            cBtn.style.display = selectedImages.length > 0 ? 'inline-block' : 'none';
-        }
-
-        function openCarousel() { currentIndex=0; updateLightboxImage(); document.getElementById('lightbox').style.display='flex'; }
-        function changeImage(step) { 
-            if(selectedImages.length === 0) return;
-            currentIndex = (currentIndex + step + selectedImages.length) % selectedImages.length; 
-            updateLightboxImage(); 
-        }
-        function updateLightboxImage() { document.getElementById('fullImage').src = selectedImages[currentIndex]; }
-        function closeLightbox() { document.getElementById('lightbox').style.display='none'; }
-        
-        // Teclado para el visor
-        document.addEventListener('keydown', (e) => {
-            if (document.getElementById('lightbox').style.display === 'flex') {
-                if (e.key === "ArrowLeft") changeImage(-1);
-                if (e.key === "ArrowRight") changeImage(1);
-                if (e.key === "Escape") closeLightbox();
-            }
-        });
-
-        window.onload = () => { buildGalleryData(); };
+        window.onload = buildData;
     </script>
 </body>
 </html>
