@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Library Pro - Ultra Fast</title>
     <style>
-        :root { --bg: #0a0a0a; --acc: #4caf50; --pink: #d81b60; }
+        :root { --bg: #0a0a0a; --acc: #4caf50; --pink: #d81b60; --blue: #2196f3; }
         * { box-sizing: border-box; }
         body { margin:0; font-family: sans-serif; background:var(--bg); color:white; overflow-x:hidden; }
 
@@ -33,6 +33,10 @@
         .card img { width:100%; height:250px; object-fit:cover; display:block; background: #222; }
         .card span { display:block; padding:8px; font-size:11px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+        /* Estilo específico para cards de anime (sin imagen) */
+        .card.anime-card { padding: 20px 10px; background: #1a1a1a; border-left: 4px solid var(--blue); }
+        .card.anime-card:hover { background: #222; border-color: var(--acc); }
+
         .futa-sep { grid-column:1/-1; color:var(--acc); text-align:center; border-top:1px dashed #333; padding:15px; font-weight:bold; }
         .hidden { display:none !important; }
         
@@ -48,11 +52,12 @@
     <div class="nav">
         <button class="t-btn active" id="btn-mangas" onclick="tab('mangas',this)">📚 Mis Mangas</button>
         <button class="t-btn" id="btn-galeria" onclick="tab('galeria',this)">🖼️ Ilustraciones</button>
+        <button class="t-btn" id="btn-animes" onclick="tab('animes',this)">📺 Animes</button>
     </div>
 
     <div id="t-mangas">
         <div class="f-bar">
-            <input type="text" placeholder="Buscar manga..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="searchM(this.value)">
+            <input type="text" placeholder="Buscar manga..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="searchM(this.value, 'm-grid')">
         </div>
         <div id="m-grid" class="grid">
             <a class="card" href="reader.html?manga=Francis_X_Raikou"><span>Francis X Raikou</span></a>
@@ -83,7 +88,14 @@
             <div id="cats" class="f-group"></div>
             <div id="pjs" class="f-group"></div>
         </div>
-        <div id="g-grid" class="grid">
+        <div id="g-grid" class="grid"></div>
+    </div>
+
+    <div id="t-animes" class="hidden">
+        <div class="f-bar">
+            <input type="text" placeholder="Buscar anime..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="searchM(this.value, 'a-grid')">
+        </div>
+        <div id="a-grid" class="grid">
             </div>
     </div>
 
@@ -97,18 +109,49 @@
     </div>
 
     <script src="lista_imagenes.js"></script>
+    <script src="lista_animes.js"></script> 
     <script>
     let db = [], selectedDB = new Map(), fCat = 'Todos', fPj = 'Todos', curIdx = 0;
 
     function tab(t, b) {
         document.getElementById('t-mangas').classList.toggle('hidden', t !== 'mangas');
         document.getElementById('t-galeria').classList.toggle('hidden', t !== 'galeria');
+        document.getElementById('t-animes').classList.toggle('hidden', t !== 'animes');
+        
         document.querySelectorAll('.nav .t-btn').forEach(x => x.classList.remove('active'));
         b.classList.add('active');
+
         if (t === 'galeria' && db.length === 0) loadG();
+        if (t === 'animes') loadAnimes();
     }
 
-    // CARGA INICIAL: Crea todos los elementos del DOM una sola vez
+    // Nueva función para cargar animes desde el objeto lista_animes
+    function loadAnimes() {
+        const container = document.getElementById('a-grid');
+        if (container.children.length > 0) return; // No recargar si ya existe
+
+        const frag = document.createDocumentFragment();
+        for (const [nombre, url] of Object.entries(lista_animes)) {
+            if (!url) continue;
+            const a = document.createElement('a');
+            a.className = 'card anime-card';
+            a.href = url;
+            a.target = '_blank';
+            a.innerHTML = `<span>${nombre.replace(/_/g, ' ')}</span>`;
+            frag.appendChild(a);
+        }
+        container.appendChild(frag);
+    }
+
+    // REUTILIZABLE: búsqueda para mangas y animes
+    function searchM(q, gridId) {
+        document.querySelectorAll(`#${gridId} .card`).forEach(c => {
+            if(c.classList.contains('futa-sep')) return;
+            c.classList.toggle('hidden', !c.innerText.toLowerCase().includes(q.toLowerCase()));
+        });
+    }
+
+    // --- EL RESTO DE TU CÓDIGO DE GALERÍA SE MANTIENE IGUAL ---
     function loadG() {
         const tempDb = [];
         const container = document.getElementById('g-grid');
@@ -127,18 +170,12 @@
                         g: filterGroupName 
                     };
                     tempDb.push(item);
-
-                    // Creamos el elemento físico
                     const cardDiv = document.createElement('div');
                     cardDiv.className = 'card';
-                    // Guardamos los datos para filtrar después
                     cardDiv.dataset.cat = item.c;
                     cardDiv.dataset.group = item.g;
                     cardDiv.dataset.name = item.p.toLowerCase();
-                    
-                    // Nota importante aplicada: loading="lazy" para no saturar datos
                     cardDiv.innerHTML = `<img src="${item.r}" loading="lazy"><span>${item.p}</span>`;
-                    
                     cardDiv.onclick = () => {
                         if (selectedDB.has(item.r)) {
                             selectedDB.delete(item.r);
@@ -159,9 +196,9 @@
         proc(lista_rule34, "Rule34");
         
         db = tempDb;
-        container.appendChild(frag); // Inyectamos todo al grid
+        container.appendChild(frag);
         renderF(); 
-        filtG(); // Filtro inicial
+        filtG();
     }
 
     function renderF() {
@@ -169,7 +206,6 @@
             const d = document.getElementById(id);
             const frag = document.createDocumentFragment();
             const items = type === 'p' ? l.filter(x => x !== 'Todos' && x !== 'Futa') : l;
-
             items.forEach(x => {
                 const b = document.createElement('button'); 
                 b.innerText = x;
@@ -179,7 +215,7 @@
                     if (type === 'c') fCat = x;
                     else fPj = (fPj === x) ? 'Todos' : x;
                     renderF(); 
-                    filtG(); // Solo oculta/muestra, no recarga imágenes
+                    filtG();
                 };
                 frag.appendChild(b);
             });
@@ -190,52 +226,27 @@
         gen('pjs', ['Todos', ...pjsUnicos], fPj, 'p');
     }
 
-    // FILTRADO RÁPIDO: Solo oculta elementos existentes
     function filtG() {
         const q = document.getElementById('gSearch').value.toLowerCase();
         const cards = document.querySelectorAll('#g-grid .card');
-        
         cards.forEach(card => {
             const matchesCat = (fCat === 'Todos' || card.dataset.cat === fCat);
             const matchesPj = (fPj === 'Todos' || card.dataset.group === fPj);
             const matchesSearch = card.dataset.name.includes(q);
-
-            if (matchesCat && matchesPj && matchesSearch) {
-                card.classList.remove('hidden');
-            } else {
-                card.classList.add('hidden');
-            }
+            card.classList.toggle('hidden', !(matchesCat && matchesPj && matchesSearch));
         });
-
-        document.getElementById('viewBtn').innerText = `👁️ Ver (${selectedDB.size})`;
     }
 
     function clearSel() {
         selectedDB.clear();
-        // Quitamos la clase selected de todas las cards visualmente
         document.querySelectorAll('#g-grid .card.selected').forEach(c => c.classList.remove('selected'));
         document.getElementById('viewBtn').innerText = `👁️ Ver (0)`;
     }
 
-    function openM() { 
-        if(selectedDB.size === 0) return;
-        curIdx = 0; document.getElementById('modal').style.display = 'flex'; updM(); 
-    }
+    function openM() { if(selectedDB.size === 0) return; curIdx = 0; document.getElementById('modal').style.display = 'flex'; updM(); }
     function closeM() { document.getElementById('modal').style.display = 'none'; }
-    function updM() {
-        const items = Array.from(selectedDB.values());
-        document.getElementById('m-img').src = items[curIdx].r;
-    }
-    function changeM(d) {
-        const s = selectedDB.size;
-        curIdx = (curIdx + d + s) % s; updM();
-    }
-    function searchM(q) {
-        document.querySelectorAll('#m-grid .card').forEach(c => {
-            if(c.classList.contains('futa-sep')) return;
-            c.classList.toggle('hidden', !c.innerText.toLowerCase().includes(q.toLowerCase()));
-        });
-    }
+    function updM() { const items = Array.from(selectedDB.values()); document.getElementById('m-img').src = items[curIdx].r; }
+    function changeM(d) { const s = selectedDB.size; curIdx = (curIdx + d + s) % s; updM(); }
     </script>
 </body>
 </html>
