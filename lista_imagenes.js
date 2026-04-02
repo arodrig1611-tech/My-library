@@ -102,7 +102,7 @@ const lista_ilustraciones = {
         "https://i.ibb.co/RGSDB6QB/Vermeil-ami-v2.png",
         "https://i.ibb.co/p6h4ynrM/Vermeil-x-2b.png"
     ],
-    "TwoB_2B": [
+    "TwoB": [
         "https://i.ibb.co/C31PGhqh/2b-ami.png",
         "https://i.ibb.co/CK6jkZ61/2b-ami-v2.png",
         "https://i.ibb.co/F4SnSTL9/2b-ami-v3.png",
@@ -235,7 +235,7 @@ const lista_rule34 = {
         "https://i.ibb.co/KjpCKC8Y/Albedo-4-Rule.jpg",
         "https://i.ibb.co/q318RYZV/Albedo-5-Rule.jpg"
     ],
-    "TwoB_R34": [
+    "TwoB": [
         "https://i.ibb.co/HT44RnzT/2b-1-Rule.png",
         "https://i.ibb.co/G4kWyRx5/2b-2-Rule.png",
         "https://i.ibb.co/JW3hJzVm/2b-3-Rule.jpg"
