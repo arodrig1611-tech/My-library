@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Library Pro - Fixed</title>
+    <title>My Library Pro - Ultra Fast</title>
     <style>
         :root { --bg: #0a0a0a; --acc: #4caf50; --pink: #d81b60; }
         * { box-sizing: border-box; }
@@ -24,7 +24,7 @@
         /* Ajuste para Móvil: 4 columnas */
         @media (max-width: 600px) { 
             .grid { grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 5px; } 
-            .card img { height: 100px !important; } /* Imagen más baja para que quepan 4 */
+            .card img { height: 100px !important; } 
             .card span { font-size: 8px !important; padding: 4px !important; }
         }
 
@@ -83,7 +83,8 @@
             <div id="cats" class="f-group"></div>
             <div id="pjs" class="f-group"></div>
         </div>
-        <div id="g-grid" class="grid"></div>
+        <div id="g-grid" class="grid">
+            </div>
     </div>
 
     <div id="modal" onclick="if(event.target===this) closeM()">
@@ -107,29 +108,60 @@
         if (t === 'galeria' && db.length === 0) loadG();
     }
 
+    // CARGA INICIAL: Crea todos los elementos del DOM una sola vez
     function loadG() {
         const tempDb = [];
+        const container = document.getElementById('g-grid');
+        const frag = document.createDocumentFragment();
+
         const proc = (o, c) => { 
             if (!o) return; 
             let realCounter = 1; 
             for (let [p, l] of Object.entries(o)) {
                 const filterGroupName = (c === "Realista") ? "Real" : p;
                 l.forEach(r => {
-                    tempDb.push({
+                    const item = {
                         r, 
                         p: (c === "Realista") ? `Real ${realCounter++}` : p, 
                         c, 
                         g: filterGroupName 
-                    });
+                    };
+                    tempDb.push(item);
+
+                    // Creamos el elemento físico
+                    const cardDiv = document.createElement('div');
+                    cardDiv.className = 'card';
+                    // Guardamos los datos para filtrar después
+                    cardDiv.dataset.cat = item.c;
+                    cardDiv.dataset.group = item.g;
+                    cardDiv.dataset.name = item.p.toLowerCase();
+                    
+                    // Nota importante aplicada: loading="lazy" para no saturar datos
+                    cardDiv.innerHTML = `<img src="${item.r}" loading="lazy"><span>${item.p}</span>`;
+                    
+                    cardDiv.onclick = () => {
+                        if (selectedDB.has(item.r)) {
+                            selectedDB.delete(item.r);
+                            cardDiv.classList.remove('selected');
+                        } else {
+                            selectedDB.set(item.r, item);
+                            cardDiv.classList.add('selected');
+                        }
+                        document.getElementById('viewBtn').innerText = `👁️ Ver (${selectedDB.size})`;
+                    };
+                    frag.appendChild(cardDiv);
                 });
             }
         };
+
         proc(lista_ilustraciones, "Ilustraciones"); 
         proc(lista_real, "Realista"); 
         proc(lista_rule34, "Rule34");
+        
         db = tempDb;
+        container.appendChild(frag); // Inyectamos todo al grid
         renderF(); 
-        filtG();
+        filtG(); // Filtro inicial
     }
 
     function renderF() {
@@ -146,7 +178,8 @@
                 b.onclick = () => { 
                     if (type === 'c') fCat = x;
                     else fPj = (fPj === x) ? 'Todos' : x;
-                    renderF(); filtG(); 
+                    renderF(); 
+                    filtG(); // Solo oculta/muestra, no recarga imágenes
                 };
                 frag.appendChild(b);
             });
@@ -157,36 +190,31 @@
         gen('pjs', ['Todos', ...pjsUnicos], fPj, 'p');
     }
 
+    // FILTRADO RÁPIDO: Solo oculta elementos existentes
     function filtG() {
         const q = document.getElementById('gSearch').value.toLowerCase();
-        const g = document.getElementById('g-grid');
-        const frag = document.createDocumentFragment();
+        const cards = document.querySelectorAll('#g-grid .card');
         
-        const filtered = db.filter(i => 
-            (fCat === 'Todos' || i.c === fCat) && 
-            (fPj === 'Todos' || i.g === fPj) && 
-            (i.p.toLowerCase().includes(q))
-        );
+        cards.forEach(card => {
+            const matchesCat = (fCat === 'Todos' || card.dataset.cat === fCat);
+            const matchesPj = (fPj === 'Todos' || card.dataset.group === fPj);
+            const matchesSearch = card.dataset.name.includes(q);
 
-        filtered.forEach(i => {
-            const c = document.createElement('div');
-            c.className = 'card' + (selectedDB.has(i.r) ? ' selected' : '');
-            c.innerHTML = `<img src="${i.r}" loading="lazy"><span>${i.p}</span>`;
-            c.onclick = () => {
-                if (selectedDB.has(i.r)) selectedDB.delete(i.r);
-                else selectedDB.set(i.r, i);
-                c.classList.toggle('selected');
-                document.getElementById('viewBtn').innerText = `👁️ Ver (${selectedDB.size})`;
-            };
-            frag.appendChild(c);
+            if (matchesCat && matchesPj && matchesSearch) {
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
         });
-        g.innerHTML = ''; g.appendChild(frag);
+
         document.getElementById('viewBtn').innerText = `👁️ Ver (${selectedDB.size})`;
     }
 
     function clearSel() {
         selectedDB.clear();
-        filtG();
+        // Quitamos la clase selected de todas las cards visualmente
+        document.querySelectorAll('#g-grid .card.selected').forEach(c => c.classList.remove('selected'));
+        document.getElementById('viewBtn').innerText = `👁️ Ver (0)`;
     }
 
     function openM() { 
