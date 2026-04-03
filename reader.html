@@ -7,10 +7,32 @@
         #reader { display:flex; flex-direction:column; align-items:center; width:100%; transition: 0.3s; }
         .page { width:100%; max-width:850px; margin-bottom:10px; display: block; transition: 0.2s; }
         
-        /* MODOS */
-        .fit-mode .page { max-width: 100vw !important; width: 100% !important; margin-bottom: 0; border-radius: 0; }
-        .double-mode { flex-direction: row !important; flex-wrap: wrap; justify-content: center; }
-        .double-mode .page { width: calc(50% - 10px) !important;  max-width: 50vw !important; margin: 5px !important; border: 1px solid #222; }
+/* MODOS */
+.fit-mode .page { 
+    max-width: 100vw !important; 
+    width: 100% !important; 
+    margin-bottom: 0 !important; 
+    border-radius: 0; 
+}
+
+/* Forzamos el display block para evitar espacios extraños de línea */
+.double-mode { 
+    display: flex !important; 
+    flex-direction: row !important; 
+    flex-wrap: wrap !important; 
+    justify-content: center !important; 
+    align-items: flex-start !important;
+}
+
+/* Esta es la clave: anulamos el ancho fijo que pone el JS con !important */
+.double-mode .page { 
+    width: calc(50% - 20px) !important; 
+    max-width: 48vw !important; 
+    margin: 10px 5px !important; 
+    height: auto !important;
+    object-fit: contain;
+    border: 1px solid #222;
+}
 
         /* UI */
         #sideBar { position:fixed; right:15px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.9); border:1px solid #333; border-radius:12px; padding:15px 10px; display:flex; flex-direction:column; gap:8px; z-index:3000; width:105px; border: 1px solid #4caf50; }
