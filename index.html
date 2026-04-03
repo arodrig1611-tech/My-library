@@ -8,39 +8,27 @@
         :root { --bg: #0a0a0a; --acc: #4caf50; --pink: #d81b60; --blue: #2196f3; }
         * { box-sizing: border-box; }
         body { margin:0; font-family: sans-serif; background:var(--bg); color:white; overflow-x:hidden; }
-
-        /* Nav */
         .nav { display:flex; justify-content:center; gap:10px; padding:20px; position: sticky; top: 0; background: var(--bg); z-index: 100; border-bottom: 1px solid #222; }
         .t-btn { background:#222; color:white; border:1px solid #444; padding:10px 20px; border-radius:20px; cursor:pointer; transition:0.2s; }
         .t-btn.active { background:var(--acc); border-color:var(--acc); }
-
-        /* Contenedores */
         .f-bar { background:#141414; margin:10px auto; padding:15px; border-radius:12px; max-width:1400px; border:1px solid #333; }
-        .f-group { display:flex; flex-wrap: wrap; gap:8px; margin-top:10px; } 
-        
-        /* Grid dinámico */
         .grid { display:grid; gap:10px; padding:15px; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); }
         
-        /* Ajuste para Móvil: 4 columnas */
-        @media (max-width: 600px) { 
-            .grid { grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 5px; } 
-            .card img { height: 100px !important; } 
-            .card span { font-size: 8px !important; padding: 4px !important; }
-        }
-
-        .card { background:#161616; border:1px solid #333; border-radius:8px; text-decoration:none; color:white; overflow:hidden; text-align:center; cursor: pointer; position: relative; }
+        /* Estilo de Card y Álbum */
+        .card { background:#161616; border:1px solid #333; border-radius:8px; overflow:hidden; text-align:center; cursor: pointer; position: relative; transition: 0.2s; text-decoration: none; color: white;}
+        .card:hover { border-color: var(--acc); transform: translateY(-3px); }
         .card.selected { border: 2px solid var(--acc); background: rgba(76, 175, 80, 0.1); }
         .card img { width:100%; height:250px; object-fit:cover; display:block; background: #222; }
         .card span { display:block; padding:8px; font-size:11px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        /* Portadas de Personaje */
+        .album-card { height: 300px; display: flex; flex-direction: column; justify-content: flex-end; background-size: cover; background-position: center; }
+        .album-title { background: rgba(0,0,0,0.8); padding: 12px; border-top: 1px solid var(--acc); font-size: 14px; }
 
-        /* Estilo específico para cards de anime (sin imagen) */
-        .card.anime-card { padding: 20px 10px; background: #1a1a1a; border-left: 4px solid var(--blue); }
-        .card.anime-card:hover { background: #222; border-color: var(--acc); }
-
-        .futa-sep { grid-column:1/-1; color:var(--acc); text-align:center; border-top:1px dashed #333; padding:15px; font-weight:bold; }
+        .card.anime-card { padding: 20px 10px; border-left: 4px solid var(--blue); }
+        .futa-sep { grid-column:1/-1; color:var(--acc); text-align:center; padding:15px; font-weight:bold; }
         .hidden { display:none !important; }
         
-        /* Modal */
         #modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:5000; }
         #modal img { max-width:95%; max-height:85vh; object-fit:contain; }
         .m-nav { position:absolute; bottom:20px; width:100%; display:flex; justify-content:center; gap:20px; }
@@ -50,22 +38,19 @@
 <body>
 
     <div class="nav">
-        <button class="t-btn active" id="btn-mangas" onclick="tab('mangas',this)">📚 Mis Mangas</button>
-        <button class="t-btn" id="btn-galeria" onclick="tab('galeria',this)">🖼️ Ilustraciones</button>
-        <button class="t-btn" id="btn-animes" onclick="tab('animes',this)">📺 Animes</button>
+        <button class="t-btn active" onclick="tab('mangas',this)">📚 Mis Mangas</button>
+        <button class="t-btn" onclick="tab('galeria',this)">🖼️ Ilustraciones</button>
+        <button class="t-btn" onclick="tab('animes',this)">📺 Animes</button>
     </div>
 
     <div id="t-mangas">
-        <div class="f-bar">
-            <input type="text" placeholder="Buscar manga..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="searchM(this.value, 'm-grid')">
-        </div>
+        <div class="f-bar"><input type="text" placeholder="Buscar manga..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="searchGeneric(this.value, 'm-grid')"></div>
         <div id="m-grid" class="grid">
             <a class="card" href="reader.html?manga=Francis_X_Raikou"><span>Francis X Raikou</span></a>
             <a class="card" href="reader.html?manga=Yang_Gui_Fei_X_Prota"><span>Yang Gui Fei X Prota</span></a>
             <a class="card" href="reader.html?manga=Ibuki_X_Yui"><span>Ibuki X Yui</span></a>
             <a class="card" href="reader.html?manga=BB_X_Prota"><span>BB X Prota</span></a>
             <a class="card" href="reader.html?manga=Jalter_X_Apocrypha_NPC"><span>Jalter X Apocrypha NPC</span></a>
-            
             <div class="futa-sep">FUTANARIJIMA</div>
             <a class="card" href="reader.html?manga=Futanarijima_ch1"><span>Capítulo 1</span></a>
             <a class="card" href="reader.html?manga=Futanarijima_ch2"><span>Capítulo 2</span></a>
@@ -78,25 +63,18 @@
 
     <div id="t-galeria" class="hidden">
         <div class="f-bar">
-            <div style="display:flex; gap:10px; margin-bottom:10px; flex-wrap: wrap;">
-                <input type="text" id="gSearch" placeholder="Buscar personaje..." style="flex-grow:1; min-width: 150px; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="filtG()">
-                <div style="display:flex; gap:5px;">
-                    <button class="t-btn" style="background:var(--pink); border:none;" onclick="openM()" id="viewBtn">👁️ Ver (0)</button>
-                    <button class="t-btn" style="background:#f44336; border:none;" onclick="clearSel()">🧹 Limpiar</button>
-                </div>
+            <div style="display:flex; gap:10px; flex-wrap: wrap;">
+                <input type="text" id="gSearch" placeholder="Buscar personaje..." style="flex-grow:1; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="renderAlbums(this.value)">
+                <button class="t-btn" style="background:var(--pink); border:none;" onclick="openM()" id="viewBtn">👁️ Ver (0)</button>
+                <button class="t-btn" style="background:#f44336; border:none;" onclick="clearSel()">🧹 Limpiar</button>
             </div>
-            <div id="cats" class="f-group"></div>
-            <div id="pjs" class="f-group"></div>
         </div>
         <div id="g-grid" class="grid"></div>
     </div>
 
     <div id="t-animes" class="hidden">
-        <div class="f-bar">
-            <input type="text" placeholder="Buscar anime..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="searchM(this.value, 'a-grid')">
-        </div>
-        <div id="a-grid" class="grid">
-            </div>
+        <div class="f-bar"><input type="text" placeholder="Buscar anime..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="searchGeneric(this.value, 'a-grid')"></div>
+        <div id="a-grid" class="grid"></div>
     </div>
 
     <div id="modal" onclick="if(event.target===this) closeM()">
@@ -111,141 +89,88 @@
     <script src="lista_imagenes.js"></script>
     <script src="lista_animes.js"></script> 
     <script>
-    let db = [], selectedDB = new Map(), fCat = 'Todos', fPj = 'Todos', curIdx = 0;
+    let db = [], selectedDB = new Map(), curIdx = 0;
 
     function tab(t, b) {
         document.getElementById('t-mangas').classList.toggle('hidden', t !== 'mangas');
         document.getElementById('t-galeria').classList.toggle('hidden', t !== 'galeria');
         document.getElementById('t-animes').classList.toggle('hidden', t !== 'animes');
-        
-        document.querySelectorAll('.nav .t-btn').forEach(x => x.classList.remove('active'));
+        document.querySelectorAll('.t-btn').forEach(x => x.classList.remove('active'));
         b.classList.add('active');
-
         if (t === 'galeria' && db.length === 0) loadG();
         if (t === 'animes') loadAnimes();
     }
 
-    // Nueva función para cargar animes desde el objeto lista_animes
     function loadAnimes() {
         const container = document.getElementById('a-grid');
-        if (container.children.length > 0) return; // No recargar si ya existe
-
-        const frag = document.createDocumentFragment();
-        for (const [nombre, url] of Object.entries(lista_animes)) {
-            if (!url) continue;
+        if (container.children.length > 0) return;
+        for (const [n, url] of Object.entries(lista_animes)) {
             const a = document.createElement('a');
-            a.className = 'card anime-card';
-            a.href = url;
-            a.target = '_blank';
-            a.innerHTML = `<span>${nombre.replace(/_/g, ' ')}</span>`;
-            frag.appendChild(a);
+            a.className = 'card anime-card'; a.href = url; a.target = '_blank';
+            a.innerHTML = `<span>${n.replace(/_/g, ' ')}</span>`;
+            container.appendChild(a);
         }
-        container.appendChild(frag);
     }
 
-    // REUTILIZABLE: búsqueda para mangas y animes
-    function searchM(q, gridId) {
-        document.querySelectorAll(`#${gridId} .card`).forEach(c => {
-            if(c.classList.contains('futa-sep')) return;
+    function searchGeneric(q, id) {
+        document.querySelectorAll(`#${id} .card`).forEach(c => {
             c.classList.toggle('hidden', !c.innerText.toLowerCase().includes(q.toLowerCase()));
         });
     }
 
-    // --- EL RESTO DE TU CÓDIGO DE GALERÍA SE MANTIENE IGUAL ---
     function loadG() {
-        const tempDb = [];
-        const container = document.getElementById('g-grid');
-        const frag = document.createDocumentFragment();
-
-        const proc = (o, c) => { 
-            if (!o) return; 
-            let realCounter = 1; 
-            for (let [p, l] of Object.entries(o)) {
-                const filterGroupName = (c === "Realista") ? "Real" : p;
-                l.forEach(r => {
-                    const item = {
-                        r, 
-                        p: (c === "Realista") ? `Real ${realCounter++}` : p, 
-                        c, 
-                        g: filterGroupName 
-                    };
-                    tempDb.push(item);
-                    const cardDiv = document.createElement('div');
-                    cardDiv.className = 'card';
-                    cardDiv.dataset.cat = item.c;
-                    cardDiv.dataset.group = item.g;
-                    cardDiv.dataset.name = item.p.toLowerCase();
-                    cardDiv.innerHTML = `<img src="${item.r}" loading="lazy"><span>${item.p}</span>`;
-                    cardDiv.onclick = () => {
-                        if (selectedDB.has(item.r)) {
-                            selectedDB.delete(item.r);
-                            cardDiv.classList.remove('selected');
-                        } else {
-                            selectedDB.set(item.r, item);
-                            cardDiv.classList.add('selected');
-                        }
-                        document.getElementById('viewBtn').innerText = `👁️ Ver (${selectedDB.size})`;
-                    };
-                    frag.appendChild(cardDiv);
-                });
+        const proc = (obj, cat) => {
+            if(!obj) return;
+            for (let [p, links] of Object.entries(obj)) {
+                links.forEach(r => db.push({ r, p, g: (cat==="Realista"?"Real":p) }));
             }
         };
+        proc(lista_ilustraciones, "Ilus"); proc(lista_real, "Realista"); proc(lista_rule34, "Rule34");
+        renderAlbums();
+    }
 
-        proc(lista_ilustraciones, "Ilustraciones"); 
-        proc(lista_real, "Realista"); 
-        proc(lista_rule34, "Rule34");
+    function renderAlbums(filter = "") {
+        const grid = document.getElementById('g-grid');
+        grid.innerHTML = '';
+        const groups = [...new Set(db.map(i => i.g))].filter(g => g.toLowerCase().includes(filter.toLowerCase())).sort();
+
+        groups.forEach(g => {
+            const item = db.find(i => i.g === g);
+            const album = document.createElement('div');
+            album.className = 'card album-card';
+            album.style.backgroundImage = `url('${item.r}')`;
+            album.innerHTML = `<div class="album-title">${g.replace(/_/g, ' ')}</div>`;
+            album.onclick = () => renderImages(g);
+            grid.appendChild(album);
+        });
+    }
+
+    function renderImages(groupName) {
+        const grid = document.getElementById('g-grid');
+        grid.innerHTML = `<div class="card album-card" style="height:50px; background:var(--pink); justify-content:center" onclick="renderAlbums()"><span>⬅ Volver a Personajes</span></div>`;
         
-        db = tempDb;
-        container.appendChild(frag);
-        renderF(); 
-        filtG();
-    }
-
-    function renderF() {
-        const gen = (id, l, cur, type) => {
-            const d = document.getElementById(id);
-            const frag = document.createDocumentFragment();
-            const items = type === 'p' ? l.filter(x => x !== 'Todos' && x !== 'Futa') : l;
-            items.forEach(x => {
-                const b = document.createElement('button'); 
-                b.innerText = x;
-                b.className = 't-btn' + (x === cur ? ' active' : ''); 
-                b.style.fontSize = '11px';
-                b.onclick = () => { 
-                    if (type === 'c') fCat = x;
-                    else fPj = (fPj === x) ? 'Todos' : x;
-                    renderF(); 
-                    filtG();
-                };
-                frag.appendChild(b);
-            });
-            d.innerHTML = ''; d.appendChild(frag);
-        };
-        gen('cats', ['Todos', ...new Set(db.map(i => i.c))], fCat, 'c');
-        const pjsUnicos = [...new Set(db.map(i => i.g))].sort();
-        gen('pjs', ['Todos', ...pjsUnicos], fPj, 'p');
-    }
-
-    function filtG() {
-        const q = document.getElementById('gSearch').value.toLowerCase();
-        const cards = document.querySelectorAll('#g-grid .card');
-        cards.forEach(card => {
-            const matchesCat = (fCat === 'Todos' || card.dataset.cat === fCat);
-            const matchesPj = (fPj === 'Todos' || card.dataset.group === fPj);
-            const matchesSearch = card.dataset.name.includes(q);
-            card.classList.toggle('hidden', !(matchesCat && matchesPj && matchesSearch));
+        db.filter(i => i.g === groupName).forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card' + (selectedDB.has(item.r) ? ' selected' : '');
+            card.innerHTML = `<img src="${item.r}" loading="lazy"><span>${item.p}</span>`;
+            card.onclick = () => {
+                if (selectedDB.has(item.r)) { selectedDB.delete(item.r); card.classList.remove('selected'); }
+                else { selectedDB.set(item.r, item); card.classList.add('selected'); }
+                document.getElementById('viewBtn').innerText = `👁️ Ver (${selectedDB.size})`;
+            };
+            grid.appendChild(card);
         });
     }
 
     function clearSel() {
         selectedDB.clear();
-        document.querySelectorAll('#g-grid .card.selected').forEach(c => c.classList.remove('selected'));
+        document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
         document.getElementById('viewBtn').innerText = `👁️ Ver (0)`;
     }
 
-    function openM() { if(selectedDB.size === 0) return; curIdx = 0; document.getElementById('modal').style.display = 'flex'; updM(); }
+    function openM() { if(selectedDB.size > 0) { curIdx = 0; document.getElementById('modal').style.display = 'flex'; updM(); } }
     function closeM() { document.getElementById('modal').style.display = 'none'; }
-    function updM() { const items = Array.from(selectedDB.values()); document.getElementById('m-img').src = items[curIdx].r; }
+    function updM() { document.getElementById('m-img').src = Array.from(selectedDB.values())[curIdx].r; }
     function changeM(d) { const s = selectedDB.size; curIdx = (curIdx + d + s) % s; updM(); }
     </script>
 </body>
