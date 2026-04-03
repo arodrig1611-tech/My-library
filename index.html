@@ -14,14 +14,17 @@
         .f-bar { background:#141414; margin:10px auto; padding:15px; border-radius:12px; max-width:1400px; border:1px solid #333; }
         .grid { display:grid; gap:10px; padding:15px; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); }
         
-        /* Estilo de Card y Álbum */
+        /* Floating Action Buttons */
+        .fab-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 2000; }
+        .fab { border: none; padding: 15px 25px; border-radius: 30px; color: white; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: 0.2s; }
+        .fab:active { transform: scale(0.9); }
+
         .card { background:#161616; border:1px solid #333; border-radius:8px; overflow:hidden; text-align:center; cursor: pointer; position: relative; transition: 0.2s; text-decoration: none; color: white;}
         .card:hover { border-color: var(--acc); transform: translateY(-3px); }
         .card.selected { border: 2px solid var(--acc); background: rgba(76, 175, 80, 0.1); }
         .card img { width:100%; height:250px; object-fit:cover; display:block; background: #222; }
         .card span { display:block; padding:8px; font-size:11px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        /* Portadas de Personaje */
         .album-card { height: 300px; display: flex; flex-direction: column; justify-content: flex-end; background-size: cover; background-position: center; }
         .album-title { background: rgba(0,0,0,0.8); padding: 12px; border-top: 1px solid var(--acc); font-size: 14px; }
 
@@ -63,12 +66,14 @@
 
     <div id="t-galeria" class="hidden">
         <div class="f-bar">
-            <div style="display:flex; gap:10px; flex-wrap: wrap;">
-                <input type="text" id="gSearch" placeholder="Buscar personaje..." style="flex-grow:1; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="renderAlbums(this.value)">
-                <button class="t-btn" style="background:var(--pink); border:none;" onclick="openM()" id="viewBtn">👁️ Ver (0)</button>
-                <button class="t-btn" style="background:#f44336; border:none;" onclick="clearSel()">🧹 Limpiar</button>
-            </div>
+            <input type="text" id="gSearch" placeholder="Buscar personaje..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="renderAlbums(this.value)">
         </div>
+        
+        <div class="fab-container">
+            <button class="fab" style="background:var(--pink);" onclick="openM()" id="viewBtn">👁️ Ver (0)</button>
+            <button class="fab" style="background:#f44336;" onclick="clearSel()">🧹 Limpiar</button>
+        </div>
+
         <div id="g-grid" class="grid"></div>
     </div>
 
@@ -89,7 +94,13 @@
     <script src="lista_imagenes.js"></script>
     <script src="lista_animes.js"></script> 
     <script>
-    let db = [], selectedDB = new Map(), curIdx = 0;
+    let db = [], selectedDB = new Map(), curIdx = 0, currentView = 'albums';
+
+    // Manejo del botón "Atrás" del navegador/celular
+    window.onpopstate = function() {
+        if (document.getElementById('modal').style.display === 'flex') closeM(false);
+        else if (currentView === 'images') renderAlbums();
+    };
 
     function tab(t, b) {
         document.getElementById('t-mangas').classList.toggle('hidden', t !== 'mangas');
@@ -101,54 +112,39 @@
         if (t === 'animes') loadAnimes();
     }
 
-    function loadAnimes() {
-        const container = document.getElementById('a-grid');
-        if (container.children.length > 0) return;
-        for (const [n, url] of Object.entries(lista_animes)) {
-            const a = document.createElement('a');
-            a.className = 'card anime-card'; a.href = url; a.target = '_blank';
-            a.innerHTML = `<span>${n.replace(/_/g, ' ')}</span>`;
-            container.appendChild(a);
-        }
-    }
-
     function searchGeneric(q, id) {
-        document.querySelectorAll(`#${id} .card`).forEach(c => {
-            c.classList.toggle('hidden', !c.innerText.toLowerCase().includes(q.toLowerCase()));
-        });
+        document.querySelectorAll(`#${id} .card`).forEach(c => c.classList.toggle('hidden', !c.innerText.toLowerCase().includes(q.toLowerCase())));
     }
 
     function loadG() {
         const proc = (obj, cat) => {
             if(!obj) return;
-            for (let [p, links] of Object.entries(obj)) {
-                links.forEach(r => db.push({ r, p, g: (cat==="Realista"?"Real":p) }));
-            }
+            for (let [p, links] of Object.entries(obj)) links.forEach(r => db.push({ r, p, g: (cat==="Realista"?"Real":p) }));
         };
         proc(lista_ilustraciones, "Ilus"); proc(lista_real, "Realista"); proc(lista_rule34, "Rule34");
         renderAlbums();
     }
 
     function renderAlbums(filter = "") {
+        currentView = 'albums';
         const grid = document.getElementById('g-grid');
         grid.innerHTML = '';
         const groups = [...new Set(db.map(i => i.g))].filter(g => g.toLowerCase().includes(filter.toLowerCase())).sort();
-
         groups.forEach(g => {
             const item = db.find(i => i.g === g);
             const album = document.createElement('div');
             album.className = 'card album-card';
             album.style.backgroundImage = `url('${item.r}')`;
             album.innerHTML = `<div class="album-title">${g.replace(/_/g, ' ')}</div>`;
-            album.onclick = () => renderImages(g);
+            album.onclick = () => { history.pushState({}, ""); renderImages(g); };
             grid.appendChild(album);
         });
     }
 
     function renderImages(groupName) {
+        currentView = 'images';
         const grid = document.getElementById('g-grid');
-        grid.innerHTML = `<div class="card album-card" style="height:50px; background:var(--pink); justify-content:center" onclick="renderAlbums()"><span>⬅ Volver a Personajes</span></div>`;
-        
+        grid.innerHTML = `<div class="card album-card" style="height:50px; background:var(--pink); justify-content:center" onclick="history.back()"><span>⬅ Volver a Personajes</span></div>`;
         db.filter(i => i.g === groupName).forEach(item => {
             const card = document.createElement('div');
             card.className = 'card' + (selectedDB.has(item.r) ? ' selected' : '');
@@ -162,16 +158,48 @@
         });
     }
 
+    function openM() { 
+        if(selectedDB.size > 0) { 
+            curIdx = 0; 
+            history.pushState({}, "");
+            document.getElementById('modal').style.display = 'flex'; 
+            updM(); 
+        } 
+    }
+    
+    function closeM(pushHistory = true) { 
+        document.getElementById('modal').style.display = 'none'; 
+        if(pushHistory) history.back();
+    }
+
+    function updM() { document.getElementById('m-img').src = Array.from(selectedDB.values())[curIdx].r; }
+    function changeM(d) { const s = selectedDB.size; curIdx = (curIdx + d + s) % s; updM(); }
+
+    // Control por teclado (PC)
+    document.onkeydown = (e) => {
+        if (document.getElementById('modal').style.display === 'flex') {
+            if (e.key === "ArrowRight") changeM(1);
+            if (e.key === "ArrowLeft") changeM(-1);
+            if (e.key === "Escape") closeM();
+        }
+    };
+
     function clearSel() {
         selectedDB.clear();
         document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
         document.getElementById('viewBtn').innerText = `👁️ Ver (0)`;
     }
 
-    function openM() { if(selectedDB.size > 0) { curIdx = 0; document.getElementById('modal').style.display = 'flex'; updM(); } }
-    function closeM() { document.getElementById('modal').style.display = 'none'; }
-    function updM() { document.getElementById('m-img').src = Array.from(selectedDB.values())[curIdx].r; }
-    function changeM(d) { const s = selectedDB.size; curIdx = (curIdx + d + s) % s; updM(); }
+    function loadAnimes() {
+        const container = document.getElementById('a-grid');
+        if (container.children.length > 0) return;
+        for (const [n, url] of Object.entries(lista_animes)) {
+            const a = document.createElement('a');
+            a.className = 'card anime-card'; a.href = url; a.target = '_blank';
+            a.innerHTML = `<span>${n.replace(/_/g, ' ')}</span>`;
+            container.appendChild(a);
+        }
+    }
     </script>
 </body>
 </html>
