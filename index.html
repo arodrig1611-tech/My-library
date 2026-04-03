@@ -5,38 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Library Pro - Fixed</title>
     <style>
-        :root { --bg: #0a0a0a; --acc: #4caf50; --pink: #d81b60; --blue: #2196f3; }
+        :root { --bg: #0a0a0a; --acc: #4caf50; --pink: #d81b60; --blue: #2196f3; --gray: #222; }
         * { box-sizing: border-box; }
         body { margin:0; font-family: sans-serif; background:var(--bg); color:white; overflow-x:hidden; }
         
-        /* Nav */
+        /* Nav Principal */
         .nav { display:flex; justify-content:center; gap:10px; padding:20px; position: sticky; top: 0; background: var(--bg); z-index: 1000; border-bottom: 1px solid #222; }
-        .t-btn { background:#222; color:white; border:1px solid #444; padding:10px 20px; border-radius:20px; cursor:pointer; transition:0.2s; }
+        .t-btn { background:#222; color:white; border:1px solid #444; padding:10px 20px; border-radius:20px; cursor:pointer; transition:0.2s; font-size: 14px; }
         .t-btn.active { background:var(--acc); border-color:var(--acc); }
 
-        /* Contenedores */
-        .f-bar { background:#141414; margin:10px auto; padding:15px; border-radius:12px; max-width:1400px; border:1px solid #333; }
+        /* Barra de Filtros y Categorías */
+        .f-bar { background:#141414; margin:10px auto; padding:15px; border-radius:12px; max-width:1400px; border:1px solid #333; display: flex; flex-direction: column; gap: 12px; }
+        .cat-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+        .cat-row::-webkit-scrollbar { display: none; }
+        .c-btn { background: #1a1a1a; color: #aaa; border: 1px solid #333; padding: 6px 15px; border-radius: 15px; cursor: pointer; white-space: nowrap; font-size: 12px; transition: 0.3s; }
+        .c-btn.active { background: var(--blue); color: white; border-color: var(--blue); }
+
+        /* Grid */
         .grid { display:grid; gap:10px; padding:15px; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); }
         
-        /* Cards e Imágenes */
+        /* Cards */
         .card { background:#161616; border:1px solid #333; border-radius:8px; overflow:hidden; text-align:center; cursor: pointer; position: relative; transition: 0.3s; text-decoration: none; color: white;}
         .card:hover { border-color: var(--acc); }
         .card img { width:100%; height:250px; object-fit:cover; display:block; transition: 0.3s; }
-        .card:hover img { transform: scale(1.1); }
+        .card:hover img { transform: scale(1.05); }
         .card span { display:block; padding:8px; font-size:11px; font-weight: bold; background: #161616; }
 
-        /* Portadas de Personaje */
-        .album-card { height: 300px; display: flex; flex-direction: column; justify-content: flex-end; background-size: cover; background-position: center; border: 1px solid #333; }
-        .badge { position: absolute; top: 10px; right: 10px; background: var(--blue); color: white; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-        .album-title { background: rgba(0,0,0,0.85); padding: 12px; border-top: 1px solid var(--acc); font-size: 14px; font-weight: bold; }
-
-        /* Anime Cards */
-        .card.anime-card { padding: 20px 10px; border-left: 4px solid var(--blue); }
-        .futa-sep { grid-column:1/-1; color:var(--acc); text-align:center; padding:15px; font-weight:bold; border-top: 1px dashed #333; }
+        /* Portadas de Álbum */
+        .album-card { height: 280px; display: flex; flex-direction: column; justify-content: flex-end; background-size: cover; background-position: center; border: 1px solid #333; position: relative; }
+        .badge { position: absolute; top: 10px; right: 10px; background: var(--blue); color: white; padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: bold; }
+        .album-title { background: rgba(0,0,0,0.85); padding: 10px; border-top: 1px solid var(--acc); font-size: 13px; font-weight: bold; }
 
         /* Floating Buttons */
         .fab-container { position: fixed; bottom: 20px; right: 20px; display: none; flex-direction: column; gap: 10px; z-index: 2000; }
-        .fab { border: none; padding: 15px 25px; border-radius: 30px; color: white; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: 0.2s; }
+        .fab { border: none; padding: 15px 25px; border-radius: 30px; color: white; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
 
         /* Modal */
         #modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:5000; }
@@ -44,7 +46,7 @@
         .m-nav { position:absolute; bottom:20px; width:100%; display:flex; justify-content:center; gap:10px; }
 
         .hidden { display:none !important; }
-        .skeleton { background: #1a1a1a; }
+        .selected { border: 2px solid var(--pink) !important; box-shadow: 0 0 10px var(--pink); }
     </style>
 </head>
 <body>
@@ -63,19 +65,19 @@
             <a class="card" href="reader.html?manga=Ibuki_X_Yui"><span>Ibuki X Yui</span></a>
             <a class="card" href="reader.html?manga=BB_X_Prota"><span>BB X Prota</span></a>
             <a class="card" href="reader.html?manga=Jalter_X_Apocrypha_NPC"><span>Jalter X Apocrypha NPC</span></a>
-            <div class="futa-sep">FUTANARIJIMA</div>
-            <a class="card" href="reader.html?manga=Futanarijima_ch1"><span>Capítulo 1</span></a>
-            <a class="card" href="reader.html?manga=Futanarijima_ch2"><span>Capítulo 2</span></a>
-            <a class="card" href="reader.html?manga=Futanarijima_ch3"><span>Capítulo 3</span></a>
-            <a class="card" href="reader.html?manga=Futanarijima_ch4"><span>Capítulo 4</span></a>
-            <a class="card" href="reader.html?manga=Futanarijima_ch5"><span>Capítulo 5</span></a>
-            <a class="card" href="reader.html?manga=Futanarijima_ch6"><span>Capítulo 6</span></a>
         </div>
     </div>
 
     <div id="t-galeria" class="hidden">
         <div class="f-bar">
             <input type="text" id="gSearch" placeholder="Buscar personaje..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="renderAlbums(this.value)">
+            <div class="cat-row" id="catFilters">
+                <button class="c-btn active" onclick="filterCat('TODOS', this)">Todos</button>
+                <button class="c-btn" onclick="filterCat('ANIME', this)">Anime</button>
+                <button class="c-btn" onclick="filterCat('JUEGOS', this)">Juegos</button>
+                <button class="c-btn" onclick="filterCat('REAL', this)">Real</button>
+                <button class="c-btn" onclick="filterCat('VARIADO', this)">Variado</button>
+            </div>
         </div>
         <div class="fab-container" id="g-fabs">
             <button class="fab" style="background:var(--pink);" onclick="openM()" id="viewBtn">👁️ Ver (0)</button>
@@ -102,9 +104,9 @@
     <script src="lista_imagenes.js"></script>
     <script src="lista_animes.js"></script> 
     <script>
-    let db = [], selectedDB = new Map(), curIdx = 0, currentView = 'albums', playInt = null, touchStartX = 0;
+    let db = [], selectedDB = new Map(), curIdx = 0, currentView = 'albums', playInt = null, activeCat = 'TODOS';
 
-    // Navegación de pestañas
+    // 1. Navegación Principal
     function tab(t, b) {
         document.getElementById('t-mangas').classList.toggle('hidden', t !== 'mangas');
         document.getElementById('t-galeria').classList.toggle('hidden', t !== 'galeria');
@@ -118,52 +120,64 @@
         if (t === 'animes') loadAnimes();
     }
 
-    // Cargar Base de Datos de Galería
+    // 2. Cargar Base de Datos desde Objeto Biblioteca
     function loadG() {
-    db = []; // Limpiamos la base de datos temporal
-    for (let [categoria, personajes] of Object.entries(biblioteca)) {
-        for (let [nombre, links] of Object.entries(personajes)) {
-            links.forEach(url => {
-                db.push({
-                    r: url,      // URL de la imagen
-                    p: nombre,   // Nombre del personaje
-                    sub: categoria, // ANIME, JUEGOS, etc.
-                    g: (categoria === "REAL" ? "Real" : nombre) // Grupo para el álbum
+        db = [];
+        for (let [cat, personajes] of Object.entries(biblioteca)) {
+            for (let [nombre, links] of Object.entries(personajes)) {
+                links.forEach(url => {
+                    db.push({ r: url, p: nombre, sub: cat, g: nombre });
                 });
-            });
+            }
         }
+        renderAlbums();
     }
-    renderAlbums();
-}
 
-    // Renderizar Álbumes (Portadas)
+    // 3. Filtrar por Categoría
+    function filterCat(cat, btn) {
+        activeCat = cat;
+        document.querySelectorAll('.c-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderAlbums(document.getElementById('gSearch').value);
+    }
+
+    // 4. Renderizar Álbumes
     function renderAlbums(filter = "") {
         currentView = 'albums';
         const grid = document.getElementById('g-grid');
         grid.innerHTML = '';
-        const groups = [...new Set(db.map(i => i.g))].filter(g => g.toLowerCase().includes(filter.toLowerCase())).sort();
+        
+        // Obtener grupos únicos que cumplan categoría y búsqueda
+        const groups = [...new Set(db.map(i => i.g))];
 
         groups.forEach(g => {
             const groupData = db.filter(i => i.g === g);
-            const album = document.createElement('div');
-            album.className = 'card album-card';
-            album.style.backgroundImage = `url('${groupData[0].r}')`;
-            album.innerHTML = `<div class="badge">${groupData.length} fotos</div><div class="album-title">${g.replace(/_/g, ' ')}</div>`;
-            album.onclick = () => { history.pushState({view: 'images'}, ""); renderImages(g); };
-            grid.appendChild(album);
+            const catGrupo = groupData[0].sub;
+            
+            const matchBusqueda = g.toLowerCase().includes(filter.toLowerCase().replace(/ /g, '_'));
+            const matchCat = (activeCat === 'TODOS' || catGrupo === activeCat);
+
+            if (matchBusqueda && matchCat) {
+                const album = document.createElement('div');
+                album.className = 'card album-card';
+                album.style.backgroundImage = `url('${groupData[0].r}')`;
+                album.innerHTML = `<div class="badge">${groupData.length} fotos</div><div class="album-title">${g.replace(/_/g, ' ')}</div>`;
+                album.onclick = () => { history.pushState({view: 'images'}, ""); renderImages(g); };
+                grid.appendChild(album);
+            }
         });
     }
 
-    // Renderizar Imágenes de un Personaje
+    // 5. Renderizar Imágenes del Álbum
     function renderImages(groupName) {
         currentView = 'images';
         const grid = document.getElementById('g-grid');
-        grid.innerHTML = `<div class="card album-card" style="height:60px; background:var(--pink); justify-content:center" onclick="history.back()"><span>⬅ Volver a Personajes</span></div>`;
+        grid.innerHTML = `<div class="card album-card" style="height:60px; background:var(--pink); justify-content:center" onclick="history.back()"><span>⬅ Volver</span></div>`;
         
         db.filter(i => i.g === groupName).forEach(item => {
             const card = document.createElement('div');
             card.className = 'card' + (selectedDB.has(item.r) ? ' selected' : '');
-            card.innerHTML = `<img src="${item.r}" loading="lazy"><span>${item.p}</span>`;
+            card.innerHTML = `<img src="${item.r}" loading="lazy"><span>${item.p.replace(/_/g, ' ')}</span>`;
             card.onclick = () => {
                 if (selectedDB.has(item.r)) { selectedDB.delete(item.r); card.classList.remove('selected'); }
                 else { selectedDB.set(item.r, item); card.classList.add('selected'); }
@@ -174,13 +188,12 @@
         window.scrollTo(0,0);
     }
 
-    // Manejo de Historia (Atrás)
-    window.onpopstate = (e) => {
+    // 6. Historia y Modal
+    window.onpopstate = () => {
         if (document.getElementById('modal').style.display === 'flex') closeM(false);
         else renderAlbums();
     };
 
-    // Modal
     function openM() { 
         if(selectedDB.size === 0) return;
         curIdx = 0; history.pushState({view: 'modal'}, "");
@@ -188,7 +201,6 @@
     }
     function closeM(push = true) { 
         clearInterval(playInt); playInt = null;
-        document.getElementById('playBtn').innerText = "▶ Auto";
         document.getElementById('modal').style.display = 'none'; 
         if(push) history.back();
     }
@@ -196,26 +208,10 @@
     function changeM(d) { const s = selectedDB.size; curIdx = (curIdx + d + s) % s; updM(); }
     function togglePlay() {
         if (playInt) { clearInterval(playInt); playInt = null; document.getElementById('playBtn').innerText = "▶ Auto"; }
-        else { playInt = setInterval(() => changeM(1), 10000); document.getElementById('playBtn').innerText = "⏸ Stop"; }
+        else { playInt = setInterval(() => changeM(1), 5000); document.getElementById('playBtn').innerText = "⏸ Stop"; }
     }
 
-    // Gestos y Teclado
-    const modal = document.getElementById('modal');
-    modal.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
-    modal.addEventListener('touchend', e => {
-        let diff = e.changedTouches[0].screenX - touchStartX;
-        if (Math.abs(diff) > 50) changeM(diff > 0 ? -1 : 1);
-    });
-    document.onkeydown = (e) => {
-        if (modal.style.display === 'flex') {
-            if (e.key === "ArrowRight") changeM(1);
-            if (e.key === "ArrowLeft") changeM(-1);
-            if (e.key === "p" || e.key === "P") togglePlay();
-            if (e.key === "Escape") closeM();
-        }
-    };
-
-    // Auxiliares
+    // 7. Auxiliares
     function clearSel() {
         selectedDB.clear();
         document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
@@ -224,8 +220,7 @@
 
     function searchGeneric(q, id) {
         document.querySelectorAll(`#${id} .card`).forEach(c => {
-            if(!c.classList.contains('futa-sep'))
-                c.classList.toggle('hidden', !c.innerText.toLowerCase().includes(q.toLowerCase()));
+            c.classList.toggle('hidden', !c.innerText.toLowerCase().includes(q.toLowerCase()));
         });
     }
 
@@ -234,7 +229,7 @@
         if (container.children.length > 0) return;
         for (const [n, url] of Object.entries(lista_animes)) {
             const a = document.createElement('a');
-            a.className = 'card anime-card'; a.href = url; a.target = '_blank';
+            a.className = 'card'; a.href = url; a.target = '_blank';
             a.innerHTML = `<span>${n.replace(/_/g, ' ')}</span>`;
             container.appendChild(a);
         }
