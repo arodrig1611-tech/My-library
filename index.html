@@ -45,6 +45,34 @@
 
         .hidden { display:none !important; }
         .selected { border: 2px solid var(--pink) !important; box-shadow: 0 0 15px var(--pink); }
+
+        @media (max-width: 600px) {
+        #g-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 5px !important; 
+        padding: 10px !important;
+    }
+
+    #g-grid .card img {
+        height: 120px !important; 
+    }
+
+    #g-grid .album-card {
+        height: 150px !important;
+    }
+
+    #g-grid .card span, #g-grid .album-title {
+        font-size: 9px !important;
+        padding: 5px !important;
+    }
+    
+    #g-grid .badge {
+        font-size: 8px !important;
+        padding: 2px 5px !important;
+        top: 5px !important;
+        right: 5px !important;
+    }
+}
     </style>
 </head>
 <body>
