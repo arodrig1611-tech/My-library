@@ -314,5 +314,86 @@ const lista_rule34 = {
     ],
     "Ciri_Witcher": [
   "https://cdn.imgchest.com/files/b3f75cf4a65b.png"
+    ],
+    "Ahri": [
+        "https://cdn.imgchest.com/files/9b9ebff4b937.png",
+        "https://cdn.imgchest.com/files/4c69f755b9ef.jpg"
+    ],
+    "Akali": [
+        "https://cdn.imgchest.com/files/6dc69d1a51b2.jpeg",
+        "https://cdn.imgchest.com/files/2df5793c355b.jpg"
+    ],
+    "Ashe_Overwatch": [
+        "https://cdn.imgchest.com/files/8ea2e8a3e4af.jpeg"
+    ],
+    "Aurora": [
+        "https://cdn.imgchest.com/files/9b88c402d4a6.jpeg"
+    ],
+    "Bayonetta": [
+        "https://cdn.imgchest.com/files/f627b45c72d4.jpeg"
+    ],
+    "Birgitta_Lycaon": [
+        "https://cdn.imgchest.com/files/972b5ea87882.jpeg"
+    ],
+    "Centorea": [
+        "https://cdn.imgchest.com/files/257d59590b46.png",
+        "https://cdn.imgchest.com/files/a9f9814e07ad.png",
+        "https://cdn.imgchest.com/files/9a5a4b264497.png"
+    ],
+    "Cheryl_Pokemon": [
+        "https://cdn.imgchest.com/files/0c78f8f20208.jpeg",
+        "https://cdn.imgchest.com/files/e2ffbc4f5f9d.jpeg",
+        "https://cdn.imgchest.com/files/66ab63a8219e.jpeg",
+        "https://cdn.imgchest.com/files/af12b532b6a7.jpeg"
+    ],
+    "Dehya": [
+        "https://cdn.imgchest.com/files/07e91e3803f6.png"
+    ],
+    "Evelynn": [
+        "https://cdn.imgchest.com/files/d062c3f549af.jpg",
+        "https://cdn.imgchest.com/files/e46d6bd31c31.jpg",
+        "https://cdn.imgchest.com/files/81cb6702ab7c.jpg"
+    ],
+    "Gwen": [
+        "https://cdn.imgchest.com/files/2f9a21ccdfd0.jpg",
+        "https://cdn.imgchest.com/files/e0119d51e4c4.jpg",
+        "https://cdn.imgchest.com/files/3fc09487f3e4.jpeg"
+    ],
+    "Irelia": [
+        "https://cdn.imgchest.com/files/91128537499e.jpeg"
+    ],
+    "Kaisa": [
+        "https://cdn.imgchest.com/files/334e7caf3909.jpeg"
+    ],
+    "Katarina": [
+        "https://cdn.imgchest.com/files/4fb9a6621575.jpg",
+        "https://cdn.imgchest.com/files/d997582a8520.png"
+    ],
+    "Mystique": [
+        "https://cdn.imgchest.com/files/12a320fab1ca.png"
+    ],
+    "Psylocke": [
+        "https://cdn.imgchest.com/files/5f4166c94398.jpeg"
+    ],
+    "Riven": [
+        "https://cdn.imgchest.com/files/9e2cf9fa4adc.jpeg",
+        "https://cdn.imgchest.com/files/94a0f4d8a124.jpeg"
+    ],
+    "Samira": [
+        "https://cdn.imgchest.com/files/f32e98c77de5.png"
+    ],
+    "Soraka": [
+        "https://cdn.imgchest.com/files/44a34b111e0c.jpg",
+        "https://cdn.imgchest.com/files/ef03e3abee15.jpg",
+        "https://cdn.imgchest.com/files/f873172e1aa8.jpg",
+        "https://cdn.imgchest.com/files/dcb07d3afa70.jpg",
+        "https://cdn.imgchest.com/files/999e3614c1f5.png"
+    ],
+    "Xilonen": [
+        "https://cdn.imgchest.com/files/c02e599c9f73.png"
+    ],
+    "Yumeko": [
+        "https://cdn.imgchest.com/files/30a261cb97e4.jpeg",
+        "https://cdn.imgchest.com/files/c534c7a81421.jpeg"
     ]
 };
