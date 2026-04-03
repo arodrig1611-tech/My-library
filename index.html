@@ -58,7 +58,9 @@
     </div>
 
     <div id="t-mangas">
-        <div class="f-bar"><input type="text" placeholder="Buscar manga..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="searchGeneric(this.value, 'm-grid')"></div>
+        <div class="f-bar">
+            <input type="text" placeholder="Buscar manga..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="searchGeneric(this.value, 'm-grid')">
+        </div>
         <div id="m-grid" class="grid">
             <a class="card" href="reader.html?manga=Futanarijima"><span>Futanarijima</span></a>
             <a class="card" href="reader.html?manga=Futanarijima_Vol_2"><span>Futanarijima Vol 2</span></a>
@@ -75,11 +77,11 @@
             <input type="text" id="gSearch" placeholder="Buscar personaje..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="renderAlbums(this.value)">
             <div class="cat-row" id="catFilters">
                 <button class="c-btn active" onclick="filterCat('TODOS', this)">Todos</button>
-                <button class="c-btn" onclick="filterCat('ANIME', this)">Anime</button>
-                <button class="c-btn" onclick="filterCat('JUEGOS', this)">Juegos</button>
-                <button class="c-btn" onclick="filterCat('REAL', this)">Real</button>
-                <button class="c-btn" onclick="filterCat('VARIADO', this)">Variado</button>
-                <button class="c-btn" onclick="filterCat('OTROS', this)">Otros (Sin clasificar)</button>
+                <button class="c-btn" onclick="filterCat('Anime_Manga', this)">Anime/Manga</button>
+                <button class="c-btn" onclick="filterCat('Juegos', this)">Juegos</button>
+                <button class="c-btn" onclick="filterCat('Comic', this)">Comic</button>
+                <button class="c-btn" onclick="filterCat('Real', this)">Real</button>
+                <button class="c-btn" onclick="filterCat('Variados', this)">Variados</button>
             </div>
         </div>
         <div class="fab-container" id="g-fabs">
@@ -122,23 +124,20 @@
         if (t === 'animes') loadAnimes();
     }
 
-    // 2. Cargar BD: Lógica HÍBRIDA para evitar errores si tienes formatos mezclados
+    // CORRECCIÓN: Ahora usa 'galeria_maestra' y procesa correctamente las categorías
     function loadG() {
         db = [];
-        for (let [llave, contenido] of Object.entries(biblioteca)) {
-            // Si el contenido es un Array (Formato Viejo ej: "Personaje": ["url1"])
-            if (Array.isArray(contenido)) {
-                contenido.forEach(url => {
-                    db.push({ r: url, p: llave, sub: 'OTROS', g: llave });
+        // Verificamos que galeria_maestra exista para no romper el código
+        if (typeof galeria_maestra === 'undefined') {
+            console.error("Error: No se encontró 'galeria_maestra' en lista_imagenes.js");
+            return;
+        }
+
+        for (let [categoria, personajes] of Object.entries(galeria_maestra)) {
+            for (let [nombre, links] of Object.entries(personajes)) {
+                links.forEach(url => {
+                    db.push({ r: url, p: nombre, sub: categoria, g: nombre });
                 });
-            } 
-            // Si el contenido es un Objeto (Formato Nuevo ej: "ANIME": {"Personaje": ["url1"]})
-            else if (typeof contenido === 'object' && contenido !== null) {
-                for (let [nombre, links] of Object.entries(contenido)) {
-                    links.forEach(url => {
-                        db.push({ r: url, p: nombre, sub: llave, g: nombre });
-                    });
-                }
             }
         }
         renderAlbums();
@@ -232,6 +231,7 @@
     function loadAnimes() {
         const container = document.getElementById('a-grid');
         if (container.children.length > 0) return;
+        if (typeof lista_animes === 'undefined') return;
         for (const [n, url] of Object.entries(lista_animes)) {
             const a = document.createElement('a');
             a.className = 'card'; a.href = url; a.target = '_blank';
