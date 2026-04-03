@@ -57,22 +57,9 @@
 
     <div id="t-mangas">
         <div class="f-bar">
-            <input type="text" placeholder="Buscar manga..." style="width:100%; padding:12px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="searchGeneric(this.value, 'm-grid')">
+            <input type="text" placeholder="Buscar manga..." style="width:100%; padding:12px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="loadMangas(this.value)">
         </div>
-        <div id="m-grid" class="grid">
-            <a class="card" href="reader.html?manga=Futanarijima_Vol_1"><img src="https://r2.eroshare.com/i/6620358e6580e.jpg"><span>Futanarijima Vol. 1</span></a>
-            <a class="card" href="reader.html?manga=Futanarijima_Vol_2"><img src="https://r2.eroshare.com/i/662035a0d3f2b.jpg"><span>Futanarijima Vol. 2</span></a>
-            <a class="card" href="reader.html?manga=Futanarijima_Vol_3"><img src="https://r2.eroshare.com/i/662035b342e5a.jpg"><span>Futanarijima Vol. 3</span></a>
-            <a class="card" href="reader.html?manga=Futanarijima_Vol_4"><img src="https://r2.eroshare.com/i/662035c59f7d2.jpg"><span>Futanarijima Vol. 4</span></a>
-            <a class="card" href="reader.html?manga=Futanarijima_Vol_5"><img src="https://r2.eroshare.com/i/662035d7e5b2c.jpg"><span>Futanarijima Vol. 5</span></a>
-            <a class="card" href="reader.html?manga=Futanarijima_Vol_6"><img src="https://r2.eroshare.com/i/662035e94b2d1.jpg"><span>Futanarijima Vol. 6</span></a>
-            
-            <a class="card" href="reader.html?manga=Francis_X_Raikou"><img src="https://r2.eroshare.com/i/66203612d4a2b.jpg"><span>Francis X Raikou</span></a>
-            <a class="card" href="reader.html?manga=Yang_Gui_Fei_X_Prota"><img src="https://r2.eroshare.com/i/662036254a3c1.jpg"><span>Yang Gui Fei X Prota</span></a>
-            <a class="card" href="reader.html?manga=Ibuki_X_Yui"><img src="https://r2.eroshare.com/i/662036379f1d2.jpg"><span>Ibuki X Yui</span></a>
-            <a class="card" href="reader.html?manga=BB_X_Prota"><img src="https://r2.eroshare.com/i/66203649e4d2b.jpg"><span>BB X Prota</span></a>
-            <a class="card" href="reader.html?manga=Jalter_X_Apocrypha_NPC"><img src="https://r2.eroshare.com/i/6620365c4a3d1.jpg"><span>Jalter X Apocrypha NPC</span></a>
-        </div>
+        <div id="m-grid" class="grid"></div>
     </div>
 
     <div id="t-galeria" class="hidden">
@@ -109,6 +96,7 @@
         </div>
     </div>
 
+    <script src="lista_mangas.js"></script>
     <script src="lista_imagenes.js"></script>
     <script src="lista_animes.js"></script> 
     <script>
@@ -124,6 +112,76 @@
         if (t === 'galeria' && db.length === 0) loadG();
         if (t === 'animes') loadAnimes();
     }
+
+    /* === NUEVA LÓGICA DE MANGAS === */
+    function loadMangas(filter = "") {
+        const grid = document.getElementById('m-grid');
+        grid.innerHTML = '';
+        if (typeof bibliotecaMangas === 'undefined') return;
+
+        const seriesMap = {};
+
+        // Agrupar
+        Object.keys(bibliotecaMangas).forEach(key => {
+            const baseName = key.split(/_ch|_Vol/i)[0].replace(/_/g, ' ');
+            const isSubChapter = key.includes('_ch') || key.includes('_Vol');
+
+            if (!seriesMap[baseName]) {
+                seriesMap[baseName] = { nombre: baseName, caps: [], portada: bibliotecaMangas[key][0] };
+            }
+            seriesMap[baseName].caps.push({
+                originalKey: key,
+                label: isSubChapter ? `Capítulo ${key.split(/_ch|_Vol/i)[1]}` : "Completo",
+                link: `reader.html?manga=${key}`
+            });
+        });
+
+        // Renderizar
+        Object.values(seriesMap).sort((a,b) => a.nombre.localeCompare(b.nombre)).forEach(serie => {
+            if (filter && !serie.nombre.toLowerCase().includes(filter.toLowerCase())) return;
+
+            const card = document.createElement('div');
+            const hasMultiple = serie.caps.length > 1;
+            
+            card.className = 'card';
+            card.innerHTML = `
+                ${hasMultiple ? `<div class="badge" style="background:var(--pink)">${serie.caps.length} Caps</div>` : ''}
+                <img src="${serie.portada}" loading="lazy">
+                <span>${serie.nombre}</span>
+            `;
+
+            card.onclick = () => {
+                if (hasMultiple) {
+                    renderExpandedSerie(serie);
+                } else {
+                    window.location.href = serie.caps[0].link;
+                }
+            };
+            grid.appendChild(card);
+        });
+    }
+
+    function renderExpandedSerie(serie) {
+        const grid = document.getElementById('m-grid');
+        grid.innerHTML = `
+            <div class="card" style="grid-column: 1/-1; height: 60px; background: var(--pink); display:flex; align-items:center; justify-content:center; font-weight:bold; flex-direction:row;" onclick="loadMangas()">
+                ⬅ Volver a Biblioteca
+            </div>
+        `;
+
+        serie.caps.sort((a,b) => a.label.localeCompare(b.label, undefined, {numeric: true})).forEach(cap => {
+            const card = document.createElement('a');
+            card.className = 'card';
+            card.href = cap.link;
+            card.innerHTML = `
+                <img src="${bibliotecaMangas[cap.originalKey][0]}" loading="lazy">
+                <span>${serie.nombre} - ${cap.label}</span>
+            `;
+            grid.appendChild(card);
+        });
+        window.scrollTo(0,0);
+    }
+    /* ============================== */
 
     function loadG() {
         db = [];
@@ -176,7 +234,7 @@
 
     function renderImages(groupName) {
         const grid = document.getElementById('g-grid');
-        grid.innerHTML = `<div class="card album-card" style="height:80px; background:var(--pink); justify-content:center;" onclick="history.back()"><span>⬅ Volver</span></div>`;
+        grid.innerHTML = `<div class="card album-card" style="height:80px; background:var(--pink); justify-content:center; flex-direction:row; align-items:center;" onclick="history.back()"><span style="border-top:none; background:transparent;">⬅ Volver</span></div>`;
         db.filter(i => i.g === groupName).forEach(item => {
             const card = document.createElement('div');
             card.className = 'card' + (selectedDB.has(item.r) ? ' selected' : '');
@@ -240,7 +298,10 @@
         document.getElementById('viewBtn').innerText = `👁️ Ver (0)`;
     }
 
-    window.onload = () => { searchGeneric('', 'm-grid'); };
+    // Al cargar la ventana, iniciar Mangas
+    window.onload = () => { 
+        loadMangas(); 
+    };
     </script>
 </body>
 </html>
