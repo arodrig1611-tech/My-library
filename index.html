@@ -60,6 +60,8 @@
     <div id="t-mangas">
         <div class="f-bar"><input type="text" placeholder="Buscar manga..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="searchGeneric(this.value, 'm-grid')"></div>
         <div id="m-grid" class="grid">
+            <a class="card" href="reader.html?manga=Futanarijima"><span>Futanarijima</span></a>
+            <a class="card" href="reader.html?manga=Futanarijima_Vol_2"><span>Futanarijima Vol 2</span></a>
             <a class="card" href="reader.html?manga=Francis_X_Raikou"><span>Francis X Raikou</span></a>
             <a class="card" href="reader.html?manga=Yang_Gui_Fei_X_Prota"><span>Yang Gui Fei X Prota</span></a>
             <a class="card" href="reader.html?manga=Ibuki_X_Yui"><span>Ibuki X Yui</span></a>
@@ -77,6 +79,7 @@
                 <button class="c-btn" onclick="filterCat('JUEGOS', this)">Juegos</button>
                 <button class="c-btn" onclick="filterCat('REAL', this)">Real</button>
                 <button class="c-btn" onclick="filterCat('VARIADO', this)">Variado</button>
+                <button class="c-btn" onclick="filterCat('OTROS', this)">Otros (Sin clasificar)</button>
             </div>
         </div>
         <div class="fab-container" id="g-fabs">
@@ -106,7 +109,6 @@
     <script>
     let db = [], selectedDB = new Map(), curIdx = 0, currentView = 'albums', playInt = null, activeCat = 'TODOS';
 
-    // 1. Navegación Principal
     function tab(t, b) {
         document.getElementById('t-mangas').classList.toggle('hidden', t !== 'mangas');
         document.getElementById('t-galeria').classList.toggle('hidden', t !== 'galeria');
@@ -120,20 +122,28 @@
         if (t === 'animes') loadAnimes();
     }
 
-    // 2. Cargar Base de Datos desde Objeto Biblioteca
+    // 2. Cargar BD: Lógica HÍBRIDA para evitar errores si tienes formatos mezclados
     function loadG() {
         db = [];
-        for (let [cat, personajes] of Object.entries(biblioteca)) {
-            for (let [nombre, links] of Object.entries(personajes)) {
-                links.forEach(url => {
-                    db.push({ r: url, p: nombre, sub: cat, g: nombre });
+        for (let [llave, contenido] of Object.entries(biblioteca)) {
+            // Si el contenido es un Array (Formato Viejo ej: "Personaje": ["url1"])
+            if (Array.isArray(contenido)) {
+                contenido.forEach(url => {
+                    db.push({ r: url, p: llave, sub: 'OTROS', g: llave });
                 });
+            } 
+            // Si el contenido es un Objeto (Formato Nuevo ej: "ANIME": {"Personaje": ["url1"]})
+            else if (typeof contenido === 'object' && contenido !== null) {
+                for (let [nombre, links] of Object.entries(contenido)) {
+                    links.forEach(url => {
+                        db.push({ r: url, p: nombre, sub: llave, g: nombre });
+                    });
+                }
             }
         }
         renderAlbums();
     }
 
-    // 3. Filtrar por Categoría
     function filterCat(cat, btn) {
         activeCat = cat;
         document.querySelectorAll('.c-btn').forEach(b => b.classList.remove('active'));
@@ -141,13 +151,11 @@
         renderAlbums(document.getElementById('gSearch').value);
     }
 
-    // 4. Renderizar Álbumes
     function renderAlbums(filter = "") {
         currentView = 'albums';
         const grid = document.getElementById('g-grid');
         grid.innerHTML = '';
         
-        // Obtener grupos únicos que cumplan categoría y búsqueda
         const groups = [...new Set(db.map(i => i.g))];
 
         groups.forEach(g => {
@@ -168,7 +176,6 @@
         });
     }
 
-    // 5. Renderizar Imágenes del Álbum
     function renderImages(groupName) {
         currentView = 'images';
         const grid = document.getElementById('g-grid');
@@ -188,7 +195,6 @@
         window.scrollTo(0,0);
     }
 
-    // 6. Historia y Modal
     window.onpopstate = () => {
         if (document.getElementById('modal').style.display === 'flex') closeM(false);
         else renderAlbums();
@@ -211,7 +217,6 @@
         else { playInt = setInterval(() => changeM(1), 5000); document.getElementById('playBtn').innerText = "⏸ Stop"; }
     }
 
-    // 7. Auxiliares
     function clearSel() {
         selectedDB.clear();
         document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
