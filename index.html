@@ -120,18 +120,21 @@
 
     // Cargar Base de Datos de Galería
     function loadG() {
-        db = []; // Reset
-        const proc = (obj, cat) => {
-            if(!obj) return;
-            for (let [p, links] of Object.entries(obj)) {
-                links.forEach(r => db.push({ r, p, g: (cat==="Realista"?"Real":p), c: cat }));
-            }
-        };
-        proc(lista_ilustraciones, "Ilus"); 
-        proc(lista_real, "Realista"); 
-        proc(lista_rule34, "Rule34");
-        renderAlbums();
+    db = []; // Limpiamos la base de datos temporal
+    for (let [categoria, personajes] of Object.entries(biblioteca)) {
+        for (let [nombre, links] of Object.entries(personajes)) {
+            links.forEach(url => {
+                db.push({
+                    r: url,      // URL de la imagen
+                    p: nombre,   // Nombre del personaje
+                    sub: categoria, // ANIME, JUEGOS, etc.
+                    g: (categoria === "REAL" ? "Real" : nombre) // Grupo para el álbum
+                });
+            });
+        }
     }
+    renderAlbums();
+}
 
     // Renderizar Álbumes (Portadas)
     function renderAlbums(filter = "") {
