@@ -892,5 +892,5 @@ const bibliotecaMangas = {
         "https://cdn.imgchest.com/files/a3f64a9fdc51.webp",
         "https://cdn.imgchest.com/files/75f01ac722e7.webp",
         "https://cdn.imgchest.com/files/b9d9ab4fa084.webp"
-    ]
+    ],
 };
