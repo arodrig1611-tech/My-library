@@ -192,7 +192,7 @@ const bibliotecaMangas = {
         "https://cdn.imgchest.com/files/5e453b120340.webp",
         "https://cdn.imgchest.com/files/c7e84dc95948.webp"
     ],
-    "Futanari_Chinjufu_Wanwan_Sanpo": [
+    "Futanari Chinjufu Wanwan Sanpo": [
         "https://cdn.imgchest.com/files/ac0fa563fa10.webp",
         "https://cdn.imgchest.com/files/40c4b334c95d.webp",
         "https://cdn.imgchest.com/files/8337b698e07a.webp",
