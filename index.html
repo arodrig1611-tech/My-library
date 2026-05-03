@@ -5,127 +5,119 @@
     <link rel="dns-prefetch" href="https://imgchest.com">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Library Pro - Ultra Fluid</title>
+    <title>My Library Pro - Mobile Optimized</title>
     <style>
         :root { --bg: #0a0a0a; --acc: #4caf50; --pink: #d81b60; --blue: #2196f3; --gray: #222; }
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin:0; font-family: 'Segoe UI', sans-serif; background:var(--bg); color:white; overflow-x:hidden; }
         
         /* Nav Principal */
-        .nav { display:flex; justify-content:center; gap:15px; padding:20px; position: sticky; top: 0; background: rgba(10,10,10,0.95); z-index: 1000; border-bottom: 1px solid #222; backdrop-filter: blur(10px); }
-        .t-btn { background:#1a1a1a; color:#aaa; border:1px solid #333; padding:12px 25px; border-radius:25px; cursor:pointer; transition:0.3s; font-size: 14px; font-weight: bold; outline: none; }
-        .t-btn.active { background:var(--acc); border-color:var(--acc); color: white; box-shadow: 0 0 15px rgba(76, 175, 80, 0.3); }
+        .nav { display:flex; justify-content:center; gap:10px; padding:15px; position: sticky; top: 0; background: #0a0a0a; z-index: 1000; border-bottom: 1px solid #222; }
+        .t-btn { background:#1a1a1a; color:#aaa; border:1px solid #333; padding:10px 20px; border-radius:25px; cursor:pointer; transition:0.2s; font-size: 13px; font-weight: bold; }
+        .t-btn.active { background:var(--acc); border-color:var(--acc); color: white; }
 
         /* Barra de Filtros */
-        .f-bar { background:#141414; margin:15px auto; padding:15px; border-radius:12px; max-width:1400px; border:1px solid #333; display: flex; flex-direction: column; gap: 12px; }
+        .f-bar { background:#141414; margin:10px auto; padding:12px; border-radius:10px; max-width:1400px; border:1px solid #333; display: flex; flex-direction: column; gap: 10px; }
         .cat-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
-        .c-btn { background: #1a1a1a; color: #aaa; border: 1px solid #333; padding: 8px 18px; border-radius: 20px; cursor: pointer; white-space: nowrap; font-size: 12px; transition: 0.3s; }
-        .c-btn.active { background: var(--blue); color: white; border-color: var(--blue); }
+        .c-btn { background: #1a1a1a; color: #aaa; border: 1px solid #333; padding: 7px 15px; border-radius: 20px; cursor: pointer; white-space: nowrap; font-size: 11px; }
+        .c-btn.active { background: var(--blue); color: white; }
 
         /* Grid Optimizado */
         .grid { 
-            display:grid; gap:15px; padding:20px; 
-            grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); 
+            display:grid; gap:10px; padding:10px; 
+            grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); 
             max-width: 1600px; margin: 0 auto;
-            contain: paint; /* Mejora rendimiento de scroll */
+            contain: content;
         }
         
-        /* Cards con Visibilidad Inteligente */
+        /* Cards Mobile-Ready */
         .card { 
-            background:#161616; border:1px solid #333; border-radius:10px; 
-            overflow:hidden; text-align:center; cursor: pointer; 
-            position: relative; transition: 0.2s; text-decoration: none; 
-            color: white; display: flex; flex-direction: column;
-            content-visibility: auto; /* El navegador no procesa la card si no está en pantalla */
-            contain-intrinsic-size: 200px 300px; /* Reserva espacio para evitar saltos de scroll */
+            background:#161616; border:1px solid #333; border-radius:8px; 
+            overflow:hidden; text-align:center; position: relative; 
+            display: flex; flex-direction: column;
+            content-visibility: auto; 
+            contain-intrinsic-size: 160px 240px;
+            transform: translateZ(0); /* Aceleración GPU */
         }
-        .card:hover { border-color: var(--acc); transform: scale(1.02); }
         
         .card img { 
             width:100%; 
-            aspect-ratio: 200 / 280; /* Crucial: reserva el espacio exacto antes de que cargue la foto */
+            aspect-ratio: 3 / 4; 
             object-fit:cover; 
             display:block; 
-            transition: opacity 0.3s ease; 
             background: #111;
+            transition: opacity 0.2s;
         }
         
         .img-loading { opacity: 0; }
         .img-loaded { opacity: 1; }
 
-        .card span { display:block; padding:12px; font-size:12px; font-weight: bold; background: #161616; border-top: 1px solid #222; flex-grow: 1; display: flex; align-items: center; justify-content: center; }
+        .card span { display:block; padding:8px; font-size:11px; font-weight: bold; background: #161616; border-top: 1px solid #222; }
 
         /* Álbumes */
-        .album-card { height: 320px; justify-content: flex-end; background-size: cover; background-position: center; }
-        .badge { position: absolute; top: 10px; right: 10px; background: var(--blue); color: white; padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: bold; z-index: 2; }
-        .album-title { background: rgba(0,0,0,0.85); padding: 12px; border-top: 1px solid var(--acc); font-size: 13px; font-weight: bold; width: 100%; backdrop-filter: blur(5px); }
+        .album-card { height: 220px; justify-content: flex-end; background-size: cover; background-position: center; }
+        .badge { position: absolute; top: 8px; right: 8px; background: var(--blue); color: white; padding: 3px 8px; border-radius: 10px; font-size: 9px; font-weight: bold; z-index: 2; }
+        .album-title { background: rgba(0,0,0,0.8); padding: 8px; border-top: 1px solid var(--acc); font-size: 11px; font-weight: bold; width: 100%; }
 
         /* Fabs */
-        .fab-container { position: fixed; bottom: 25px; right: 25px; display: none; flex-direction: column; gap: 12px; z-index: 2000; }
-        .fab { border: none; padding: 15px 25px; border-radius: 30px; color: white; font-weight: bold; cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.6); }
+        .fab-container { position: fixed; bottom: 20px; right: 20px; display: none; flex-direction: column; gap: 10px; z-index: 2000; }
+        .fab { border: none; padding: 12px 20px; border-radius: 25px; color: white; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
 
         /* Modal */
-        #modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.98); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:5000; }
-        #modal img { max-width:98%; max-height:88vh; object-fit:contain; }
-        .m-nav { position:absolute; bottom:30px; width:100%; display:flex; justify-content:center; gap:15px; }
+        #modal { position:fixed; top:0; left:0; width:100%; height:100%; background:#000; display:none; flex-direction:column; align-items:center; justify-content:center; z-index:5000; }
+        #modal img { max-width:100%; max-height:90vh; object-fit:contain; }
 
         .hidden { display:none !important; }
-        .selected { border: 2px solid var(--pink) !important; box-shadow: 0 0 15px var(--pink); }
+        .selected { border: 2px solid var(--pink) !important; }
 
         @media (max-width: 600px) {
-            #g-grid { grid-template-columns: repeat(4, 1fr) !important; gap: 5px !important; padding: 10px !important; }
-            #g-grid .card img { height: 120px !important; aspect-ratio: auto; }
-            #g-grid .album-card { height: 150px !important; }
-            #g-grid .card span, #g-grid .album-title { font-size: 9px !important; padding: 5px !important; }
-            #g-grid .badge { font-size: 8px !important; padding: 2px 5px !important; top: 5px !important; right: 5px !important; }
+            .grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .nav { padding: 10px; gap: 5px; }
+            .t-btn { padding: 8px 12px; font-size: 11px; }
         }
     </style>
 </head>
 <body>
 
     <div class="nav">
-        <button class="t-btn active" onclick="tab('mangas',this)">📚 Mis Mangas</button>
-        <button class="t-btn" onclick="tab('galeria',this)">🖼️ Ilustraciones</button>
+        <button class="t-btn active" onclick="tab('mangas',this)">📚 Mangas</button>
+        <button class="t-btn" onclick="tab('galeria',this)">🖼️ Galería</button>
         <button class="t-btn" onclick="tab('animes',this)">📺 Animes</button>
     </div>
 
     <div id="t-mangas">
         <div class="f-bar">
-            <input type="text" placeholder="Buscar manga..." style="width:100%; padding:12px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="loadMangas(this.value)">
+            <input type="text" placeholder="Buscar manga..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="debouncedSearch(this.value, 'mangas')">
         </div>
         <div id="m-grid" class="grid"></div>
     </div>
 
     <div id="t-galeria" class="hidden">
         <div class="f-bar">
-            <input type="text" id="gSearch" placeholder="Buscar..." style="width:100%; padding:12px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="renderAlbums(this.value)">
-            <div class="cat-row" id="catFilters">
+            <input type="text" id="gSearch" placeholder="Buscar..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="debouncedSearch(this.value, 'galeria')">
+            <div class="cat-row">
                 <button class="c-btn active" onclick="filterCat('TODOS', this)">Todos</button>
-                <button class="c-btn" onclick="filterCat('Anime_Manga', this)">Anime/Manga</button>
+                <button class="c-btn" onclick="filterCat('Anime_Manga', this)">Anime</button>
                 <button class="c-btn" onclick="filterCat('Juegos', this)">Juegos</button>
-                <button class="c-btn" onclick="filterCat('Comic', this)">Comic</button>
                 <button class="c-btn" onclick="filterCat('Real', this)">Real</button>
-                <button class="c-btn" onclick="filterCat('Variados', this)">Variados</button>
             </div>
         </div>
+        <div id="g-grid" class="grid"></div>
         <div class="fab-container" id="g-fabs">
             <button class="fab" style="background:var(--pink);" onclick="openM()" id="viewBtn">👁️ Ver (0)</button>
-            <button class="fab" style="background:#f44336;" onclick="clearSel()">🧹 Limpiar</button>
         </div>
-        <div id="g-grid" class="grid"></div>
     </div>
 
     <div id="t-animes" class="hidden">
-        <div class="f-bar"><input type="text" placeholder="Buscar anime..." style="width:100%; padding:12px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="searchGeneric(this.value, 'a-grid')"></div>
+        <div class="f-bar"><input type="text" placeholder="Buscar anime..." style="width:100%; padding:10px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="searchGeneric(this.value, 'a-grid')"></div>
         <div id="a-grid" class="grid"></div>
     </div>
 
     <div id="modal" onclick="if(event.target===this) closeM()">
-        <button style="position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:35px;" onclick="closeM()">✕</button>
         <img id="m-img" src="">
-        <div class="m-nav">
+        <div style="position:absolute; bottom:20px; display:flex; gap:20px;">
             <button class="t-btn" onclick="changeM(-1)">❮</button>
-            <button class="t-btn" id="playBtn" onclick="togglePlay()">▶ Auto</button>
+            <button class="t-btn" onclick="closeM()">Cerrar</button>
             <button class="t-btn" onclick="changeM(1)">❯</button>
         </div>
     </div>
@@ -134,302 +126,184 @@
     <script src="lista_imagenes.js"></script>
     <script src="lista_animes.js"></script> 
     <script>
-    let db = [], selectedDB = new Map(), curIdx = 0, currentView = 'albums', playInt = null, activeCat = 'TODOS';
+    let db = [], selectedDB = new Map(), curIdx = 0, activeCat = 'TODOS';
+    let fullItems = [], itemsLoaded = 0, currentSearch = "";
+    const CHUNK_SIZE = 24;
 
-    // 1. Service Worker para caché offline
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js');
-    }
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 
-    /* === MOTOR DE CARGA ULTRA (Observer + Async Decode) === */
-    const observerOptions = { rootMargin: '0px 0px 1000px 0px' }; // Carga mucho antes de llegar
+    /* --- MOTOR DE CARGA --- */
     const imageObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const img = entry.target;
-                if (!img.dataset.src) return;
-                
-                const tempImg = new Image();
-                tempImg.src = img.dataset.src;
-                
-                // Decodificación asíncrona: la CPU prepara la imagen sin trabar el scroll
-                tempImg.decode().then(() => {
-                    img.src = tempImg.src;
-                    img.classList.add('img-loaded');
-                }).catch(() => {
+                if(img.dataset.src) {
                     img.src = img.dataset.src;
-                    img.classList.add('img-loaded');
-                });
+                    img.onload = () => img.classList.add('img-loaded');
+                }
                 observer.unobserve(img);
             }
         });
-    }, observerOptions);
+    }, { rootMargin: '400px' });
 
-    function createLazyImg(src, alt) {
-        const img = document.createElement('img');
-        img.className = 'img-loading';
-        img.dataset.src = src;
-        img.alt = alt;
-        img.decoding = 'async';
-        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lMREFUeNoFwQEBAAAAgl0A/gl1UwVNAAACR0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=";
-        imageObserver.observe(img);
-        return img;
-    }
-
-    /* === DELEGACIÓN DE EVENTOS (Elimina el freeze al cliquear) === */
-    document.getElementById('m-grid').addEventListener('click', handleGridClick);
-    document.getElementById('g-grid').addEventListener('click', handleGridClick);
-
-    function handleGridClick(e) {
+    /* --- DELEGACIÓN DE CLIC --- */
+    document.addEventListener('click', (e) => {
         const card = e.target.closest('.card');
-        if (!card || !card.dataset.id) return;
-
+        if (!card) return;
         const id = card.dataset.id;
         const type = card.dataset.type;
 
-        if (type === 'manga_serie') {
-            const serieData = JSON.parse(card.dataset.extra);
-            renderExpandedSerie(serieData);
-        } else if (type === 'album') {
-            history.pushState({view: 'images'}, "");
-            renderImages(id);
-        } else if (type === 'image' || type === 'manga_cap') {
-            const link = card.dataset.link;
-            if (type === 'manga_cap') window.location.href = link;
-            else {
-                // Aquí podrías añadir lógica de selección si quieres
-                const item = { r: link, p: card.querySelector('span').innerText };
-                toggleSelection(item, card);
-            }
+        if (type === 'manga_serie') { renderExpandedSerie(JSON.parse(card.dataset.extra)); }
+        else if (type === 'album') { history.pushState({view: 'images'}, ""); renderImages(id); }
+        else if (type === 'image' || type === 'manga_cap') {
+            if (type === 'manga_cap') window.location.href = card.dataset.link;
+            else toggleSelection({r: card.dataset.link, p: id}, card);
         }
+    }, { passive: true });
+
+    /* --- RENDERIZADO POR LOTES (La clave para móviles) --- */
+    window.onscroll = () => {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 800) {
+            renderMore();
+        }
+    };
+
+    function renderMore() {
+        if (itemsLoaded >= fullItems.length) return;
+        const gridId = document.getElementById('t-mangas').classList.contains('hidden') ? 'g-grid' : 'm-grid';
+        const grid = document.getElementById(gridId);
+        const fragment = document.createDocumentFragment();
+        
+        const nextBatch = fullItems.slice(itemsLoaded, itemsLoaded + CHUNK_SIZE);
+        nextBatch.forEach(item => fragment.appendChild(createCard(item)));
+        
+        grid.appendChild(fragment);
+        itemsLoaded += CHUNK_SIZE;
     }
 
+    function createCard(item) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        if(item.type === 'album') {
+            card.className += ' album-card';
+            card.style.backgroundImage = `url('${item.r}')`;
+            card.dataset.type = 'album';
+            card.dataset.id = item.g;
+            card.innerHTML = `<div class="badge">${item.count} fotos</div><div class="album-title">${item.p.replace(/_/g, ' ')}</div>`;
+        } else {
+            card.dataset.type = item.type;
+            card.dataset.id = item.p;
+            card.dataset.link = item.link || item.r;
+            if(item.extra) card.dataset.extra = item.extra;
+            if(selectedDB.has(item.r)) card.classList.add('selected');
+            
+            const img = document.createElement('img');
+            img.className = 'img-loading';
+            img.dataset.src = item.r;
+            img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lMREFUeNoFwQEBAAAAgl0A/gl1UwVNAAACR0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=";
+            
+            card.appendChild(img);
+            card.innerHTML += `<span>${(item.nombre || item.p).replace(/_/g, ' ')}</span>`;
+            imageObserver.observe(img);
+        }
+        return card;
+    }
+
+    /* --- LÓGICA DE SECCIONES --- */
     function tab(t, b) {
+        document.querySelectorAll('.t-btn').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
         document.getElementById('t-mangas').classList.toggle('hidden', t !== 'mangas');
         document.getElementById('t-galeria').classList.toggle('hidden', t !== 'galeria');
         document.getElementById('t-animes').classList.toggle('hidden', t !== 'animes');
         document.getElementById('g-fabs').style.display = (t === 'galeria') ? 'flex' : 'none';
-        document.querySelectorAll('.nav .t-btn').forEach(x => x.classList.remove('active'));
-        b.classList.add('active');
         if (t === 'galeria' && db.length === 0) loadG();
-        if (t === 'animes') loadAnimes();
+        else if (t === 'animes') loadAnimes();
+        else if (t === 'mangas') loadMangas();
     }
 
     function loadMangas(filter = "") {
-        const grid = document.getElementById('m-grid');
-        grid.innerHTML = '';
-        if (typeof bibliotecaMangas === 'undefined') return;
-
-        const fragment = document.createDocumentFragment();
+        fullItems = []; itemsLoaded = 0;
+        document.getElementById('m-grid').innerHTML = '';
         const seriesMap = {};
-
         Object.keys(bibliotecaMangas).forEach(key => {
             const baseName = key.split(/_ch|_Vol/i)[0].replace(/_/g, ' ');
-            const isSubChapter = key.includes('_ch') || key.includes('_Vol');
-            if (!seriesMap[baseName]) {
-                seriesMap[baseName] = { nombre: baseName, caps: [], portada: bibliotecaMangas[key][0] };
-            }
-            seriesMap[baseName].caps.push({
-                originalKey: key,
-                label: isSubChapter ? `Capítulo ${key.split(/_ch|_Vol/i)[1]}` : "Completo",
-                link: `reader.html?manga=${key}`
-            });
+            if (!seriesMap[baseName]) seriesMap[baseName] = { nombre: baseName, caps: [], r: bibliotecaMangas[key][0] };
+            seriesMap[baseName].caps.push(key);
         });
-
-        Object.values(seriesMap).sort((a,b) => a.nombre.localeCompare(b.nombre)).forEach(serie => {
-            if (filter && !serie.nombre.toLowerCase().includes(filter.toLowerCase())) return;
-
-            const card = document.createElement('div');
-            const hasMultiple = serie.caps.length > 1;
-            card.className = 'card';
-            card.dataset.id = serie.nombre;
-            card.dataset.type = hasMultiple ? 'manga_serie' : 'manga_cap';
-            if (!hasMultiple) card.dataset.link = serie.caps[0].link;
-            else card.dataset.extra = JSON.stringify(serie);
-
-            const badge = hasMultiple ? `<div class="badge" style="background:var(--pink)">${serie.caps.length} Caps</div>` : '';
-            card.innerHTML = badge;
-            card.appendChild(createLazyImg(serie.portada, serie.nombre));
-            const span = document.createElement('span');
-            span.innerText = serie.nombre;
-            card.appendChild(span);
-            fragment.appendChild(card);
-        });
-        grid.appendChild(fragment);
-    }
-
-    function renderExpandedSerie(serie) {
-        const grid = document.getElementById('m-grid');
-        grid.innerHTML = '';
-        const fragment = document.createDocumentFragment();
-
-        const back = document.createElement('div');
-        back.className = 'card';
-        back.style = "grid-column: 1/-1; height: 60px; background: var(--pink); display:flex; align-items:center; justify-content:center; font-weight:bold; flex-direction:row;";
-        back.innerHTML = `⬅ Volver a Biblioteca`;
-        back.onclick = () => loadMangas();
-        fragment.appendChild(back);
-
-        serie.caps.sort((a,b) => a.label.localeCompare(b.label, undefined, {numeric: true})).forEach(cap => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.dataset.id = cap.originalKey;
-            card.dataset.type = 'manga_cap';
-            card.dataset.link = cap.link;
-
-            card.appendChild(createLazyImg(bibliotecaMangas[cap.originalKey][0], serie.nombre));
-            const span = document.createElement('span');
-            span.innerText = `${serie.nombre} - ${cap.label}`;
-            card.appendChild(span);
-            fragment.appendChild(card);
-        });
-        grid.appendChild(fragment);
-        window.scrollTo(0,0);
+        
+        fullItems = Object.values(seriesMap)
+            .filter(s => s.nombre.toLowerCase().includes(filter.toLowerCase()))
+            .map(s => ({
+                ...s, 
+                type: s.caps.length > 1 ? 'manga_serie' : 'manga_cap',
+                link: `reader.html?manga=${s.caps[0]}`,
+                extra: s.caps.length > 1 ? JSON.stringify(s) : null
+            }));
+        renderMore();
     }
 
     function loadG() {
         db = [];
-        if (typeof galeria_maestra === 'undefined') return;
-        for (let [categoria, personajes] of Object.entries(galeria_maestra)) {
-            for (let [nombre, links] of Object.entries(personajes)) {
-                links.forEach(url => {
-                    let grupoID = (categoria === 'Real') ? `img_real_${url}` : nombre;
-                    db.push({ r: url, p: nombre, sub: categoria, g: grupoID });
-                });
+        for (let [cat, pers] of Object.entries(galeria_maestra)) {
+            for (let [nom, links] of Object.entries(pers)) {
+                links.forEach(url => db.push({ r: url, p: nom, sub: cat, g: nom }));
             }
         }
-        db.sort((a, b) => a.p.localeCompare(b.p));
         renderAlbums();
     }
 
-    function filterCat(cat, btn) {
-        activeCat = cat;
-        document.querySelectorAll('.c-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    function renderAlbums(filter = "") {
+        fullItems = []; itemsLoaded = 0;
+        document.getElementById('g-grid').innerHTML = '';
+        const groups = [...new Set(db.map(i => i.g))];
+        fullItems = groups.map(g => {
+            const data = db.filter(i => i.g === g);
+            return { ...data[0], count: data.length, type: data[0].sub === 'Real' ? 'image' : 'album' };
+        }).filter(i => i.p.toLowerCase().includes(filter.toLowerCase().replace(/ /g, '_')) && (activeCat === 'TODOS' || i.sub === activeCat));
+        renderMore();
+    }
+
+    function renderImages(g) {
+        fullItems = db.filter(i => i.g === g).map(i => ({...i, type: 'image'}));
+        itemsLoaded = 0;
+        document.getElementById('g-grid').innerHTML = '<div class="card" style="height:60px; background:var(--pink); align-items:center; justify-content:center; grid-column:1/-1" onclick="history.back()">⬅ Volver</div>';
+        renderMore();
+    }
+
+    /* --- UTILIDADES --- */
+    let searchT;
+    function debouncedSearch(v, type) {
+        clearTimeout(searchT);
+        searchT = setTimeout(() => { if(type==='mangas') loadMangas(v); else renderAlbums(v); }, 300);
+    }
+
+    function filterCat(c, b) {
+        activeCat = c;
+        document.querySelectorAll('.c-btn').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
         renderAlbums(document.getElementById('gSearch').value);
     }
 
-    function renderAlbums(filter = "") {
-        const grid = document.getElementById('g-grid');
-        grid.innerHTML = '';
-        const fragment = document.createDocumentFragment();
-        
-        const groups = [...new Set(db.map(i => i.g))].sort((a, b) => a.localeCompare(b));
-        groups.forEach(g => {
-            const groupData = db.filter(i => i.g === g);
-            const item = groupData[0];
-            if (filter && !item.p.toLowerCase().includes(filter.toLowerCase().replace(/ /g, '_'))) return;
-            if (activeCat !== 'TODOS' && item.sub !== activeCat) return;
-
-            const card = document.createElement('div');
-            card.dataset.id = g;
-            
-            if (item.sub === 'Real') {
-                card.className = 'card' + (selectedDB.has(item.r) ? ' selected' : '');
-                card.dataset.type = 'image';
-                card.dataset.link = item.r;
-                card.appendChild(createLazyImg(item.r, item.p));
-                const span = document.createElement('span');
-                span.innerText = item.p.replace(/_/g, ' ');
-                card.appendChild(span);
-            } else {
-                card.className = 'card album-card';
-                card.dataset.type = 'album';
-                card.style.backgroundImage = `url('${item.r}')`;
-                card.innerHTML = `<div class="badge">${groupData.length} fotos</div><div class="album-title">${item.p.replace(/_/g, ' ')}</div>`;
-            }
-            fragment.appendChild(card);
-        });
-        grid.appendChild(fragment);
-    }
-
-    function renderImages(groupName) {
-        const grid = document.getElementById('g-grid');
-        grid.innerHTML = '';
-        const fragment = document.createDocumentFragment();
-
-        const back = document.createElement('div');
-        back.className = 'card album-card';
-        back.style = "height:80px; background:var(--pink); justify-content:center; flex-direction:row; align-items:center;";
-        back.onclick = () => history.back();
-        back.innerHTML = `<span style="border-top:none; background:transparent;">⬅ Volver</span>`;
-        fragment.appendChild(back);
-
-        db.filter(i => i.g === groupName).forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'card' + (selectedDB.has(item.r) ? ' selected' : '');
-            card.dataset.type = 'image';
-            card.dataset.link = item.r;
-            card.dataset.id = item.r;
-
-            card.appendChild(createLazyImg(item.r, item.p));
-            const span = document.createElement('span');
-            span.innerText = item.p.replace(/_/g, ' ');
-            card.appendChild(span);
-            fragment.appendChild(card);
-        });
-        grid.appendChild(fragment);
-        window.scrollTo(0,0);
-    }
-
     function toggleSelection(item, card) {
-        if (selectedDB.has(item.r)) { 
-            selectedDB.delete(item.r); 
-            card.classList.remove('selected'); 
-        } else { 
-            selectedDB.set(item.r, item); 
-            card.classList.add('selected'); 
-        }
+        if (selectedDB.has(item.r)) { selectedDB.delete(item.r); card.classList.remove('selected'); }
+        else { selectedDB.set(item.r, item); card.classList.add('selected'); }
         document.getElementById('viewBtn').innerText = `👁️ Ver (${selectedDB.size})`;
     }
 
-    function searchGeneric(q, id) {
-        const container = document.getElementById(id);
-        const cards = Array.from(container.querySelectorAll('.card'));
-        cards.forEach(c => c.classList.toggle('hidden', !c.innerText.toLowerCase().includes(q.toLowerCase())));
-    }
-
-    function loadAnimes() {
-        const container = document.getElementById('a-grid');
-        if (container.children.length > 0 || typeof lista_animes === 'undefined') return;
-        const fragment = document.createDocumentFragment();
-        Object.entries(lista_animes).sort((a, b) => a[0].localeCompare(b[0])).forEach(([n, url]) => {
-            const a = document.createElement('a');
-            a.className = 'card'; a.href = url; a.target = '_blank';
-            a.innerHTML = `<span>${n.replace(/_/g, ' ')}</span>`;
-            fragment.appendChild(a);
-        });
-        container.appendChild(fragment);
-    }
-
-    window.onpopstate = () => {
-        if (document.getElementById('modal').style.display === 'flex') closeM(false);
-        else renderAlbums();
-    };
-
     function openM() { 
-        if(selectedDB.size === 0) return;
-        curIdx = 0; history.pushState({view: 'modal'}, "");
-        document.getElementById('modal').style.display = 'flex'; updM(); 
+        if(selectedDB.size === 0) return; curIdx = 0; 
+        document.getElementById('modal').style.display = 'flex'; 
+        document.getElementById('m-img').src = Array.from(selectedDB.values())[0].r;
     }
-    function closeM(push = true) { 
-        clearInterval(playInt); playInt = null;
-        document.getElementById('modal').style.display = 'none'; 
-        if(push) history.back();
-    }
-    function updM() { document.getElementById('m-img').src = Array.from(selectedDB.values())[curIdx].r; }
-    function changeM(d) { const s = selectedDB.size; curIdx = (curIdx + d + s) % s; updM(); }
-    function togglePlay() {
-        if (playInt) { clearInterval(playInt); playInt = null; document.getElementById('playBtn').innerText = "▶ Auto"; }
-        else { playInt = setInterval(() => changeM(1), 5000); document.getElementById('playBtn').innerText = "⏸ Stop"; }
-    }
-    function clearSel() {
-        selectedDB.clear();
-        document.querySelectorAll('.card.selected').forEach(c => c.classList.remove('selected'));
-        document.getElementById('viewBtn').innerText = `👁️ Ver (0)`;
+    function closeM() { document.getElementById('modal').style.display = 'none'; }
+    function changeM(d) {
+        const arr = Array.from(selectedDB.values());
+        curIdx = (curIdx + d + arr.length) % arr.length;
+        document.getElementById('m-img').src = arr[curIdx].r;
     }
 
-    window.onload = () => { loadMangas(); };
+    window.onload = loadMangas;
     </script>
 </body>
 </html>
