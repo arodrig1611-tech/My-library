@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Pre-conexión para ganar milisegundos de carga -->
     <link rel="preconnect" href="https://imgchest.com">
     <link rel="dns-prefetch" href="https://imgchest.com">
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Library Pro - Extreme Speed</title>
+    <title>My Library Pro - Ultra Speed</title>
     <style>
         :root { --bg: #0a0a0a; --acc: #4caf50; --pink: #d81b60; --blue: #2196f3; --gray: #222; }
         * { box-sizing: border-box; }
@@ -35,7 +37,7 @@
             object-fit:cover; 
             display:block; 
             transition: opacity 0.4s ease-in-out; 
-            background: #111; /* Color previo a la carga */
+            background: #111;
         }
         
         .img-loading { opacity: 0; }
@@ -124,14 +126,29 @@
     <script>
     let db = [], selectedDB = new Map(), curIdx = 0, currentView = 'albums', playInt = null, activeCat = 'TODOS';
 
-    /* === MOTOR DE CARGA PROFESIONAL (Intersection Observer) === */
-    const observerOptions = { rootMargin: '0px 0px 600px 0px' }; // Carga 600px antes de llegar
+    // 1. Registro del Service Worker para Caché Offline
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js');
+    }
+
+    /* === MOTOR DE CARGA ULTRA (Intersection Observer + Decode) === */
+    const observerOptions = { rootMargin: '0px 0px 800px 0px' }; // Carga anticipada de 800px
     const imageObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const img = entry.target;
-                img.src = img.dataset.src; // Cargar link real de ImgChest
-                img.onload = () => img.classList.add('img-loaded');
+                const tempImg = new Image();
+                tempImg.src = img.dataset.src;
+                
+                // Procesar imagen fuera del hilo principal para evitar tirones
+                tempImg.decode().then(() => {
+                    img.src = tempImg.src;
+                    img.classList.add('img-loaded');
+                }).catch(() => {
+                    img.src = img.dataset.src;
+                    img.classList.add('img-loaded');
+                });
+                
                 observer.unobserve(img);
             }
         });
@@ -142,8 +159,8 @@
         img.className = 'img-loading';
         img.dataset.src = src;
         img.alt = alt;
-        img.decoding = 'async'; // Decodificación asíncrona
-        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lMREFUeNoFwQEBAAAAgl0A/gl1UwVNAAACR0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII="; // Placeholder 1x1 transparente
+        img.decoding = 'async'; 
+        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lMREFUeNoFwQEBAAAAgl0A/gl1UwVNAAACR0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=";
         imageObserver.observe(img);
         return img;
     }
