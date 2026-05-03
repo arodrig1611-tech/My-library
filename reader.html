@@ -1,47 +1,73 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8"><title>Reader Pro</title>
+    <!-- Pre-conexión a los servidores de ImgChest para acelerar descarga -->
+    <link rel="preconnect" href="https://imgchest.com">
+    <link rel="dns-prefetch" href="https://imgchest.com">
+    <meta charset="UTF-8">
+    <title>Reader Pro - Ultra Speed</title>
     <style>
-        body { margin:0; background:#000; color:white; font-family:sans-serif; overflow-x:hidden; }
-        #reader { display:flex; flex-direction:column; align-items:center; width:100%; transition: 0.3s; }
-        .page { width:100%; max-width:850px; margin-bottom:10px; display: block; transition: 0.2s; }
+        :root {
+            --pastel-blue: #00d4ff;
+            --glass-bg: rgba(15, 15, 20, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Fondo Win11 unificado con el Index */
+        body { margin:0; background-color:#050508; color:white; font-family:'Segoe UI', sans-serif; overflow-x:hidden; }
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+            background-image: 
+                radial-gradient(circle at 50% 120%, rgba(255, 0, 127, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% -10%, rgba(0, 212, 255, 0.08) 0%, transparent 40%);
+        }
+
+        #reader { display:flex; flex-direction:column; align-items:center; width:100%; transition: 0.3s; padding-bottom: 50px; }
         
-/* MODOS */
-.fit-mode .page { 
-    max-width: 100vw !important; 
-    width: 100% !important; 
-    margin-bottom: 0 !important; 
-    border-radius: 0; 
-}
+        /* Optimización de las imágenes (Evita saltos de scroll) */
+        .page { 
+            width:100%; max-width:850px; margin-bottom:10px; display: block; transition: 0.2s; 
+            background: #0a0a0f; min-height: 300px; /* Evita que el celular recalcule la pantalla al vacío */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        
+        /* MODOS */
+        .fit-mode .page { max-width: 100vw !important; width: 100% !important; margin-bottom: 0 !important; border-radius: 0; }
 
-/* Forzamos el display block para evitar espacios extraños de línea */
-.double-mode { 
-    display: flex !important; 
-    flex-direction: row !important; 
-    flex-wrap: wrap !important; 
-    justify-content: center !important; 
-    align-items: flex-start !important;
-}
+        .double-mode { display: flex !important; flex-direction: row !important; flex-wrap: wrap !important; justify-content: center !important; align-items: flex-start !important; }
+        .double-mode .page { width: calc(50% - 20px) !important; max-width: 48vw !important; margin: 10px 5px !important; height: auto !important; object-fit: contain; border: 1px solid #222; }
 
-/* Esta es la clave: anulamos el ancho fijo que pone el JS con !important */
-.double-mode .page { 
-    width: calc(50% - 20px) !important; 
-    max-width: 48vw !important; 
-    margin: 10px 5px !important; 
-    height: auto !important;
-    object-fit: contain;
-    border: 1px solid #222;
-}
-
-        /* UI */
-        #sideBar { position:fixed; right:15px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.9); border:1px solid #333; border-radius:12px; padding:15px 10px; display:flex; flex-direction:column; gap:8px; z-index:3000; width:105px; border: 1px solid #4caf50; }
-        .p-btn { background:#1a1a1a; color:white; border:1px solid #333; padding:8px; border-radius:5px; cursor:pointer; font-size:12px; font-weight:bold; }
-        .p-btn:hover { border-color:#4caf50; background:#222; }
-        #progressBar { position:fixed; top:0; left:0; height:4px; background:#4caf50; width:0%; z-index:4000; }
-        #info { font-size:11px; text-align:center; margin-bottom:5px; color:#4caf50; font-weight:bold; }
+        /* UI Estilo Glassmorphism (Celeste) */
+        #sideBar { 
+            position:fixed; right:15px; top:50%; transform:translateY(-50%); 
+            background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 12px; padding: 15px 10px; 
+            display:flex; flex-direction:column; gap:8px; z-index:3000; width:105px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .p-btn { 
+            background: rgba(0,0,0,0.5); color: #ccc; border: 1px solid var(--glass-border); 
+            padding: 8px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: bold; 
+            transition: 0.2s;
+        }
+        .p-btn:hover { border-color: var(--pastel-blue); background: rgba(0, 212, 255, 0.15); color: white; }
+        
+        #progressBar { position:fixed; top:0; left:0; height:4px; background:var(--pastel-blue); width:0%; z-index:4000; box-shadow: 0 0 10px var(--pastel-blue); transition: width 0.1s; }
+        #info { font-size:12px; text-align:center; margin-bottom:8px; color:var(--pastel-blue); font-weight:bold; letter-spacing: 1px; }
+        
         .hidden-ui { display:none !important; }
-        #btnShow { position:fixed; right:10px; top:10px; background:rgba(0,0,0,0.7); border:1px solid #4caf50; color:white; padding:10px; border-radius:50%; cursor:pointer; z-index:3001; display:none; }
+        #btnShow { 
+            position:fixed; right:15px; top:15px; background:rgba(0,0,0,0.6); backdrop-filter: blur(5px); 
+            border:1px solid var(--pastel-blue); color:white; padding:12px; border-radius:50%; 
+            cursor:pointer; z-index:3001; display:none; box-shadow: 0 0 15px rgba(0, 212, 255, 0.2); 
+        }
+
+        /* Ajustes Móvil */
+        @media (max-width: 600px) {
+            #sideBar { transform: translateY(-50%) scale(0.9); right: 5px; padding: 10px 8px; }
+            .p-btn { font-size: 11px; padding: 6px; }
+            .double-mode .page { width: calc(50% - 4px) !important; margin: 5px 2px !important; }
+        }
     </style>
 </head>
 <body>
@@ -67,19 +93,55 @@
 <script>
     const mID = new URLSearchParams(window.location.search).get("manga");
     let zoomW = 850;
+    let totalPages = 0;
 
     window.onload = () => {
         if (!mID || typeof bibliotecaMangas === 'undefined') return;
         const p = bibliotecaMangas[mID];
         if(!p) return;
-        document.getElementById("info").innerText = `1 / ${p.length}`;
-        p.forEach(url => {
+        
+        totalPages = p.length;
+        document.getElementById("info").innerText = `1 / ${totalPages}`;
+        
+        // Creamos un fragmento para inyectar todas las fotos de golpe (evita congelamiento)
+        const fragment = document.createDocumentFragment();
+        
+        p.forEach((url, index) => {
             const img = document.createElement("img");
-            img.src = url; img.className = "page";
-            document.getElementById("reader").appendChild(img);
+            img.className = "page";
+            img.id = "page-" + index;
+            
+            // Lógica Pro: Las 3 primeras fotos cargan normal, el resto son "Lazy"
+            if (index > 2) img.loading = "lazy";
+            
+            img.decoding = "async"; // Libera el procesador del celular
+            img.src = url;
+            
+            fragment.appendChild(img);
         });
+        
+        document.getElementById("reader").appendChild(fragment);
+
+        // Inicializamos el contador inteligente
+        setupPageObserver();
     };
 
+    // --- Contador Inteligente (Sin Lag) ---
+    function setupPageObserver() {
+        // Este observer detecta qué imagen está exactamente en el centro de tu pantalla
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const pageNum = parseInt(entry.target.id.split('-')[1]) + 1;
+                    document.getElementById("info").innerText = `${pageNum} / ${totalPages}`;
+                }
+            });
+        }, { rootMargin: "-40% 0px -40% 0px" }); // El margen asegura que cuente la foto central
+
+        document.querySelectorAll('.page').forEach(img => observer.observe(img));
+    }
+
+    // --- Lógica UI (Sin Cambios a tus funciones originales) ---
     function zm(f) { 
         zoomW *= f; 
         document.getElementById('reader').classList.remove('fit-mode', 'double-mode');
@@ -103,14 +165,11 @@
         else { bar.style.display = 'none'; btn.style.display = 'block'; }
     }
 
+    // --- Barra de progreso (Optimizado) ---
     window.onscroll = () => {
         let s = document.documentElement.scrollTop, h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
         document.getElementById("progressBar").style.width = (s / h * 100) + "%";
-        let p = document.querySelectorAll('.page');
-        if(p.length) {
-            let cur = Math.round((s / h) * (p.length - 1)) + 1;
-            document.getElementById("info").innerText = `${cur || 1} / ${p.length}`;
-        }
+        // El texto "# / #" ahora lo maneja el IntersectionObserver, por lo que el scroll es más ligero.
     };
 </script>
 </body>
