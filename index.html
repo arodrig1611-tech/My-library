@@ -5,155 +5,165 @@
     <link rel="dns-prefetch" href="https://imgchest.com">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Library Pro - Glass UI</title>
+    <title>My Library Pro - Win11 Style</title>
     <style>
         :root { 
-            /* Fondo base profundo para el contraste del cristal */
-            --bg-gradient: radial-gradient(circle at 50% 0%, #1e1b2e 0%, #0a0a0f 100%);
+            /* Colores Pastel Neón (Win11 Vibe) */
+            --pastel-green: #00ffaa; 
+            --pastel-pink: #ff007f; 
+            --pastel-blue: #00d4ff; 
+            --pastel-purple: #9d00ff;
             
-            /* Colores Pastelosos */
-            --pastel-green: #a8e6cf; 
-            --pastel-pink: #ffb7b2; 
-            --pastel-blue: #99c1f1; 
-            
-            /* Variables Glassmorphism */
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-panel: rgba(15, 15, 20, 0.6);
+            /* Colores de Tarjetas (Falso Cristal = 0 Lag) */
+            --card-bg-top: rgba(30, 30, 38, 0.85);
+            --card-bg-bot: rgba(15, 15, 20, 0.95);
+            --card-border: rgba(255, 255, 255, 0.05);
+            --card-gloss: rgba(255, 255, 255, 0.15); /* Borde superior brillante */
         }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin:0; font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg-gradient); background-attachment: fixed; color:white; overflow-x:hidden; min-height: 100vh; }
         
-        /* Nav Principal Glass */
+        /* Solución a la barra blanca en móvil */
+        html, body { margin: 0; padding: 0; min-height: 100%; color: white; font-family: 'Segoe UI', system-ui, sans-serif; overflow-x: hidden; }
+        
+        /* Fondo Win11 Fijo (Alto rendimiento) */
+        .app-bg {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+            background-color: #050508;
+            /* Orbes de luz estilo Windows 11 */
+            background-image: 
+                radial-gradient(circle at 50% 120%, rgba(255, 0, 127, 0.15) 0%, transparent 50%), /* Rosa abajo */
+                radial-gradient(circle at 80% -10%, rgba(0, 212, 255, 0.15) 0%, transparent 40%), /* Azul arriba-derecha */
+                radial-gradient(circle at -10% 50%, rgba(157, 0, 255, 0.15) 0%, transparent 50%); /* Morado izquierda */
+        }
+        
+        /* Nav Principal (Cristal Real) */
         .nav { 
-            display:flex; justify-content:center; gap:15px; padding:20px; 
+            display:flex; justify-content:center; gap:12px; padding:15px; 
             position: sticky; top: 0; z-index: 1000; 
-            background: rgba(10, 10, 15, 0.7); 
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--glass-border); 
+            background: rgba(10, 10, 15, 0.6); 
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--card-border); 
         }
         
         .t-btn { 
-            background: var(--glass-bg); color: #aaa; border: 1px solid var(--glass-border); 
-            padding: 10px 24px; border-radius: 30px; cursor: pointer; transition: all 0.3s ease; 
-            font-size: 14px; font-weight: 600; letter-spacing: 0.5px;
+            background: rgba(255,255,255,0.03); color: #999; border: 1px solid var(--card-border); 
+            padding: 10px 22px; border-radius: 30px; cursor: pointer; transition: 0.3s; 
+            font-size: 13px; font-weight: 600; 
         }
-        .t-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+        .t-btn:hover { background: rgba(255,255,255,0.08); color: white; }
         
-        /* Estados Activos Nav (Pastel) */
-        .t-btn.active:nth-child(1) { background: rgba(168, 230, 207, 0.15); border-color: var(--pastel-green); color: var(--pastel-green); box-shadow: 0 0 15px rgba(168, 230, 207, 0.2); }
-        .t-btn.active:nth-child(2) { background: rgba(255, 183, 178, 0.15); border-color: var(--pastel-pink); color: var(--pastel-pink); box-shadow: 0 0 15px rgba(255, 183, 178, 0.2); }
-        .t-btn.active:nth-child(3) { background: rgba(153, 193, 241, 0.15); border-color: var(--pastel-blue); color: var(--pastel-blue); box-shadow: 0 0 15px rgba(153, 193, 241, 0.2); }
+        /* Botones Activos (Luces Pastel) */
+        .t-btn.active:nth-child(1) { background: rgba(0, 255, 170, 0.1); border-color: rgba(0, 255, 170, 0.3); color: var(--pastel-green); box-shadow: 0 0 15px rgba(0, 255, 170, 0.15); }
+        .t-btn.active:nth-child(2) { background: rgba(255, 0, 127, 0.1); border-color: rgba(255, 0, 127, 0.3); color: var(--pastel-pink); box-shadow: 0 0 15px rgba(255, 0, 127, 0.15); }
+        .t-btn.active:nth-child(3) { background: rgba(0, 212, 255, 0.1); border-color: rgba(0, 212, 255, 0.3); color: var(--pastel-blue); box-shadow: 0 0 15px rgba(0, 212, 255, 0.15); }
 
-        /* Barra de Filtros Glass */
+        /* Barra de Filtros */
         .f-bar { 
-            background: var(--glass-panel); backdrop-filter: blur(10px);
+            background: linear-gradient(180deg, var(--card-bg-top), var(--card-bg-bot));
             margin: 20px auto; padding: 15px; border-radius: 16px; 
-            max-width: 1400px; border: 1px solid var(--glass-border); 
+            max-width: 1400px; border: 1px solid var(--card-border); border-top: 1px solid var(--card-gloss);
             display: flex; flex-direction: column; gap: 12px; 
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         
         input[type="text"] {
             width: 100%; padding: 14px; border-radius: 10px;
-            background: rgba(0,0,0,0.3); color: white; border: 1px solid var(--glass-border);
+            background: rgba(0,0,0,0.4); color: white; border: 1px solid var(--card-border);
             font-size: 14px; outline: none; transition: 0.3s;
         }
-        input[type="text"]:focus { border-color: var(--pastel-blue); background: rgba(0,0,0,0.5); }
-        input[type="text"]::placeholder { color: #777; }
+        input[type="text"]:focus { border-color: var(--pastel-purple); background: rgba(0,0,0,0.6); box-shadow: 0 0 10px rgba(157, 0, 255, 0.2); }
 
-        .cat-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+        .cat-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
         .c-btn { 
-            background: rgba(0,0,0,0.4); color: #aaa; border: 1px solid var(--glass-border); 
-            padding: 8px 20px; border-radius: 20px; cursor: pointer; white-space: nowrap; 
+            background: rgba(0,0,0,0.5); color: #aaa; border: 1px solid transparent; 
+            padding: 8px 18px; border-radius: 20px; cursor: pointer; white-space: nowrap; 
             font-size: 12px; font-weight: 600; transition: 0.3s; 
         }
-        .c-btn.active { background: var(--pastel-blue); color: #111; border-color: var(--pastel-blue); box-shadow: 0 0 10px rgba(153,193,241,0.4); }
+        .c-btn.active { background: rgba(157, 0, 255, 0.15); color: #fff; border-color: var(--pastel-purple); }
 
-        /* Grid */
+        /* Grid Optimizado */
         .grid { 
-            display:grid; gap:20px; padding:20px; 
-            grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); 
+            display:grid; gap:18px; padding:15px 20px; 
+            grid-template-columns:repeat(auto-fill, minmax(170px, 1fr)); 
             max-width: 1600px; margin: 0 auto; contain: content; 
         }
         
-        /* Cards Glassmorphism */
+        /* Cards (Zero-Lag Glass) */
         .card { 
-            background: var(--glass-bg); border: 1px solid var(--glass-border); 
-            border-radius: 16px; overflow: hidden; text-align: center; cursor: pointer; 
-            position: relative; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
-            text-decoration: none; color: white; display: flex; flex-direction: column;
-            content-visibility: auto; contain-intrinsic-size: 200px 300px;
-            transform: translateZ(0); box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            background: linear-gradient(180deg, var(--card-bg-top), var(--card-bg-bot)); 
+            border: 1px solid var(--card-border); border-top: 1px solid var(--card-gloss);
+            border-radius: 14px; overflow: hidden; text-align: center; cursor: pointer; 
+            position: relative; transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; 
+            color: white; display: flex; flex-direction: column;
+            content-visibility: auto; contain-intrinsic-size: 170px 280px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
         }
-        .card:hover { 
-            transform: translateY(-5px) translateZ(0); 
-            border-color: rgba(255,255,255,0.2); 
-            box-shadow: 0 12px 25px rgba(0,0,0,0.4); 
-        }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 12px 25px rgba(0,0,0,0.6); }
         
         .card img { 
             width:100%; aspect-ratio: 200 / 280; object-fit:cover; display:block; 
-            background: rgba(20,20,20,0.5); transition: opacity 0.3s; 
-        }
-        
-        /* Títulos flotantes en cristal */
-        .card span { 
-            position: absolute; bottom: 0; left: 0; width: 100%;
-            padding: 15px 10px; font-size: 12px; font-weight: 600; 
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 100%);
-            backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
-            border-top: 1px solid rgba(255,255,255,0.05); text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            background: #0d0d12;
         }
 
-        /* Tarjetas exclusivas para Animes (Sin imagen) */
-        .anime-card { 
-            padding: 25px 15px; justify-content: center; align-items: center; 
-            background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(0,0,0,0.2));
-            height: 100%; min-height: 100px; border-radius: 16px;
+        /* Textos de tarjetas integrados limpiamente */
+        .card span { 
+            padding: 14px 10px; font-size: 12px; font-weight: 600; 
+            background: transparent; color: #eaeaea; letter-spacing: 0.3px;
         }
-        .anime-card span { position: relative; background: transparent; backdrop-filter: none; border: none; padding: 0; }
+
+        /* Tarjetas Anime (Sin imagen, estilo Cápsula) */
+        .anime-card { 
+            padding: 20px 15px; justify-content: center; align-items: center; 
+            min-height: 100px; border-radius: 14px;
+        }
 
         /* Álbumes */
         .album-card { justify-content: flex-end; background-size: cover; background-position: center; aspect-ratio: 200/280; }
+        .album-card span { 
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%); 
+            text-shadow: 0 2px 4px #000;
+        }
+        
         .badge { 
-            position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6); 
-            backdrop-filter: blur(5px); border: 1px solid var(--pastel-blue); color: var(--pastel-blue); 
-            padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: bold; z-index: 2; 
+            position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); 
+            border: 1px solid var(--pastel-blue); color: var(--pastel-blue); 
+            padding: 5px 12px; border-radius: 20px; font-size: 10px; font-weight: bold; z-index: 2; 
         }
         .manga-badge { border-color: var(--pastel-pink); color: var(--pastel-pink); }
 
         /* Fabs */
-        .fab-container { position: fixed; bottom: 30px; right: 30px; display: none; flex-direction: column; gap: 15px; z-index: 2000; }
+        .fab-container { position: fixed; bottom: 25px; right: 25px; display: none; flex-direction: column; gap: 12px; z-index: 2000; }
         .fab { 
-            border: none; padding: 15px 25px; border-radius: 30px; color: #111; 
-            font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.3s;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4); 
+            border: none; padding: 14px 24px; border-radius: 30px; color: white; background: #222;
+            font-weight: bold; font-size: 13px; cursor: pointer; border: 1px solid var(--card-border);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6); 
         }
-        .fab:hover { transform: scale(1.05); }
 
-        /* Modal Glass */
-        #modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); backdrop-filter: blur(8px); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:5000; }
-        #modal img { max-width:98%; max-height:85vh; object-fit:contain; border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        /* Modal */
+        #modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:5000; }
+        #modal img { max-width:98%; max-height:85vh; object-fit:contain; border-radius: 8px; }
         .m-nav { position:absolute; bottom:30px; width:100%; display:flex; justify-content:center; gap:20px; }
 
         .hidden { display:none !important; }
-        .selected { border: 2px solid var(--pastel-pink) !important; box-shadow: 0 0 20px rgba(255, 183, 178, 0.4) !important; transform: scale(0.95); }
+        .selected { border: 2px solid var(--pastel-pink) !important; transform: scale(0.96); opacity: 0.8; }
 
         @media (max-width: 600px) {
-            .grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; padding: 12px !important; }
-            .t-btn { padding: 10px 15px; font-size: 11px; }
-            .nav { padding: 15px 10px; gap: 8px; }
-            .card { border-radius: 12px; }
-            .card span { padding: 10px 8px; font-size: 10px; }
+            .grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; padding: 10px !important; }
+            .t-btn { padding: 10px 14px; font-size: 12px; }
+            .nav { padding: 12px 10px; gap: 8px; }
+            .card { border-radius: 10px; }
+            .card span { padding: 10px 8px; font-size: 11px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Fondo independiente (Corrige la barra blanca) -->
+    <div class="app-bg"></div>
+
     <div class="nav">
-        <button class="t-btn active" onclick="tab('mangas',this)">📚 Mis Mangas</button>
+        <button class="t-btn active" onclick="tab('mangas',this)">📚 Mangas</button>
         <button class="t-btn" onclick="tab('galeria',this)">🖼️ Galería</button>
         <button class="t-btn" onclick="tab('animes',this)">📺 Animes</button>
     </div>
@@ -178,8 +188,8 @@
             </div>
         </div>
         <div class="fab-container" id="g-fabs">
-            <button class="fab" style="background:var(--pastel-pink);" onclick="openM()" id="viewBtn">👁️ Ver (0)</button>
-            <button class="fab" style="background:var(--pastel-green);" onclick="clearSel()">🧹 Limpiar</button>
+            <button class="fab" style="border-color:var(--pastel-pink); color:var(--pastel-pink);" onclick="openM()" id="viewBtn">👁️ Ver (0)</button>
+            <button class="fab" style="border-color:var(--pastel-green); color:var(--pastel-green);" onclick="clearSel()">🧹 Limpiar</button>
         </div>
         <div id="g-grid" class="grid"></div>
     </div>
@@ -190,11 +200,11 @@
     </div>
 
     <div id="modal" onclick="if(event.target===this) closeM()">
-        <button style="position:absolute; top:25px; right:25px; background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:50%; width:45px; height:45px; color:white; font-size:20px; cursor:pointer; backdrop-filter:blur(5px);" onclick="closeM()">✕</button>
+        <button style="position:absolute; top:20px; right:20px; background:transparent; border:none; color:white; font-size:30px; cursor:pointer;" onclick="closeM()">✕</button>
         <img id="m-img" src="">
         <div class="m-nav">
-            <button class="t-btn" onclick="changeM(-1)">❮</button>
-            <button class="t-btn" onclick="changeM(1)">❯</button>
+            <button class="t-btn" style="background:#222; border-color:#444;" onclick="changeM(-1)">❮</button>
+            <button class="t-btn" style="background:#222; border-color:#444;" onclick="changeM(1)">❯</button>
         </div>
     </div>
 
@@ -206,7 +216,7 @@
 
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 
-    /* --- MOTOR DE CARGA (Nativo) --- */
+    /* --- MOTOR DE CARGA (Nativo y Cero Lag) --- */
     function createLazyImg(src, alt) {
         const img = document.createElement('img');
         img.loading = 'lazy'; 
@@ -266,7 +276,7 @@
 
     function renderExpandedSerie(serie) {
         const grid = document.getElementById('m-grid');
-        grid.innerHTML = `<div class="card anime-card" style="grid-column: 1/-1; min-height: 60px; background: rgba(168,230,207,0.1); border-color: var(--pastel-green); color: var(--pastel-green);" onclick="loadMangas()"><span>⬅ Volver a Biblioteca</span></div>`;
+        grid.innerHTML = `<div class="card anime-card" style="grid-column: 1/-1; min-height: 60px; border-color: var(--pastel-green); color: var(--pastel-green);" onclick="loadMangas()"><span style="color:var(--pastel-green);">⬅ Volver a Biblioteca</span></div>`;
         const fragment = document.createDocumentFragment();
         serie.caps.sort((a,b) => a.label.localeCompare(b.label, undefined, {numeric: true})).forEach(cap => {
             const card = document.createElement('div');
@@ -330,7 +340,7 @@
 
     function renderImages(g) {
         const grid = document.getElementById('g-grid');
-        grid.innerHTML = `<div class="card anime-card" style="grid-column: 1/-1; min-height: 60px; background: rgba(255,183,178,0.1); border-color: var(--pastel-pink); color: var(--pastel-pink);" onclick="renderAlbums()"><span>⬅ Volver</span></div>`;
+        grid.innerHTML = `<div class="card anime-card" style="grid-column: 1/-1; min-height: 60px; border-color: var(--pastel-pink);" onclick="renderAlbums()"><span style="color:var(--pastel-pink);">⬅ Volver</span></div>`;
         const fragment = document.createDocumentFragment();
         db.filter(i => i.g === g).forEach(item => {
             const card = document.createElement('div');
