@@ -18,7 +18,7 @@
             --card-bg-top: rgba(30, 30, 38, 0.85);
             --card-bg-bot: rgba(15, 15, 20, 0.95);
             --card-border: rgba(255, 255, 255, 0.05);
-            --card-gloss: rgba(255, 255, 255, 0.15); /* Borde superior brillante */
+            --card-gloss: rgba(255, 255, 255, 0.15);
         }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -32,12 +32,12 @@
             background-color: #050508;
             /* Orbes de luz estilo Windows 11 */
             background-image: 
-                radial-gradient(circle at 50% 120%, rgba(255, 0, 127, 0.15) 0%, transparent 50%), /* Rosa abajo */
-                radial-gradient(circle at 80% -10%, rgba(0, 212, 255, 0.15) 0%, transparent 40%), /* Azul arriba-derecha */
-                radial-gradient(circle at -10% 50%, rgba(157, 0, 255, 0.15) 0%, transparent 50%); /* Morado izquierda */
+                radial-gradient(circle at 50% 120%, rgba(255, 0, 127, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% -10%, rgba(0, 212, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at -10% 50%, rgba(157, 0, 255, 0.15) 0%, transparent 50%);
         }
         
-        /* Nav Principal (Cristal Real) */
+        /* Nav Principal */
         .nav { 
             display:flex; justify-content:center; gap:12px; padding:15px; 
             position: sticky; top: 0; z-index: 1000; 
@@ -53,7 +53,7 @@
         }
         .t-btn:hover { background: rgba(255,255,255,0.08); color: white; }
         
-        /* Botones Activos (Luces Pastel) */
+        /* Botones Activos */
         .t-btn.active:nth-child(1) { background: rgba(0, 255, 170, 0.1); border-color: rgba(0, 255, 170, 0.3); color: var(--pastel-green); box-shadow: 0 0 15px rgba(0, 255, 170, 0.15); }
         .t-btn.active:nth-child(2) { background: rgba(255, 0, 127, 0.1); border-color: rgba(255, 0, 127, 0.3); color: var(--pastel-pink); box-shadow: 0 0 15px rgba(255, 0, 127, 0.15); }
         .t-btn.active:nth-child(3) { background: rgba(0, 212, 255, 0.1); border-color: rgba(0, 212, 255, 0.3); color: var(--pastel-blue); box-shadow: 0 0 15px rgba(0, 212, 255, 0.15); }
@@ -80,16 +80,17 @@
             padding: 8px 18px; border-radius: 20px; cursor: pointer; white-space: nowrap; 
             font-size: 12px; font-weight: 600; transition: 0.3s; 
         }
-        .c-btn.active { background: rgba(157, 0, 255, 0.15); color: #fff; border-color: var(--pastel-purple); }
+        /* Botones de Categorías = Celeste */
+        .c-btn.active { background: rgba(0, 212, 255, 0.15); color: #fff; border-color: var(--pastel-blue); box-shadow: 0 0 10px rgba(0, 212, 255, 0.2); }
 
-        /* Grid Optimizado */
+        /* Grid */
         .grid { 
             display:grid; gap:18px; padding:15px 20px; 
             grid-template-columns:repeat(auto-fill, minmax(170px, 1fr)); 
             max-width: 1600px; margin: 0 auto; contain: content; 
         }
         
-        /* Cards (Zero-Lag Glass) */
+        /* Cards */
         .card { 
             background: linear-gradient(180deg, var(--card-bg-top), var(--card-bg-bot)); 
             border: 1px solid var(--card-border); border-top: 1px solid var(--card-gloss);
@@ -106,31 +107,28 @@
             background: #0d0d12;
         }
 
-        /* Textos de tarjetas integrados limpiamente */
         .card span { 
             padding: 14px 10px; font-size: 12px; font-weight: 600; 
             background: transparent; color: #eaeaea; letter-spacing: 0.3px;
         }
 
-        /* Tarjetas Anime (Sin imagen, estilo Cápsula) */
         .anime-card { 
             padding: 20px 15px; justify-content: center; align-items: center; 
             min-height: 100px; border-radius: 14px;
         }
 
-        /* Álbumes */
         .album-card { justify-content: flex-end; background-size: cover; background-position: center; aspect-ratio: 200/280; }
         .album-card span { 
             background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%); 
             text-shadow: 0 2px 4px #000;
         }
         
+        /* Cartelitos (Badges) unificados = Celeste */
         .badge { 
             position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); 
             border: 1px solid var(--pastel-blue); color: var(--pastel-blue); 
             padding: 5px 12px; border-radius: 20px; font-size: 10px; font-weight: bold; z-index: 2; 
         }
-        .manga-badge { border-color: var(--pastel-pink); color: var(--pastel-pink); }
 
         /* Fabs */
         .fab-container { position: fixed; bottom: 25px; right: 25px; display: none; flex-direction: column; gap: 12px; z-index: 2000; }
@@ -148,18 +146,26 @@
         .hidden { display:none !important; }
         .selected { border: 2px solid var(--pastel-pink) !important; transform: scale(0.96); opacity: 0.8; }
 
+        /* Ajustes específicos para 4 columnas en Móvil */
         @media (max-width: 600px) {
-            .grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; padding: 10px !important; }
-            .t-btn { padding: 10px 14px; font-size: 12px; }
-            .nav { padding: 12px 10px; gap: 8px; }
-            .card { border-radius: 10px; }
-            .card span { padding: 10px 8px; font-size: 11px; }
+            .grid { grid-template-columns: repeat(4, 1fr) !important; gap: 6px !important; padding: 8px !important; }
+            .t-btn { padding: 8px 12px; font-size: 11px; }
+            .nav { padding: 10px 5px; gap: 5px; }
+            .f-bar { margin: 10px; padding: 10px; border-radius: 10px; }
+            input[type="text"] { padding: 10px; font-size: 12px; }
+            
+            /* Ajustes para que las tarjetas de 4 columnas no se rompan */
+            .card { border-radius: 6px; contain-intrinsic-size: 80px 120px; border-width: 1px; }
+            .card span { padding: 6px 4px; font-size: 9px; line-height: 1.2; word-wrap: break-word; }
+            .badge { padding: 2px 5px; font-size: 8px; top: 4px; right: 4px; border-width: 1px; }
+            .anime-card { padding: 8px 4px; min-height: 70px; }
+            .fab-container { bottom: 15px; right: 15px; gap: 8px; }
+            .fab { padding: 10px 16px; font-size: 11px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Fondo independiente (Corrige la barra blanca) -->
     <div class="app-bg"></div>
 
     <div class="nav">
@@ -216,7 +222,6 @@
 
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 
-    /* --- MOTOR DE CARGA (Nativo y Cero Lag) --- */
     function createLazyImg(src, alt) {
         const img = document.createElement('img');
         img.loading = 'lazy'; 
@@ -225,7 +230,6 @@
         return img;
     }
 
-    /* --- GESTIÓN DE TABS --- */
     function tab(t, b) {
         document.getElementById('t-mangas').classList.toggle('hidden', t !== 'mangas');
         document.getElementById('t-galeria').classList.toggle('hidden', t !== 'galeria');
@@ -237,7 +241,6 @@
         if (t === 'animes') loadAnimes();
     }
 
-    /* --- MANGAS --- */
     function loadMangas(filter = "") {
         const grid = document.getElementById('m-grid');
         grid.innerHTML = '';
@@ -261,7 +264,7 @@
             card.className = 'card';
             const hasMultiple = serie.caps.length > 1;
             
-            card.innerHTML = hasMultiple ? `<div class="badge manga-badge">${serie.caps.length} Caps</div>` : '';
+            card.innerHTML = hasMultiple ? `<div class="badge">${serie.caps.length} Caps</div>` : '';
             card.appendChild(createLazyImg(serie.portada, serie.nombre));
             card.innerHTML += `<span>${serie.nombre}</span>`;
             
@@ -276,7 +279,7 @@
 
     function renderExpandedSerie(serie) {
         const grid = document.getElementById('m-grid');
-        grid.innerHTML = `<div class="card anime-card" style="grid-column: 1/-1; min-height: 60px; border-color: var(--pastel-green); color: var(--pastel-green);" onclick="loadMangas()"><span style="color:var(--pastel-green);">⬅ Volver a Biblioteca</span></div>`;
+        grid.innerHTML = `<div class="card anime-card" style="grid-column: 1/-1; min-height: 60px; border-color: var(--pastel-green);" onclick="loadMangas()"><span style="color:var(--pastel-green);">⬅ Volver a Biblioteca</span></div>`;
         const fragment = document.createDocumentFragment();
         serie.caps.sort((a,b) => a.label.localeCompare(b.label, undefined, {numeric: true})).forEach(cap => {
             const card = document.createElement('div');
@@ -290,7 +293,6 @@
         window.scrollTo(0,0);
     }
 
-    /* --- GALERÍA --- */
     function loadG() {
         db = [];
         if (typeof galeria_maestra === 'undefined') return;
@@ -340,7 +342,8 @@
 
     function renderImages(g) {
         const grid = document.getElementById('g-grid');
-        grid.innerHTML = `<div class="card anime-card" style="grid-column: 1/-1; min-height: 60px; border-color: var(--pastel-pink);" onclick="renderAlbums()"><span style="color:var(--pastel-pink);">⬅ Volver</span></div>`;
+        // Botón volver en Galería ahora usa --pastel-purple
+        grid.innerHTML = `<div class="card anime-card" style="grid-column: 1/-1; min-height: 60px; border-color: var(--pastel-purple);" onclick="renderAlbums()"><span style="color:var(--pastel-purple);">⬅ Volver</span></div>`;
         const fragment = document.createDocumentFragment();
         db.filter(i => i.g === g).forEach(item => {
             const card = document.createElement('div');
@@ -354,7 +357,6 @@
         window.scrollTo(0,0);
     }
 
-    /* --- RESTO DE FUNCIONES --- */
     function toggleSelection(item, card) {
         if (selectedDB.has(item.r)) { selectedDB.delete(item.r); card.classList.remove('selected'); }
         else { selectedDB.set(item.r, item); card.classList.add('selected'); }
