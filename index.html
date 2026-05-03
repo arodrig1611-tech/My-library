@@ -5,16 +5,16 @@
     <link rel="dns-prefetch" href="https://imgchest.com">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Library Pro - Win11 Style</title>
+    <title>My Library Pro - Win11 Style (Zero Lag)</title>
     <style>
         :root { 
-            /* Colores Pastel Neón (Win11 Vibe) */
+            /* Colores Pastel Neón */
             --pastel-green: #00ffaa; 
             --pastel-pink: #ff007f; 
             --pastel-blue: #00d4ff; 
             --pastel-purple: #9d00ff;
             
-            /* Colores de Tarjetas (Falso Cristal = 0 Lag) */
+            /* Colores de Tarjetas (Falso Cristal) */
             --card-bg-top: rgba(30, 30, 38, 0.85);
             --card-bg-bot: rgba(15, 15, 20, 0.95);
             --card-border: rgba(255, 255, 255, 0.05);
@@ -23,14 +23,12 @@
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        /* Solución a la barra blanca en móvil */
         html, body { margin: 0; padding: 0; min-height: 100%; color: white; font-family: 'Segoe UI', system-ui, sans-serif; overflow-x: hidden; }
         
-        /* Fondo Win11 Fijo (Alto rendimiento) */
+        /* Fondo Win11 Fijo */
         .app-bg {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
             background-color: #050508;
-            /* Orbes de luz estilo Windows 11 */
             background-image: 
                 radial-gradient(circle at 50% 120%, rgba(255, 0, 127, 0.15) 0%, transparent 50%),
                 radial-gradient(circle at 80% -10%, rgba(0, 212, 255, 0.15) 0%, transparent 40%),
@@ -53,7 +51,6 @@
         }
         .t-btn:hover { background: rgba(255,255,255,0.08); color: white; }
         
-        /* Botones Activos */
         .t-btn.active:nth-child(1) { background: rgba(0, 255, 170, 0.1); border-color: rgba(0, 255, 170, 0.3); color: var(--pastel-green); box-shadow: 0 0 15px rgba(0, 255, 170, 0.15); }
         .t-btn.active:nth-child(2) { background: rgba(255, 0, 127, 0.1); border-color: rgba(255, 0, 127, 0.3); color: var(--pastel-pink); box-shadow: 0 0 15px rgba(255, 0, 127, 0.15); }
         .t-btn.active:nth-child(3) { background: rgba(0, 212, 255, 0.1); border-color: rgba(0, 212, 255, 0.3); color: var(--pastel-blue); box-shadow: 0 0 15px rgba(0, 212, 255, 0.15); }
@@ -80,7 +77,6 @@
             padding: 8px 18px; border-radius: 20px; cursor: pointer; white-space: nowrap; 
             font-size: 12px; font-weight: 600; transition: 0.3s; 
         }
-        /* Botones de Categorías = Celeste */
         .c-btn.active { background: rgba(0, 212, 255, 0.15); color: #fff; border-color: var(--pastel-blue); box-shadow: 0 0 10px rgba(0, 212, 255, 0.2); }
 
         /* Grid */
@@ -123,7 +119,6 @@
             text-shadow: 0 2px 4px #000;
         }
         
-        /* Cartelitos (Badges) unificados = Celeste */
         .badge { 
             position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); 
             border: 1px solid var(--pastel-blue); color: var(--pastel-blue); 
@@ -140,7 +135,7 @@
 
         /* Modal */
         #modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:5000; }
-        #modal img { max-width:98%; max-height:85vh; object-fit:contain; border-radius: 8px; }
+        #modal img { max-width:100%; max-height:85vh; object-fit:contain; border-radius: 8px; user-select: none; }
         .m-nav { position:absolute; bottom:30px; width:100%; display:flex; justify-content:center; gap:20px; }
 
         .hidden { display:none !important; }
@@ -154,13 +149,13 @@
             .f-bar { margin: 10px; padding: 10px; border-radius: 10px; }
             input[type="text"] { padding: 10px; font-size: 12px; }
             
-            /* Ajustes para que las tarjetas de 4 columnas no se rompan */
             .card { border-radius: 6px; contain-intrinsic-size: 80px 120px; border-width: 1px; }
             .card span { padding: 6px 4px; font-size: 9px; line-height: 1.2; word-wrap: break-word; }
             .badge { padding: 2px 5px; font-size: 8px; top: 4px; right: 4px; border-width: 1px; }
             .anime-card { padding: 8px 4px; min-height: 70px; }
             .fab-container { bottom: 15px; right: 15px; gap: 8px; }
             .fab { padding: 10px 16px; font-size: 11px; }
+            .m-nav { display: none; } /* Ocultamos botones en móvil, usamos el swipe */
         }
     </style>
 </head>
@@ -205,7 +200,8 @@
         <div id="a-grid" class="grid"></div>
     </div>
 
-    <div id="modal" onclick="if(event.target===this) closeM()">
+    <!-- Modal con soporte Swipe -->
+    <div id="modal">
         <button style="position:absolute; top:20px; right:20px; background:transparent; border:none; color:white; font-size:30px; cursor:pointer;" onclick="closeM()">✕</button>
         <img id="m-img" src="">
         <div class="m-nav">
@@ -219,12 +215,14 @@
     <script src="lista_animes.js"></script> 
     <script>
     let db = [], selectedDB = new Map(), curIdx = 0, activeCat = 'TODOS';
+    let renderTask = null; // Variable clave para matar el lag
 
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 
     function createLazyImg(src, alt) {
         const img = document.createElement('img');
         img.loading = 'lazy'; 
+        img.decoding = 'async'; // Libera la CPU en imágenes pesadas
         img.src = src;
         img.alt = alt || '';
         return img;
@@ -241,14 +239,14 @@
         if (t === 'animes') loadAnimes();
     }
 
+    /* --- MANGAS (Con Micro-Batching) --- */
     function loadMangas(filter = "") {
+        clearTimeout(renderTask);
         const grid = document.getElementById('m-grid');
         grid.innerHTML = '';
         if (typeof bibliotecaMangas === 'undefined') return;
 
-        const fragment = document.createDocumentFragment();
         const seriesMap = {};
-
         Object.keys(bibliotecaMangas).forEach(key => {
             const baseName = key.split(/_ch|_Vol/i)[0].replace(/_/g, ' ');
             const isSub = key.includes('_ch') || key.includes('_Vol');
@@ -258,41 +256,64 @@
             seriesMap[baseName].caps.push({ key, label: isSub ? `Cap ${key.split(/_ch|_Vol/i)[1]}` : "Completo" });
         });
 
-        Object.values(seriesMap).sort((a,b) => a.nombre.localeCompare(b.nombre)).forEach(serie => {
-            if (filter && !serie.nombre.toLowerCase().includes(filter.toLowerCase())) return;
-            const card = document.createElement('div');
-            card.className = 'card';
-            const hasMultiple = serie.caps.length > 1;
-            
-            card.innerHTML = hasMultiple ? `<div class="badge">${serie.caps.length} Caps</div>` : '';
-            card.appendChild(createLazyImg(serie.portada, serie.nombre));
-            card.innerHTML += `<span>${serie.nombre}</span>`;
-            
-            card.onclick = () => {
-                if (hasMultiple) renderExpandedSerie(serie);
-                else window.location.href = `reader.html?manga=${serie.caps[0].key}`;
-            };
-            fragment.appendChild(card);
+        const itemsToRender = Object.values(seriesMap).sort((a,b) => a.nombre.localeCompare(b.nombre)).filter(serie => {
+            return !(filter && !serie.nombre.toLowerCase().includes(filter.toLowerCase()));
         });
-        grid.appendChild(fragment);
+
+        let i = 0;
+        function renderBatch() {
+            const fragment = document.createDocumentFragment();
+            const chunkEnd = Math.min(i + 24, itemsToRender.length);
+            for (; i < chunkEnd; i++) {
+                const serie = itemsToRender[i];
+                const card = document.createElement('div');
+                card.className = 'card';
+                const hasMultiple = serie.caps.length > 1;
+                
+                card.innerHTML = hasMultiple ? `<div class="badge">${serie.caps.length} Caps</div>` : '';
+                card.appendChild(createLazyImg(serie.portada, serie.nombre));
+                card.innerHTML += `<span>${serie.nombre}</span>`;
+                
+                card.onclick = () => {
+                    if (hasMultiple) renderExpandedSerie(serie);
+                    else window.location.href = `reader.html?manga=${serie.caps[0].key}`;
+                };
+                fragment.appendChild(card);
+            }
+            grid.appendChild(fragment);
+            if (i < itemsToRender.length) renderTask = setTimeout(renderBatch, 15);
+        }
+        renderBatch();
     }
 
     function renderExpandedSerie(serie) {
+        clearTimeout(renderTask);
         const grid = document.getElementById('m-grid');
         grid.innerHTML = `<div class="card anime-card" style="grid-column: 1/-1; min-height: 60px; border-color: var(--pastel-green);" onclick="loadMangas()"><span style="color:var(--pastel-green);">⬅ Volver a Biblioteca</span></div>`;
-        const fragment = document.createDocumentFragment();
-        serie.caps.sort((a,b) => a.label.localeCompare(b.label, undefined, {numeric: true})).forEach(cap => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.appendChild(createLazyImg(bibliotecaMangas[cap.key][0], serie.nombre));
-            card.innerHTML += `<span>${serie.nombre} - ${cap.label}</span>`;
-            card.onclick = () => window.location.href = `reader.html?manga=${cap.key}`;
-            fragment.appendChild(card);
-        });
-        grid.appendChild(fragment);
+        
+        const itemsToRender = [...serie.caps].sort((a,b) => a.label.localeCompare(b.label, undefined, {numeric: true}));
+        
+        let i = 0;
+        function renderBatch() {
+            const fragment = document.createDocumentFragment();
+            const chunkEnd = Math.min(i + 24, itemsToRender.length);
+            for (; i < chunkEnd; i++) {
+                const cap = itemsToRender[i];
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.appendChild(createLazyImg(bibliotecaMangas[cap.key][0], serie.nombre));
+                card.innerHTML += `<span>${serie.nombre} - ${cap.label}</span>`;
+                card.onclick = () => window.location.href = `reader.html?manga=${cap.key}`;
+                fragment.appendChild(card);
+            }
+            grid.appendChild(fragment);
+            if (i < itemsToRender.length) renderTask = setTimeout(renderBatch, 15);
+        }
+        renderBatch();
         window.scrollTo(0,0);
     }
 
+    /* --- GALERÍA (Con Micro-Batching) --- */
     function loadG() {
         db = [];
         if (typeof galeria_maestra === 'undefined') return;
@@ -312,51 +333,90 @@
     }
 
     function renderAlbums(filter = "") {
+        clearTimeout(renderTask);
         const grid = document.getElementById('g-grid');
         grid.innerHTML = '';
-        const fragment = document.createDocumentFragment();
+        
         const groups = [...new Set(db.map(i => i.g))].sort();
-
+        const itemsToRender = [];
+        
         groups.forEach(g => {
             const data = db.filter(i => i.g === g);
             const item = data[0];
             if (filter && !item.p.toLowerCase().includes(filter.toLowerCase().replace(/ /g, '_'))) return;
             if (activeCat !== 'TODOS' && item.sub !== activeCat) return;
+            itemsToRender.push({ g, data, item });
+        });
 
-            const card = document.createElement('div');
-            if (item.sub === 'Real') {
+        let i = 0;
+        function renderBatch() {
+            const fragment = document.createDocumentFragment();
+            const chunkEnd = Math.min(i + 24, itemsToRender.length);
+            for (; i < chunkEnd; i++) {
+                const { g, data, item } = itemsToRender[i];
+                const card = document.createElement('div');
+                
+                if (item.sub === 'Real') {
+                    card.className = 'card' + (selectedDB.has(item.r) ? ' selected' : '');
+                    card.appendChild(createLazyImg(item.r, item.p));
+                    card.innerHTML += `<span>${item.p.replace(/_/g, ' ')}</span>`;
+                    card.onclick = () => toggleSelection(item, card);
+                } else {
+                    card.className = 'card album-card';
+                    card.style.backgroundImage = `url('${item.r}')`;
+                    card.innerHTML = `<div class="badge">${data.length} fotos</div><span>${item.p.replace(/_/g, ' ')}</span>`;
+                    card.onclick = () => renderImages(g);
+                }
+                fragment.appendChild(card);
+            }
+            grid.appendChild(fragment);
+            if (i < itemsToRender.length) renderTask = setTimeout(renderBatch, 15);
+        }
+        renderBatch();
+    }
+
+    function renderImages(g) {
+        clearTimeout(renderTask);
+        const grid = document.getElementById('g-grid');
+        grid.innerHTML = `<div class="card anime-card" style="grid-column: 1/-1; min-height: 60px; border-color: var(--pastel-purple);" onclick="renderAlbums()"><span style="color:var(--pastel-purple);">⬅ Volver</span></div>`;
+        
+        const itemsToRender = db.filter(i => i.g === g);
+        
+        let i = 0;
+        function renderBatch() {
+            const fragment = document.createDocumentFragment();
+            const chunkEnd = Math.min(i + 24, itemsToRender.length);
+            for (; i < chunkEnd; i++) {
+                const item = itemsToRender[i];
+                const card = document.createElement('div');
                 card.className = 'card' + (selectedDB.has(item.r) ? ' selected' : '');
                 card.appendChild(createLazyImg(item.r, item.p));
                 card.innerHTML += `<span>${item.p.replace(/_/g, ' ')}</span>`;
                 card.onclick = () => toggleSelection(item, card);
-            } else {
-                card.className = 'card album-card';
-                card.style.backgroundImage = `url('${item.r}')`;
-                card.innerHTML = `<div class="badge">${data.length} fotos</div><span>${item.p.replace(/_/g, ' ')}</span>`;
-                card.onclick = () => renderImages(g);
+                fragment.appendChild(card);
             }
-            fragment.appendChild(card);
-        });
-        grid.appendChild(fragment);
-    }
-
-    function renderImages(g) {
-        const grid = document.getElementById('g-grid');
-        // Botón volver en Galería ahora usa --pastel-purple
-        grid.innerHTML = `<div class="card anime-card" style="grid-column: 1/-1; min-height: 60px; border-color: var(--pastel-purple);" onclick="renderAlbums()"><span style="color:var(--pastel-purple);">⬅ Volver</span></div>`;
-        const fragment = document.createDocumentFragment();
-        db.filter(i => i.g === g).forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'card' + (selectedDB.has(item.r) ? ' selected' : '');
-            card.appendChild(createLazyImg(item.r, item.p));
-            card.innerHTML += `<span>${item.p.replace(/_/g, ' ')}</span>`;
-            card.onclick = () => toggleSelection(item, card);
-            fragment.appendChild(card);
-        });
-        grid.appendChild(fragment);
+            grid.appendChild(fragment);
+            if (i < itemsToRender.length) renderTask = setTimeout(renderBatch, 15);
+        }
+        renderBatch();
         window.scrollTo(0,0);
     }
 
+    /* --- GESTOS SWIPE (Deslizar en móvil) --- */
+    const modalEl = document.getElementById('modal');
+    let touchStartX = 0;
+
+    modalEl.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, {passive: true});
+
+    modalEl.addEventListener('touchend', e => {
+        const touchEndX = e.changedTouches[0].screenX;
+        if (touchEndX < touchStartX - 50) changeM(1); // Deslizar Izquierda -> Siguiente
+        if (touchEndX > touchStartX + 50) changeM(-1); // Deslizar Derecha -> Anterior
+    }, {passive: true});
+
+    /* --- RESTO DE FUNCIONES --- */
     function toggleSelection(item, card) {
         if (selectedDB.has(item.r)) { selectedDB.delete(item.r); card.classList.remove('selected'); }
         else { selectedDB.set(item.r, item); card.classList.add('selected'); }
