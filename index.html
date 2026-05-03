@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Library Pro - Final Fix</title>
+    <title>My Library Pro - Extreme Speed</title>
     <style>
         :root { --bg: #0a0a0a; --acc: #4caf50; --pink: #d81b60; --blue: #2196f3; --gray: #222; }
         * { box-sizing: border-box; }
@@ -23,10 +23,22 @@
         /* Grid */
         .grid { display:grid; gap:15px; padding:20px; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); max-width: 1600px; margin: 0 auto; }
         
-        /* Cards */
-        .card { background:#161616; border:1px solid #333; border-radius:10px; overflow:hidden; text-align:center; cursor: pointer; position: relative; transition: 0.3s; text-decoration: none; color: white; display: flex; flex-direction: column; }
+        /* Cards Optimizado */
+        .card { background:#161616; border:1px solid #333; border-radius:10px; overflow:hidden; text-align:center; cursor: pointer; position: relative; transition: 0.3s; text-decoration: none; color: white; display: flex; flex-direction: column; content-visibility: auto; contain-intrinsic-size: 200px 300px; }
         .card:hover { border-color: var(--acc); transform: translateY(-5px); }
-        .card img { width:100%; height:280px; object-fit:cover; display:block; transition: 0.5s; }
+        
+        .card img { 
+            width:100%; 
+            height:280px; 
+            object-fit:cover; 
+            display:block; 
+            transition: opacity 0.4s ease-in-out; 
+            background: #111; /* Color previo a la carga */
+        }
+        
+        .img-loading { opacity: 0; }
+        .img-loaded { opacity: 1; }
+
         .card span { display:block; padding:12px; font-size:12px; font-weight: bold; background: #161616; border-top: 1px solid #222; flex-grow: 1; display: flex; align-items: center; justify-content: center; }
 
         /* Álbumes */
@@ -47,32 +59,12 @@
         .selected { border: 2px solid var(--pink) !important; box-shadow: 0 0 15px var(--pink); }
 
         @media (max-width: 600px) {
-        #g-grid {
-        grid-template-columns: repeat(4, 1fr) !important;
-        gap: 5px !important; 
-        padding: 10px !important;
-    }
-
-    #g-grid .card img {
-        height: 120px !important; 
-    }
-
-    #g-grid .album-card {
-        height: 150px !important;
-    }
-
-    #g-grid .card span, #g-grid .album-title {
-        font-size: 9px !important;
-        padding: 5px !important;
-    }
-    
-    #g-grid .badge {
-        font-size: 8px !important;
-        padding: 2px 5px !important;
-        top: 5px !important;
-        right: 5px !important;
-    }
-}
+            #g-grid { grid-template-columns: repeat(4, 1fr) !important; gap: 5px !important; padding: 10px !important; }
+            #g-grid .card img { height: 120px !important; }
+            #g-grid .album-card { height: 150px !important; }
+            #g-grid .card span, #g-grid .album-title { font-size: 9px !important; padding: 5px !important; }
+            #g-grid .badge { font-size: 8px !important; padding: 2px 5px !important; top: 5px !important; right: 5px !important; }
+        }
     </style>
 </head>
 <body>
@@ -130,6 +122,30 @@
     <script>
     let db = [], selectedDB = new Map(), curIdx = 0, currentView = 'albums', playInt = null, activeCat = 'TODOS';
 
+    /* === MOTOR DE CARGA PROFESIONAL (Intersection Observer) === */
+    const observerOptions = { rootMargin: '0px 0px 600px 0px' }; // Carga 600px antes de llegar
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src; // Cargar link real de ImgChest
+                img.onload = () => img.classList.add('img-loaded');
+                observer.unobserve(img);
+            }
+        });
+    }, observerOptions);
+
+    function createLazyImg(src, alt) {
+        const img = document.createElement('img');
+        img.className = 'img-loading';
+        img.dataset.src = src;
+        img.alt = alt;
+        img.decoding = 'async'; // Decodificación asíncrona
+        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lMREFUeNoFwQEBAAAAgl0A/gl1UwVNAAACR0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII="; // Placeholder 1x1 transparente
+        imageObserver.observe(img);
+        return img;
+    }
+
     function tab(t, b) {
         document.getElementById('t-mangas').classList.toggle('hidden', t !== 'mangas');
         document.getElementById('t-galeria').classList.toggle('hidden', t !== 'galeria');
@@ -141,19 +157,15 @@
         if (t === 'animes') loadAnimes();
     }
 
-    /* === NUEVA LÓGICA DE MANGAS === */
     function loadMangas(filter = "") {
         const grid = document.getElementById('m-grid');
         grid.innerHTML = '';
         if (typeof bibliotecaMangas === 'undefined') return;
 
         const seriesMap = {};
-
-        // Agrupar
         Object.keys(bibliotecaMangas).forEach(key => {
             const baseName = key.split(/_ch|_Vol/i)[0].replace(/_/g, ' ');
             const isSubChapter = key.includes('_ch') || key.includes('_Vol');
-
             if (!seriesMap[baseName]) {
                 seriesMap[baseName] = { nombre: baseName, caps: [], portada: bibliotecaMangas[key][0] };
             }
@@ -164,26 +176,25 @@
             });
         });
 
-        // Renderizar
         Object.values(seriesMap).sort((a,b) => a.nombre.localeCompare(b.nombre)).forEach(serie => {
             if (filter && !serie.nombre.toLowerCase().includes(filter.toLowerCase())) return;
 
             const card = document.createElement('div');
             const hasMultiple = serie.caps.length > 1;
-            
             card.className = 'card';
-            card.innerHTML = `
-                ${hasMultiple ? `<div class="badge" style="background:var(--pink)">${serie.caps.length} Caps</div>` : ''}
-                <img src="${serie.portada}" loading="lazy">
-                <span>${serie.nombre}</span>
-            `;
+            
+            const img = createLazyImg(serie.portada, serie.nombre);
+            const badge = hasMultiple ? `<div class="badge" style="background:var(--pink)">${serie.caps.length} Caps</div>` : '';
+            const span = document.createElement('span');
+            span.innerText = serie.nombre;
+
+            card.innerHTML = badge;
+            card.appendChild(img);
+            card.appendChild(span);
 
             card.onclick = () => {
-                if (hasMultiple) {
-                    renderExpandedSerie(serie);
-                } else {
-                    window.location.href = serie.caps[0].link;
-                }
+                if (hasMultiple) renderExpandedSerie(serie);
+                else window.location.href = serie.caps[0].link;
             };
             grid.appendChild(card);
         });
@@ -198,18 +209,19 @@
         `;
 
         serie.caps.sort((a,b) => a.label.localeCompare(b.label, undefined, {numeric: true})).forEach(cap => {
-            const card = document.createElement('a');
+            const card = document.createElement('div');
             card.className = 'card';
-            card.href = cap.link;
-            card.innerHTML = `
-                <img src="${bibliotecaMangas[cap.originalKey][0]}" loading="lazy">
-                <span>${serie.nombre} - ${cap.label}</span>
-            `;
+            const img = createLazyImg(bibliotecaMangas[cap.originalKey][0], serie.nombre);
+            const span = document.createElement('span');
+            span.innerText = `${serie.nombre} - ${cap.label}`;
+            
+            card.appendChild(img);
+            card.appendChild(span);
+            card.onclick = () => window.location.href = cap.link;
             grid.appendChild(card);
         });
         window.scrollTo(0,0);
     }
-    /* ============================== */
 
     function loadG() {
         db = [];
@@ -247,7 +259,11 @@
                 const card = document.createElement('div');
                 if (item.sub === 'Real') {
                     card.className = 'card' + (selectedDB.has(item.r) ? ' selected' : '');
-                    card.innerHTML = `<img src="${item.r}" loading="lazy"><span>${item.p.replace(/_/g, ' ')}</span>`;
+                    const img = createLazyImg(item.r, item.p);
+                    const span = document.createElement('span');
+                    span.innerText = item.p.replace(/_/g, ' ');
+                    card.appendChild(img);
+                    card.appendChild(span);
                     card.onclick = () => toggleSelection(item, card);
                 } else {
                     card.className = 'card album-card';
@@ -266,7 +282,13 @@
         db.filter(i => i.g === groupName).forEach(item => {
             const card = document.createElement('div');
             card.className = 'card' + (selectedDB.has(item.r) ? ' selected' : '');
-            card.innerHTML = `<img src="${item.r}" loading="lazy"><span>${item.p.replace(/_/g, ' ')}</span>`;
+            
+            const img = createLazyImg(item.r, item.p);
+            const span = document.createElement('span');
+            span.innerText = item.p.replace(/_/g, ' ');
+            
+            card.appendChild(img);
+            card.appendChild(span);
             card.onclick = () => toggleSelection(item, card);
             grid.appendChild(card);
         });
@@ -326,10 +348,7 @@
         document.getElementById('viewBtn').innerText = `👁️ Ver (0)`;
     }
 
-    // Al cargar la ventana, iniciar Mangas
-    window.onload = () => { 
-        loadMangas(); 
-    };
+    window.onload = () => { loadMangas(); };
     </script>
 </body>
 </html>
