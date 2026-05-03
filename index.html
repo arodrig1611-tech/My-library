@@ -5,7 +5,7 @@
     <link rel="dns-prefetch" href="https://imgchest.com">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Library Pro - Win11 Style (Zero Lag)</title>
+    <title>My Library Pro - Win11 Style (Zero Lag + Filmstrip)</title>
     <style>
         :root { 
             --pastel-green: #00ffaa; 
@@ -22,8 +22,6 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         html, body { margin: 0; padding: 0; min-height: 100%; color: white; font-family: 'Segoe UI', system-ui, sans-serif; overflow-x: hidden; }
-        
-        /* Clase para bloquear el fondo cuando el visor está abierto */
         body.no-scroll { overflow: hidden; touch-action: none; }
         
         .app-bg {
@@ -70,6 +68,7 @@
         input[type="text"]:focus { border-color: var(--pastel-purple); background: rgba(0,0,0,0.6); box-shadow: 0 0 10px rgba(157, 0, 255, 0.2); }
 
         .cat-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+        .cat-row::-webkit-scrollbar { display: none; }
         .c-btn { 
             background: rgba(0,0,0,0.5); color: #aaa; border: 1px solid transparent; 
             padding: 8px 18px; border-radius: 20px; cursor: pointer; white-space: nowrap; 
@@ -104,16 +103,9 @@
             background: transparent; color: #eaeaea; letter-spacing: 0.3px;
         }
 
-        .anime-card { 
-            padding: 20px 15px; justify-content: center; align-items: center; 
-            min-height: 100px; border-radius: 14px;
-        }
-
+        .anime-card { padding: 20px 15px; justify-content: center; align-items: center; min-height: 100px; border-radius: 14px; }
         .album-card { justify-content: flex-end; background-size: cover; background-position: center; aspect-ratio: 200/280; }
-        .album-card span { 
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%); 
-            text-shadow: 0 2px 4px #000;
-        }
+        .album-card span { background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%); text-shadow: 0 2px 4px #000; }
         
         .badge { 
             position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); 
@@ -128,7 +120,7 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.6); 
         }
 
-        /* Modal Actualizado con Fondo Win11 */
+        /* --- MODAL OPTIMIZADO --- */
         #modal { 
             position:fixed; top:0; left:0; width:100%; height:100%; 
             background-color: #050508;
@@ -138,8 +130,27 @@
                 radial-gradient(circle at -10% 50%, rgba(157, 0, 255, 0.15) 0%, transparent 50%);
             display:none; flex-direction:column; align-items:center; justify-content:center; z-index:5000; 
         }
-        #modal img { max-width:100%; max-height:85vh; object-fit:contain; border-radius: 8px; user-select: none; }
-        .m-nav { position:absolute; bottom:30px; width:100%; display:flex; justify-content:center; gap:20px; }
+        #modal img#m-img { max-width:100%; max-height:75vh; object-fit:contain; border-radius: 8px; user-select: none; transition: opacity 0.2s; }
+        
+        /* Botones Laterales del Visor */
+        .m-nav-side { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; display: flex; justify-content: space-between; padding: 0 20px; pointer-events: none; }
+        .m-nav-side button { pointer-events: auto; width: 45px; height: 45px; border-radius: 50%; font-size: 18px; display: flex; justify-content: center; align-items: center; }
+
+        /* --- NUEVO: CARRUSEL DE MINIATURAS (FILMSTRIP) --- */
+        .thumb-strip {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 8px; width: 90vw; max-width: 800px; overflow-x: auto;
+            padding: 10px; background: rgba(10,10,15,0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-radius: 12px; border: 1px solid var(--card-border);
+            scrollbar-width: none; scroll-behavior: smooth; z-index: 5001;
+        }
+        .thumb-strip::-webkit-scrollbar { display: none; }
+        .thumb-item {
+            height: 55px; aspect-ratio: 3/4; object-fit: cover; border-radius: 6px;
+            cursor: pointer; opacity: 0.4; transition: 0.2s ease; border: 2px solid transparent;
+            flex-shrink: 0; background: #111;
+        }
+        .thumb-item.active { opacity: 1; border-color: var(--pastel-pink); transform: scale(1.05); }
 
         .hidden { display:none !important; }
         .selected { border: 2px solid var(--pastel-pink) !important; transform: scale(0.96); opacity: 0.8; }
@@ -157,7 +168,10 @@
             .anime-card { padding: 8px 4px; min-height: 70px; }
             .fab-container { bottom: 15px; right: 15px; gap: 8px; }
             .fab { padding: 10px 16px; font-size: 11px; }
-            .m-nav { display: none; }
+            .m-nav-side { display: none; } /* En móvil se usa el swipe puro */
+            #modal img#m-img { max-height: 80vh; }
+            .thumb-strip { width: 95vw; padding: 8px; bottom: 15px; }
+            .thumb-item { height: 45px; }
         }
     </style>
 </head>
@@ -202,13 +216,18 @@
         <div id="a-grid" class="grid"></div>
     </div>
 
+    <!-- Visor Modal con Filmstrip -->
     <div id="modal">
-        <button style="position:absolute; top:20px; right:20px; background:transparent; border:none; color:white; font-size:30px; cursor:pointer;" onclick="closeM()">✕</button>
-        <img id="m-img" src="">
-        <div class="m-nav">
-            <button class="t-btn" style="background:#222; border-color:#444;" onclick="changeM(-1)">❮</button>
-            <button class="t-btn" style="background:#222; border-color:#444;" onclick="changeM(1)">❯</button>
+        <button style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.5); border:1px solid var(--card-border); color:white; font-size:24px; width:40px; height:40px; border-radius:50%; cursor:pointer; z-index:5002; display:flex; align-items:center; justify-content:center;" onclick="closeM()">✕</button>
+        
+        <div class="m-nav-side">
+            <button class="t-btn" style="background:rgba(0,0,0,0.6);" onclick="changeM(-1)">❮</button>
+            <button class="t-btn" style="background:rgba(0,0,0,0.6);" onclick="changeM(1)">❯</button>
         </div>
+        
+        <img id="m-img" src="">
+        
+        <div id="modal-thumbnails" class="thumb-strip"></div>
     </div>
 
     <script src="lista_mangas.js"></script>
@@ -216,16 +235,14 @@
     <script src="lista_animes.js"></script> 
     <script>
     let db = [], selectedDB = new Map(), curIdx = 0, activeCat = 'TODOS';
-    let renderTask = null;
+    let renderFrame = null; // Usaremos rAF para Zero-Lag absoluto
 
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 
     function createLazyImg(src, alt) {
         const img = document.createElement('img');
-        img.loading = 'lazy'; 
-        img.decoding = 'async'; 
-        img.src = src;
-        img.alt = alt || '';
+        img.loading = 'lazy'; img.decoding = 'async'; 
+        img.src = src; img.alt = alt || '';
         return img;
     }
 
@@ -240,79 +257,79 @@
         if (t === 'animes') loadAnimes();
     }
 
-    function loadMangas(filter = "") {
-        clearTimeout(renderTask);
-        const grid = document.getElementById('m-grid');
+    /* --- MOTOR DE RENDERIZADO 60FPS (requestAnimationFrame) --- */
+    function renderEngine(gridId, itemsToRender, renderFunc) {
+        if (renderFrame) cancelAnimationFrame(renderFrame);
+        const grid = document.getElementById(gridId);
         grid.innerHTML = '';
-        if (typeof bibliotecaMangas === 'undefined') return;
+        
+        let i = 0;
+        const chunkSize = window.innerWidth < 600 ? 16 : 32; // En móvil inyecta más rápido y más pequeño
 
+        function renderBatch() {
+            const fragment = document.createDocumentFragment();
+            const chunkEnd = Math.min(i + chunkSize, itemsToRender.length);
+            for (; i < chunkEnd; i++) {
+                fragment.appendChild(renderFunc(itemsToRender[i]));
+            }
+            grid.appendChild(fragment);
+            if (i < itemsToRender.length) {
+                renderFrame = requestAnimationFrame(renderBatch);
+            }
+        }
+        renderFrame = requestAnimationFrame(renderBatch);
+    }
+
+    /* --- MANGAS --- */
+    function loadMangas(filter = "") {
+        if (typeof bibliotecaMangas === 'undefined') return;
         const seriesMap = {};
         Object.keys(bibliotecaMangas).forEach(key => {
             const baseName = key.split(/_ch|_Vol/i)[0].replace(/_/g, ' ');
             const isSub = key.includes('_ch') || key.includes('_Vol');
-            if (!seriesMap[baseName]) {
-                seriesMap[baseName] = { nombre: baseName, caps: [], portada: bibliotecaMangas[key][0] };
-            }
+            if (!seriesMap[baseName]) seriesMap[baseName] = { nombre: baseName, caps: [], portada: bibliotecaMangas[key][0] };
             seriesMap[baseName].caps.push({ key, label: isSub ? `Cap ${key.split(/_ch|_Vol/i)[1]}` : "Completo" });
         });
 
-        const itemsToRender = Object.values(seriesMap).sort((a,b) => a.nombre.localeCompare(b.nombre)).filter(serie => {
-            return !(filter && !serie.nombre.toLowerCase().includes(filter.toLowerCase()));
-        });
+        const items = Object.values(seriesMap).sort((a,b) => a.nombre.localeCompare(b.nombre))
+            .filter(serie => !(filter && !serie.nombre.toLowerCase().includes(filter.toLowerCase())));
 
-        let i = 0;
-        function renderBatch() {
-            const fragment = document.createDocumentFragment();
-            const chunkEnd = Math.min(i + 24, itemsToRender.length);
-            for (; i < chunkEnd; i++) {
-                const serie = itemsToRender[i];
-                const card = document.createElement('div');
-                card.className = 'card';
-                const hasMultiple = serie.caps.length > 1;
-                
-                card.innerHTML = hasMultiple ? `<div class="badge">${serie.caps.length} Caps</div>` : '';
-                card.appendChild(createLazyImg(serie.portada, serie.nombre));
-                card.innerHTML += `<span>${serie.nombre}</span>`;
-                
-                card.onclick = () => {
-                    if (hasMultiple) renderExpandedSerie(serie);
-                    else window.location.href = `reader.html?manga=${serie.caps[0].key}`;
-                };
-                fragment.appendChild(card);
-            }
-            grid.appendChild(fragment);
-            if (i < itemsToRender.length) renderTask = setTimeout(renderBatch, 15);
-        }
-        renderBatch();
+        renderEngine('m-grid', items, (serie) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            const hasMultiple = serie.caps.length > 1;
+            card.innerHTML = hasMultiple ? `<div class="badge">${serie.caps.length} Caps</div>` : '';
+            card.appendChild(createLazyImg(serie.portada, serie.nombre));
+            card.innerHTML += `<span>${serie.nombre}</span>`;
+            card.onclick = () => {
+                if (hasMultiple) renderExpandedSerie(serie);
+                else window.location.href = `reader.html?manga=${serie.caps[0].key}`;
+            };
+            return card;
+        });
     }
 
     function renderExpandedSerie(serie) {
-        clearTimeout(renderTask);
         const grid = document.getElementById('m-grid');
+        if (renderFrame) cancelAnimationFrame(renderFrame);
         grid.innerHTML = `<div class="card anime-card" style="grid-column: 1/-1; min-height: 60px; border-color: var(--pastel-green);" onclick="loadMangas()"><span style="color:var(--pastel-green);">⬅ Volver a Biblioteca</span></div>`;
         
-        const itemsToRender = [...serie.caps].sort((a,b) => a.label.localeCompare(b.label, undefined, {numeric: true}));
+        const items = [...serie.caps].sort((a,b) => a.label.localeCompare(b.label, undefined, {numeric: true}));
+        const fragment = document.createDocumentFragment();
         
-        let i = 0;
-        function renderBatch() {
-            const fragment = document.createDocumentFragment();
-            const chunkEnd = Math.min(i + 24, itemsToRender.length);
-            for (; i < chunkEnd; i++) {
-                const cap = itemsToRender[i];
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.appendChild(createLazyImg(bibliotecaMangas[cap.key][0], serie.nombre));
-                card.innerHTML += `<span>${serie.nombre} - ${cap.label}</span>`;
-                card.onclick = () => window.location.href = `reader.html?manga=${cap.key}`;
-                fragment.appendChild(card);
-            }
-            grid.appendChild(fragment);
-            if (i < itemsToRender.length) renderTask = setTimeout(renderBatch, 15);
-        }
-        renderBatch();
+        items.forEach(cap => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.appendChild(createLazyImg(bibliotecaMangas[cap.key][0], serie.nombre));
+            card.innerHTML += `<span>${serie.nombre} - ${cap.label}</span>`;
+            card.onclick = () => window.location.href = `reader.html?manga=${cap.key}`;
+            fragment.appendChild(card);
+        });
+        grid.appendChild(fragment);
         window.scrollTo(0,0);
     }
 
+    /* --- GALERÍA --- */
     function loadG() {
         db = [];
         if (typeof galeria_maestra === 'undefined') return;
@@ -332,147 +349,163 @@
     }
 
     function renderAlbums(filter = "") {
-        clearTimeout(renderTask);
-        const grid = document.getElementById('g-grid');
-        grid.innerHTML = '';
-        
         const groups = [...new Set(db.map(i => i.g))].sort();
-        const itemsToRender = [];
+        const items = [];
         
         groups.forEach(g => {
             const data = db.filter(i => i.g === g);
             const item = data[0];
             if (filter && !item.p.toLowerCase().includes(filter.toLowerCase().replace(/ /g, '_'))) return;
             if (activeCat !== 'TODOS' && item.sub !== activeCat) return;
-            itemsToRender.push({ g, data, item });
+            items.push({ g, data, item });
         });
 
-        let i = 0;
-        function renderBatch() {
-            const fragment = document.createDocumentFragment();
-            const chunkEnd = Math.min(i + 24, itemsToRender.length);
-            for (; i < chunkEnd; i++) {
-                const { g, data, item } = itemsToRender[i];
-                const card = document.createElement('div');
-                
-                if (item.sub === 'Real') {
-                    card.className = 'card' + (selectedDB.has(item.r) ? ' selected' : '');
-                    card.appendChild(createLazyImg(item.r, item.p));
-                    card.innerHTML += `<span>${item.p.replace(/_/g, ' ')}</span>`;
-                    card.onclick = () => toggleSelection(item, card);
-                } else {
-                    card.className = 'card album-card';
-                    card.style.backgroundImage = `url('${item.r}')`;
-                    card.innerHTML = `<div class="badge">${data.length} fotos</div><span>${item.p.replace(/_/g, ' ')}</span>`;
-                    card.onclick = () => renderImages(g);
-                }
-                fragment.appendChild(card);
-            }
-            grid.appendChild(fragment);
-            if (i < itemsToRender.length) renderTask = setTimeout(renderBatch, 15);
-        }
-        renderBatch();
-    }
-
-    function renderImages(g) {
-        clearTimeout(renderTask);
-        const grid = document.getElementById('g-grid');
-        grid.innerHTML = `<div class="card anime-card" style="grid-column: 1/-1; min-height: 60px; border-color: var(--pastel-purple);" onclick="renderAlbums()"><span style="color:var(--pastel-purple);">⬅ Volver</span></div>`;
-        
-        const itemsToRender = db.filter(i => i.g === g);
-        
-        let i = 0;
-        function renderBatch() {
-            const fragment = document.createDocumentFragment();
-            const chunkEnd = Math.min(i + 24, itemsToRender.length);
-            for (; i < chunkEnd; i++) {
-                const item = itemsToRender[i];
-                const card = document.createElement('div');
+        renderEngine('g-grid', items, ({ g, data, item }) => {
+            const card = document.createElement('div');
+            if (item.sub === 'Real') {
                 card.className = 'card' + (selectedDB.has(item.r) ? ' selected' : '');
                 card.appendChild(createLazyImg(item.r, item.p));
                 card.innerHTML += `<span>${item.p.replace(/_/g, ' ')}</span>`;
                 card.onclick = () => toggleSelection(item, card);
-                fragment.appendChild(card);
+            } else {
+                card.className = 'card album-card';
+                card.style.backgroundImage = `url('${item.r}')`;
+                card.innerHTML = `<div class="badge">${data.length} fotos</div><span>${item.p.replace(/_/g, ' ')}</span>`;
+                card.onclick = () => renderImages(g);
             }
-            grid.appendChild(fragment);
-            if (i < itemsToRender.length) renderTask = setTimeout(renderBatch, 15);
-        }
-        renderBatch();
+            return card;
+        });
+    }
+
+    function renderImages(g) {
+        if (renderFrame) cancelAnimationFrame(renderFrame);
+        const grid = document.getElementById('g-grid');
+        grid.innerHTML = `<div class="card anime-card" style="grid-column: 1/-1; min-height: 60px; border-color: var(--pastel-purple);" onclick="renderAlbums()"><span style="color:var(--pastel-purple);">⬅ Volver</span></div>`;
+        
+        const items = db.filter(i => i.g === g);
+        const fragment = document.createDocumentFragment();
+        
+        items.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card' + (selectedDB.has(item.r) ? ' selected' : '');
+            card.appendChild(createLazyImg(item.r, item.p));
+            card.innerHTML += `<span>${item.p.replace(/_/g, ' ')}</span>`;
+            card.onclick = () => toggleSelection(item, card);
+            fragment.appendChild(card);
+        });
+        grid.appendChild(fragment);
         window.scrollTo(0,0);
     }
 
-    /* --- GESTOS SWIPE MEJORADOS --- */
-    const modalEl = document.getElementById('modal');
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let isPinching = false;
-
-    modalEl.addEventListener('touchstart', e => {
-        // Bloqueo de pellizco (Zoom con dos dedos)
-        if (e.touches.length > 1) {
-            isPinching = true;
-            return;
-        }
-        isPinching = false;
-        touchStartX = e.changedTouches[0].screenX;
-        touchStartY = e.changedTouches[0].screenY;
-    }, {passive: true});
-
-    modalEl.addEventListener('touchend', e => {
-        if (isPinching) return; // Si estaba haciendo zoom, no hagas swipe
-
-        const touchEndX = e.changedTouches[0].screenX;
-        const touchEndY = e.changedTouches[0].screenY;
-        
-        const deltaX = touchEndX - touchStartX;
-        const deltaY = touchEndY - touchStartY;
-
-        // Requiere 60px de fuerza y que sea principalmente horizontal (evita falsos swipes al subir/bajar)
-        if (Math.abs(deltaX) > 60 && Math.abs(deltaX) > Math.abs(deltaY)) {
-            if (deltaX < 0) changeM(1); // Swipe Izquierda
-            else changeM(-1);           // Swipe Derecha
-        }
-    }, {passive: true});
-
-    /* --- RESTO DE FUNCIONES --- */
     function toggleSelection(item, card) {
         if (selectedDB.has(item.r)) { selectedDB.delete(item.r); card.classList.remove('selected'); }
         else { selectedDB.set(item.r, item); card.classList.add('selected'); }
         document.getElementById('viewBtn').innerText = `👁️ Ver (${selectedDB.size})`;
     }
 
+    /* --- ANIMES --- */
     function loadAnimes() {
         const container = document.getElementById('a-grid');
         if (container.children.length > 0 || typeof lista_animes === 'undefined') return;
+        const fragment = document.createDocumentFragment();
         Object.entries(lista_animes).sort().forEach(([n, url]) => {
             const a = document.createElement('a');
             a.className = 'card anime-card'; a.href = url; a.target = '_blank';
             a.innerHTML = `<span>${n.replace(/_/g, ' ')}</span>`;
-            container.appendChild(a);
+            fragment.appendChild(a);
         });
+        container.appendChild(fragment);
     }
-
-    function openM() { 
-        if(selectedDB.size === 0) return;
-        curIdx = 0; 
-        document.getElementById('modal').style.display = 'flex'; 
-        document.body.classList.add('no-scroll'); // Congela la página trasera
-        updM(); 
-    }
-    
-    function closeM() { 
-        document.getElementById('modal').style.display = 'none'; 
-        document.body.classList.remove('no-scroll'); // Libera la página trasera
-    }
-    
-    function updM() { document.getElementById('m-img').src = Array.from(selectedDB.values())[curIdx].r; }
-    function changeM(d) { const s = selectedDB.size; curIdx = (curIdx + d + s) % s; updM(); }
-    function clearSel() { selectedDB.clear(); renderAlbums(); document.getElementById('viewBtn').innerText = `👁️ Ver (0)`; }
 
     function searchGeneric(q, id) {
         const container = document.getElementById(id);
         Array.from(container.querySelectorAll('.card')).forEach(c => c.classList.toggle('hidden', !c.innerText.toLowerCase().includes(q.toLowerCase())));
     }
+
+    /* --- VISOR MODAL (CON FILMSTRIP) --- */
+    function openM() { 
+        if(selectedDB.size === 0) return;
+        curIdx = 0; 
+        document.getElementById('modal').style.display = 'flex'; 
+        document.body.classList.add('no-scroll'); 
+        
+        // Construir Carrusel de Miniaturas
+        const thumbStrip = document.getElementById('modal-thumbnails');
+        thumbStrip.innerHTML = '';
+        let i = 0;
+        selectedDB.forEach((item, url) => {
+            const img = createLazyImg(url, "thumb");
+            img.className = 'thumb-item';
+            img.dataset.idx = i;
+            img.onclick = function(e) { 
+                e.stopPropagation(); // Evita que se dispare el touch del modal
+                curIdx = parseInt(this.dataset.idx); 
+                updM(); 
+            };
+            thumbStrip.appendChild(img);
+            i++;
+        });
+
+        updM(); 
+    }
+    
+    function closeM() { 
+        document.getElementById('modal').style.display = 'none'; 
+        document.body.classList.remove('no-scroll'); 
+    }
+    
+    function updM() { 
+        const arr = Array.from(selectedDB.values());
+        document.getElementById('m-img').src = arr[curIdx].r; 
+        
+        // Actualizar estado del carrusel y centrar la miniatura
+        const thumbs = document.querySelectorAll('.thumb-item');
+        thumbs.forEach((t, idx) => {
+            if(idx === curIdx) {
+                t.classList.add('active');
+                // Esto hace que la tira se mueva automáticamente hacia la foto seleccionada
+                t.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            } else {
+                t.classList.remove('active');
+            }
+        });
+    }
+
+    function changeM(d) { 
+        const s = selectedDB.size; 
+        curIdx = (curIdx + d + s) % s; 
+        updM(); 
+    }
+    
+    function clearSel() { selectedDB.clear(); renderAlbums(); document.getElementById('viewBtn').innerText = `👁️ Ver (0)`; }
+
+    /* --- GESTOS SWIPE MEJORADOS --- */
+    const modalEl = document.getElementById('modal');
+    let touchStartX = 0, touchStartY = 0, isPinching = false;
+
+    modalEl.addEventListener('touchstart', e => {
+        // Ignorar si tocamos el carrusel de miniaturas
+        if (e.target.closest('.thumb-strip')) return;
+        
+        if (e.touches.length > 1) { isPinching = true; return; }
+        isPinching = false;
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+    }, {passive: true});
+
+    modalEl.addEventListener('touchend', e => {
+        if (isPinching || e.target.closest('.thumb-strip')) return;
+
+        const touchEndX = e.changedTouches[0].screenX;
+        const touchEndY = e.changedTouches[0].screenY;
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
+
+        if (Math.abs(deltaX) > 60 && Math.abs(deltaX) > Math.abs(deltaY)) {
+            if (deltaX < 0) changeM(1); 
+            else changeM(-1);           
+        }
+    }, {passive: true});
 
     window.onload = () => loadMangas();
     </script>
