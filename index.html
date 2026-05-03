@@ -8,13 +8,11 @@
     <title>My Library Pro - Win11 Style (Zero Lag)</title>
     <style>
         :root { 
-            /* Colores Pastel Neón */
             --pastel-green: #00ffaa; 
             --pastel-pink: #ff007f; 
             --pastel-blue: #00d4ff; 
             --pastel-purple: #9d00ff;
             
-            /* Colores de Tarjetas (Falso Cristal) */
             --card-bg-top: rgba(30, 30, 38, 0.85);
             --card-bg-bot: rgba(15, 15, 20, 0.95);
             --card-border: rgba(255, 255, 255, 0.05);
@@ -25,7 +23,9 @@
         
         html, body { margin: 0; padding: 0; min-height: 100%; color: white; font-family: 'Segoe UI', system-ui, sans-serif; overflow-x: hidden; }
         
-        /* Fondo Win11 Fijo */
+        /* Clase para bloquear el fondo cuando el visor está abierto */
+        body.no-scroll { overflow: hidden; touch-action: none; }
+        
         .app-bg {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
             background-color: #050508;
@@ -35,7 +35,6 @@
                 radial-gradient(circle at -10% 50%, rgba(157, 0, 255, 0.15) 0%, transparent 50%);
         }
         
-        /* Nav Principal */
         .nav { 
             display:flex; justify-content:center; gap:12px; padding:15px; 
             position: sticky; top: 0; z-index: 1000; 
@@ -55,7 +54,6 @@
         .t-btn.active:nth-child(2) { background: rgba(255, 0, 127, 0.1); border-color: rgba(255, 0, 127, 0.3); color: var(--pastel-pink); box-shadow: 0 0 15px rgba(255, 0, 127, 0.15); }
         .t-btn.active:nth-child(3) { background: rgba(0, 212, 255, 0.1); border-color: rgba(0, 212, 255, 0.3); color: var(--pastel-blue); box-shadow: 0 0 15px rgba(0, 212, 255, 0.15); }
 
-        /* Barra de Filtros */
         .f-bar { 
             background: linear-gradient(180deg, var(--card-bg-top), var(--card-bg-bot));
             margin: 20px auto; padding: 15px; border-radius: 16px; 
@@ -79,14 +77,12 @@
         }
         .c-btn.active { background: rgba(0, 212, 255, 0.15); color: #fff; border-color: var(--pastel-blue); box-shadow: 0 0 10px rgba(0, 212, 255, 0.2); }
 
-        /* Grid */
         .grid { 
             display:grid; gap:18px; padding:15px 20px; 
             grid-template-columns:repeat(auto-fill, minmax(170px, 1fr)); 
             max-width: 1600px; margin: 0 auto; contain: content; 
         }
         
-        /* Cards */
         .card { 
             background: linear-gradient(180deg, var(--card-bg-top), var(--card-bg-bot)); 
             border: 1px solid var(--card-border); border-top: 1px solid var(--card-gloss);
@@ -125,7 +121,6 @@
             padding: 5px 12px; border-radius: 20px; font-size: 10px; font-weight: bold; z-index: 2; 
         }
 
-        /* Fabs */
         .fab-container { position: fixed; bottom: 25px; right: 25px; display: none; flex-direction: column; gap: 12px; z-index: 2000; }
         .fab { 
             border: none; padding: 14px 24px; border-radius: 30px; color: white; background: #222;
@@ -133,15 +128,22 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.6); 
         }
 
-        /* Modal */
-        #modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:5000; }
+        /* Modal Actualizado con Fondo Win11 */
+        #modal { 
+            position:fixed; top:0; left:0; width:100%; height:100%; 
+            background-color: #050508;
+            background-image: 
+                radial-gradient(circle at 50% 120%, rgba(255, 0, 127, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% -10%, rgba(0, 212, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at -10% 50%, rgba(157, 0, 255, 0.15) 0%, transparent 50%);
+            display:none; flex-direction:column; align-items:center; justify-content:center; z-index:5000; 
+        }
         #modal img { max-width:100%; max-height:85vh; object-fit:contain; border-radius: 8px; user-select: none; }
         .m-nav { position:absolute; bottom:30px; width:100%; display:flex; justify-content:center; gap:20px; }
 
         .hidden { display:none !important; }
         .selected { border: 2px solid var(--pastel-pink) !important; transform: scale(0.96); opacity: 0.8; }
 
-        /* Ajustes específicos para 4 columnas en Móvil */
         @media (max-width: 600px) {
             .grid { grid-template-columns: repeat(4, 1fr) !important; gap: 6px !important; padding: 8px !important; }
             .t-btn { padding: 8px 12px; font-size: 11px; }
@@ -155,7 +157,7 @@
             .anime-card { padding: 8px 4px; min-height: 70px; }
             .fab-container { bottom: 15px; right: 15px; gap: 8px; }
             .fab { padding: 10px 16px; font-size: 11px; }
-            .m-nav { display: none; } /* Ocultamos botones en móvil, usamos el swipe */
+            .m-nav { display: none; }
         }
     </style>
 </head>
@@ -200,7 +202,6 @@
         <div id="a-grid" class="grid"></div>
     </div>
 
-    <!-- Modal con soporte Swipe -->
     <div id="modal">
         <button style="position:absolute; top:20px; right:20px; background:transparent; border:none; color:white; font-size:30px; cursor:pointer;" onclick="closeM()">✕</button>
         <img id="m-img" src="">
@@ -215,14 +216,14 @@
     <script src="lista_animes.js"></script> 
     <script>
     let db = [], selectedDB = new Map(), curIdx = 0, activeCat = 'TODOS';
-    let renderTask = null; // Variable clave para matar el lag
+    let renderTask = null;
 
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 
     function createLazyImg(src, alt) {
         const img = document.createElement('img');
         img.loading = 'lazy'; 
-        img.decoding = 'async'; // Libera la CPU en imágenes pesadas
+        img.decoding = 'async'; 
         img.src = src;
         img.alt = alt || '';
         return img;
@@ -239,7 +240,6 @@
         if (t === 'animes') loadAnimes();
     }
 
-    /* --- MANGAS (Con Micro-Batching) --- */
     function loadMangas(filter = "") {
         clearTimeout(renderTask);
         const grid = document.getElementById('m-grid');
@@ -313,7 +313,6 @@
         window.scrollTo(0,0);
     }
 
-    /* --- GALERÍA (Con Micro-Batching) --- */
     function loadG() {
         db = [];
         if (typeof galeria_maestra === 'undefined') return;
@@ -402,18 +401,37 @@
         window.scrollTo(0,0);
     }
 
-    /* --- GESTOS SWIPE (Deslizar en móvil) --- */
+    /* --- GESTOS SWIPE MEJORADOS --- */
     const modalEl = document.getElementById('modal');
     let touchStartX = 0;
+    let touchStartY = 0;
+    let isPinching = false;
 
     modalEl.addEventListener('touchstart', e => {
+        // Bloqueo de pellizco (Zoom con dos dedos)
+        if (e.touches.length > 1) {
+            isPinching = true;
+            return;
+        }
+        isPinching = false;
         touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
     }, {passive: true});
 
     modalEl.addEventListener('touchend', e => {
+        if (isPinching) return; // Si estaba haciendo zoom, no hagas swipe
+
         const touchEndX = e.changedTouches[0].screenX;
-        if (touchEndX < touchStartX - 50) changeM(1); // Deslizar Izquierda -> Siguiente
-        if (touchEndX > touchStartX + 50) changeM(-1); // Deslizar Derecha -> Anterior
+        const touchEndY = e.changedTouches[0].screenY;
+        
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
+
+        // Requiere 60px de fuerza y que sea principalmente horizontal (evita falsos swipes al subir/bajar)
+        if (Math.abs(deltaX) > 60 && Math.abs(deltaX) > Math.abs(deltaY)) {
+            if (deltaX < 0) changeM(1); // Swipe Izquierda
+            else changeM(-1);           // Swipe Derecha
+        }
     }, {passive: true});
 
     /* --- RESTO DE FUNCIONES --- */
@@ -436,9 +454,17 @@
 
     function openM() { 
         if(selectedDB.size === 0) return;
-        curIdx = 0; document.getElementById('modal').style.display = 'flex'; updM(); 
+        curIdx = 0; 
+        document.getElementById('modal').style.display = 'flex'; 
+        document.body.classList.add('no-scroll'); // Congela la página trasera
+        updM(); 
     }
-    function closeM() { document.getElementById('modal').style.display = 'none'; }
+    
+    function closeM() { 
+        document.getElementById('modal').style.display = 'none'; 
+        document.body.classList.remove('no-scroll'); // Libera la página trasera
+    }
+    
     function updM() { document.getElementById('m-img').src = Array.from(selectedDB.values())[curIdx].r; }
     function changeM(d) { const s = selectedDB.size; curIdx = (curIdx + d + s) % s; updM(); }
     function clearSel() { selectedDB.clear(); renderAlbums(); document.getElementById('viewBtn').innerText = `👁️ Ver (0)`; }
