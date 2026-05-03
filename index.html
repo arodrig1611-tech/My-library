@@ -43,15 +43,11 @@
         
         .card img { 
             width:100%; 
-            aspect-ratio: 200 / 280; /* Reserva el hueco para que el scroll no salte */
+            aspect-ratio: 200 / 280; /* Reserva el hueco exacto, evita saltos de pantalla */
             object-fit:cover; 
             display:block; 
-            transition: opacity 0.3s; 
-            background: #111;
+            background: #111; /* Fondo gris mientras carga, sin ocultar la imagen luego */
         }
-        
-        .img-loading { opacity: 0; }
-        .img-loaded { opacity: 1; }
 
         .card span { display:block; padding:12px; font-size:12px; font-weight: bold; background: #161616; border-top: 1px solid #222; }
 
@@ -98,9 +94,11 @@
             <input type="text" id="gSearch" placeholder="Buscar..." style="width:100%; padding:12px; background:#111; color:white; border:1px solid #333; border-radius:8px;" oninput="renderAlbums(this.value)">
             <div class="cat-row" id="catFilters">
                 <button class="c-btn active" onclick="filterCat('TODOS', this)">Todos</button>
-                <button class="c-btn" onclick="filterCat('Anime_Manga', this)">Anime</button>
+                <button class="c-btn" onclick="filterCat('Anime_Manga', this)">Anime/Manga</button>
                 <button class="c-btn" onclick="filterCat('Juegos', this)">Juegos</button>
+                <button class="c-btn" onclick="filterCat('Comic', this)">Comic</button>
                 <button class="c-btn" onclick="filterCat('Real', this)">Real</button>
+                <button class="c-btn" onclick="filterCat('Variados', this)">Variados</button>
             </div>
         </div>
         <div class="fab-container" id="g-fabs">
@@ -132,34 +130,12 @@
 
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 
-    /* --- MOTOR DE CARGA (Observer + Decode) --- */
-    const observerOptions = { rootMargin: '0px 0px 800px 0px' };
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                const tempImg = new Image();
-                tempImg.src = img.dataset.src;
-                tempImg.decode().then(() => {
-                    img.src = tempImg.src;
-                    img.classList.add('img-loaded');
-                }).catch(() => {
-                    img.src = img.dataset.src;
-                    img.classList.add('img-loaded');
-                });
-                observer.unobserve(img);
-            }
-        });
-    }, observerOptions);
-
+    /* --- MOTOR DE CARGA (Nativo y Confiable) --- */
     function createLazyImg(src, alt) {
         const img = document.createElement('img');
-        img.className = 'img-loading';
-        img.dataset.src = src;
-        img.alt = alt;
-        img.decoding = 'async';
-        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lMREFUeNoFwQEBAAAAgl0A/gl1UwVNAAACR0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=";
-        imageObserver.observe(img);
+        img.loading = 'lazy'; // Carga nativa del navegador, 100% segura
+        img.src = src;
+        img.alt = alt || '';
         return img;
     }
 
