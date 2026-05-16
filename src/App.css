@@ -1,0 +1,217 @@
+/* 1. TIPOGRAFÍA PREMIUM (Google Fonts) */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
+
+:root { 
+    --pastel-green: #00ffaa; 
+    --pastel-pink: #ff007f; 
+    --pastel-blue: #00d4ff; 
+    --pastel-purple: #9d00ff;
+    
+    --card-bg-top: rgba(30, 30, 38, 0.85);
+    --card-bg-bot: rgba(15, 15, 20, 0.95);
+    --card-border: rgba(255, 255, 255, 0.05);
+    --card-gloss: rgba(255, 255, 255, 0.15);
+    --glass-bg: rgba(15, 15, 20, 0.7);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body, #root { margin: 0; padding: 0; min-height: 100%; color: white; font-family: 'Outfit', system-ui, sans-serif; overflow-x: hidden; }
+body.no-scroll { overflow: hidden; touch-action: none; }
+
+.App { width: 100%; min-height: 100vh; display: flex; flex-direction: column; }
+
+.app-bg {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+    background-color: #050508;
+    background-image: 
+        radial-gradient(circle at 50% 120%, rgba(255, 0, 127, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% -10%, rgba(0, 212, 255, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at -10% 50%, rgba(157, 0, 255, 0.15) 0%, transparent 50%);
+}
+
+/* 2. MENÚ ESTILO PÍLDORA FLOTANTE */
+.nav { 
+    display: flex; justify-content: center; gap: 12px; padding: 12px 24px; 
+    position: sticky; top: 20px; z-index: 1000; 
+    background: rgba(10, 10, 15, 0.65); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--card-border); 
+    border-radius: 50px; 
+    width: max-content; margin: 0 auto 20px auto; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.t-btn { 
+    background: rgba(255,255,255,0.03); color: #999; border: 1px solid var(--card-border); 
+    padding: 10px 22px; border-radius: 30px; cursor: pointer; transition: 0.3s; font-size: 14px; font-weight: 600; 
+}
+.t-btn.active:nth-of-type(1) { background: rgba(0, 255, 170, 0.1); border-color: rgba(0, 255, 170, 0.3); color: var(--pastel-green); }
+.t-btn.active:nth-of-type(2) { background: rgba(255, 0, 127, 0.1); border-color: rgba(255, 0, 127, 0.3); color: var(--pastel-pink); }
+.t-btn.active:nth-of-type(3) { background: rgba(0, 212, 255, 0.1); border-color: rgba(0, 212, 255, 0.3); color: var(--pastel-blue); }
+
+.f-bar { 
+    background: linear-gradient(180deg, var(--card-bg-top), var(--card-bg-bot)); margin: 0 auto 20px auto; padding: 15px; border-radius: 20px; 
+    max-width: 1400px; border: 1px solid var(--card-border); border-top: 1px solid var(--card-gloss);
+    display: flex; flex-direction: column; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 95%;
+}
+
+input[type="text"] { width: 100%; padding: 14px; border-radius: 12px; background: rgba(0,0,0,0.4); color: white; border: 1px solid var(--card-border); font-size: 15px; font-family: 'Outfit'; outline: none; transition: 0.3s; }
+input[type="text"]:focus { border-color: var(--pastel-purple); background: rgba(0,0,0,0.6); box-shadow: 0 0 15px rgba(157, 0, 255, 0.2); }
+
+.cat-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+.cat-row::-webkit-scrollbar { display: none; }
+.c-btn { background: rgba(0,0,0,0.5); color: #aaa; border: 1px solid transparent; padding: 8px 18px; border-radius: 20px; cursor: pointer; white-space: nowrap; font-size: 13px; font-weight: 600; transition: 0.3s; }
+.c-btn.active { background: rgba(0, 212, 255, 0.15); color: #fff; border-color: var(--pastel-blue); box-shadow: 0 0 10px rgba(0, 212, 255, 0.2); }
+
+.grid { width: 100% !important; max-width: 1600px !important; margin: 0 auto; display: grid !important; gap: 20px; padding: 15px 20px; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+
+/* 3. TARJETAS (VERSION PC / TABLET) */
+.card { 
+    background: #0a0a0e; border: 1px solid var(--card-border); border-top: 1px solid var(--card-gloss); 
+    border-radius: 16px; overflow: hidden; text-align: center; cursor: pointer; position: relative; 
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease; 
+    color: white; display: flex; flex-direction: column; box-shadow: 0 8px 20px rgba(0,0,0,0.4); 
+    aspect-ratio: 200 / 280; 
+}
+.card:hover { transform: translateY(-6px); box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.card img { 
+    width: 100%; height: 100%; object-fit: cover; display: block; 
+    background: linear-gradient(90deg, #13131a 25%, #1f1f2e 50%, #13131a 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite linear;
+    color: transparent; 
+}
+
+/* Texto Oculto (Hover Reveal en PC) */
+.card span { 
+    position: absolute; bottom: 0; left: 0; width: 100%;
+    padding: 40px 12px 15px; font-size: 14px; font-weight: 700; 
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%); 
+    color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    opacity: 0; transform: translateY(10px); 
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none; z-index: 2;
+}
+.card:hover span { opacity: 1; transform: translateY(0); }
+
+/* BOTÓN VOLVER PC */
+.anime-card { 
+    padding: 20px; justify-content: center !important; align-items: center; 
+    aspect-ratio: auto; min-height: 100px; border-radius: 14px;
+    background: rgba(255, 255, 255, 0.02) !important; 
+    border: 1px solid rgba(255, 255, 255, 0.04) !important; 
+    box-shadow: none; 
+}
+.anime-card span { 
+    position: relative !important; opacity: 1 !important; transform: translateY(0) !important;
+    padding: 0 !important; background: transparent !important;
+    font-size: 15px !important; text-align: center; line-height: 1.3;
+    color: #ffffff !important; text-shadow: none;
+}
+
+.badge { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); border: 1px solid var(--pastel-blue); color: var(--pastel-blue); padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; z-index: 2; backdrop-filter: blur(4px); }
+.album-card { justify-content: flex-end; background-size: cover; background-position: center; }
+.selected { border: 2px solid var(--pastel-pink) !important; transform: scale(0.96); opacity: 0.8; }
+
+.fab-container { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; gap: 12px; z-index: 2000; }
+.fab { border: none; padding: 14px 24px; border-radius: 30px; color: white; background: #222; font-weight: 700; font-size: 14px; font-family: 'Outfit'; cursor: pointer; border: 1px solid var(--card-border); box-shadow: 0 8px 20px rgba(0,0,0,0.6); transition: 0.2s; }
+.fab:hover { transform: scale(1.05); }
+
+/* Visor Galería */
+#modal { 
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+  background-color: #0b0514 !important; 
+  background-image: 
+    radial-gradient(circle at 50% 120%, rgba(255, 40, 100, 0.5) 0%, transparent 60%),
+    radial-gradient(circle at 80% 20%, rgba(100, 0, 255, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 10% 60%, rgba(0, 150, 255, 0.15) 0%, transparent 50%) !important;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 5000; 
+}
+#modal img#m-img { max-width: 98vw; max-height: calc(100vh - 140px); object-fit: contain; border-radius: 8px; user-select: none; touch-action: pan-x pan-y pinch-zoom !important; margin-bottom: 85px; }
+.m-nav-side { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; display: flex; justify-content: space-between; padding: 0 20px; pointer-events: none; }
+.m-nav-side button { pointer-events: auto; width: 45px; height: 45px; border-radius: 50%; font-size: 18px; display: flex; justify-content: center; align-items: center; }
+.thumb-strip { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; width: 90vw; max-width: 800px; overflow-x: auto; padding: 10px; background: rgba(10,10,15,0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 12px; border: 1px solid var(--card-border); scrollbar-width: none; z-index: 5001; }
+.thumb-item { height: 55px; aspect-ratio: 3/4; object-fit: cover; border-radius: 6px; cursor: pointer; opacity: 0.4; transition: 0.2s; border: 2px solid transparent; flex-shrink: 0; background: #111; }
+.thumb-item.active { opacity: 1; border-color: var(--pastel-pink); transform: scale(1.05); }
+
+/* Lector de Mangas Integrado */
+#reader-container { width: 100%; display: flex; flex-direction: column; align-items: center; padding-bottom: 50px; background: #050508; min-height: 100vh; position: absolute; top: 0; left: 0; z-index: 9999; }
+.page { width: 100%; max-width: 850px; margin-bottom: 10px; display: block; transition: 0.2s; background: #0a0a0f; min-height: 300px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+.fit-mode .page { max-width: 100vw !important; width: 100% !important; margin-bottom: 0 !important; border-radius: 0; }
+.double-mode { flex-direction: row !important; flex-wrap: wrap !important; justify-content: center !important; align-items: flex-start !important; }
+.double-mode .page { width: calc(50% - 20px) !important; max-width: 48vw !important; margin: 10px 5px !important; height: auto !important; object-fit: contain; border: 1px solid #222; }
+
+#sideBar { position:fixed; right:15px; top:50%; transform:translateY(-50%); background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 12px; padding: 15px 10px; display:flex; flex-direction:column; gap:8px; z-index:10000; width:105px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.p-btn { background: rgba(0,0,0,0.5); color: #ccc; border: 1px solid var(--card-border); padding: 8px; border-radius: 8px; cursor: pointer; font-size: 13px; font-family: 'Outfit'; font-weight: 700; transition: 0.2s; }
+.p-btn:hover { border-color: var(--pastel-blue); background: rgba(0, 212, 255, 0.15); color: white; }
+
+/* =======================================================
+   REDISEÑO MÓVIL (CORREGIDO: 3 COLUMNAS Y ZOOM ARREGLADO) 
+   ======================================================= */
+@media (max-width: 600px) {
+    .nav { width: 95%; border-radius: 30px; top: 10px; margin: 10px auto; padding: 8px; gap: 8px; }
+    
+    /* Cambiado a 3 columnas para mejor visualización */
+    .grid { 
+        grid-template-columns: repeat(3, 1fr) !important; 
+        gap: 8px !important; 
+        padding: 10px !important; 
+    }
+
+    .t-btn { padding: 8px 12px; font-size: 12px; }
+    
+    .card { 
+        aspect-ratio: 200 / 280; 
+        background: #0a0a0e; 
+        border: 1px solid var(--card-border);
+        border-radius: 10px;
+        overflow: hidden; 
+        position: relative;
+    }
+    
+    .card img { 
+        width: 100%; 
+        height: 100%; 
+        object-fit: cover; /* Evita el estiramiento y zoom feo */
+    }
+
+    /* Nombre siempre visible en la parte inferior[cite: 11] */
+    .card span { 
+        position: absolute; 
+        bottom: 0; 
+        left: 0;
+        width: 100%;
+        opacity: 1 !important; 
+        transform: none !important; 
+        background: linear-gradient(to top, rgba(0,0,0,0.9) 30%, transparent 100%); 
+        border: none;
+        border-radius: 0;
+        padding: 20px 4px 6px; 
+        font-size: 10px; 
+        color: #eaeaea;
+        text-align: center;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; 
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        line-height: 1.1;
+        z-index: 2;
+    }
+
+    .album-card { background-image: none !important; } /* Eliminamos conflicto de fondo[cite: 11] */
+
+    .card.selected img { border: 2px solid var(--pastel-pink) !important; transform: scale(0.94); opacity: 0.8; }
+
+    .anime-card { min-height: 60px; padding: 10px; background: rgba(10, 10, 15, 0.8) !important; }
+    .anime-card span { position: relative !important; background: transparent !important; font-size: 13px !important; padding: 0 !important; }
+
+    .badge { padding: 3px 6px; font-size: 9px; top: 5px; right: 5px; z-index: 3; }
+    .fab-container { bottom: 15px; right: 15px; gap: 8px; }
+    #modal img#m-img { max-height: calc(100vh - 110px); margin-bottom: 60px; }
+}
